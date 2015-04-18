@@ -19,12 +19,9 @@ public abstract class Arc {
     }
 
     public Arc(State state, Transition transition, int weight) {
-        Preconditions.checkNotNull(state, "State has to be set.");
-        Preconditions.checkNotNull(transition, "Transition has to be set.");
-        Preconditions.checkArgument(weight > 0, "Arc weight has to be greater than 0.");
-        this.state = state;
-        this.transition = transition;
-        this.weight = weight;
+        setState(state);
+        setTransition(transition);
+        setWeight(weight);
     }
 
     public int getWeight() {
