@@ -30,6 +30,17 @@
             <groupId>net.sf.jung</groupId>
             <artifactId>jung2</artifactId>
             <version>${jung2.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jung</groupId>
+            <artifactId>jung-graph-impl</artifactId>
+            <version>${jung2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jung</groupId>
+            <artifactId>jung-visualization</artifactId>
+            <version>${jung2.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
