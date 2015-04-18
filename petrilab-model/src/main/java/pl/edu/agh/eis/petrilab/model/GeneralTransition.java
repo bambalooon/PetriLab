@@ -20,8 +20,7 @@ public class GeneralTransition implements Transition {
         return name;
     }
 
-    @Override
-    public void setName(String name) {
+    protected void setName(String name) {
         this.name = name;
     }
 
@@ -35,23 +34,19 @@ public class GeneralTransition implements Transition {
         return outArcs;
     }
 
-    @Override
-    public void addInArc(ArcToTransition arc) {
+    protected void addInArc(ArcToTransition arc) {
         inArcs.add(arc);
     }
 
-    @Override
-    public void addOutArc(ArcToState arc) {
+    protected void addOutArc(ArcToState arc) {
         outArcs.add(arc);
     }
 
-    @Override
-    public void removeInArc(ArcToTransition arc) {
+    protected void removeInArc(ArcToTransition arc) {
         inArcs.remove(arc);
     }
 
-    @Override
-    public void removeOutArc(ArcToState arc) {
+    protected void removeOutArc(ArcToState arc) {
         outArcs.remove(arc);
     }
 }

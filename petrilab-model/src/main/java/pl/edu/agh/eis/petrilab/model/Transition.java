@@ -10,11 +10,6 @@ import java.util.Collection;
  */
 public interface Transition {
     String getName();
-    void setName(String name);
     Collection<ArcToTransition> getInArcs();
     Collection<ArcToState> getOutArcs();
-    void addInArc(ArcToTransition arc);
-    void addOutArc(ArcToState arc);
-    void removeInArc(ArcToTransition arc);
-    void removeOutArc(ArcToState arc);
 }

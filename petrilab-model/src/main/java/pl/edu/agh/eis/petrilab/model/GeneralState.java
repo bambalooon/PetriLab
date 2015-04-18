@@ -22,8 +22,7 @@ public class GeneralState implements State {
         return name;
     }
 
-    @Override
-    public void setName(String name) {
+    protected void setName(String name) {
         this.name = name;
     }
 
@@ -53,23 +52,19 @@ public class GeneralState implements State {
         return outArcs;
     }
 
-    @Override
-    public void addInArc(ArcToState arc) {
+    protected void addInArc(ArcToState arc) {
         inArcs.add(arc);
     }
 
-    @Override
-    public void addOutArc(ArcToTransition arc) {
+    protected void addOutArc(ArcToTransition arc) {
         outArcs.add(arc);
     }
 
-    @Override
-    public void removeInArc(ArcToState arc) {
+    protected void removeInArc(ArcToState arc) {
         inArcs.remove(arc);
     }
 
-    @Override
-    public void removeOutArc(ArcToTransition arc) {
+    protected void removeOutArc(ArcToTransition arc) {
         outArcs.remove(arc);
     }
 }

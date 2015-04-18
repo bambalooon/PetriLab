@@ -15,7 +15,7 @@ public class PTState extends GeneralState {
         return capacity;
     }
 
-    public void setCapacity(int capacity) {
+    protected void setCapacity(int capacity) {
         Preconditions.checkArgument(capacity > 0, "Capacity has to be greater than 0.");
         this.capacity = capacity;
     }

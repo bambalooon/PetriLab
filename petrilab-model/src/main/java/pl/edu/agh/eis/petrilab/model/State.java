@@ -10,14 +10,9 @@ import java.util.Collection;
  */
 public interface State {
     String getName();
-    void setName(String name);
     int getMarking();
     void decreaseMarking(int difference);
     void increaseMarking(int difference);
     Collection<ArcToState> getInArcs();
     Collection<ArcToTransition> getOutArcs();
-    void addInArc(ArcToState arc);
-    void addOutArc(ArcToTransition arc);
-    void removeInArc(ArcToState arc);
-    void removeOutArc(ArcToTransition arc);
 }
