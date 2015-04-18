@@ -16,11 +16,11 @@ public class ArcToState extends Arc {
     }
 
     public Transition getStartTransition() {
-        return transition;
+        return getTransition();
     }
 
     public State getEndState() {
-        return state;
+        return getState();
     }
 
     @Override

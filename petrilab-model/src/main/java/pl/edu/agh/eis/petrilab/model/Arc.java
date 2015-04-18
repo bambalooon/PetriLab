@@ -10,9 +10,9 @@ import com.google.common.base.Preconditions;
  */
 public abstract class Arc {
     private static final int DEFAULT_WEIGHT = 1;
-    protected final State state;
-    protected final Transition transition;
-    private final int weight;
+    private State state;
+    private Transition transition;
+    private int weight;
 
     public Arc(State state, Transition transition) {
         this(state, transition, DEFAULT_WEIGHT);
@@ -27,8 +27,28 @@ public abstract class Arc {
         this.weight = weight;
     }
 
+    protected void setWeight(int weight) {
+        this.weight = weight;
+    }
+
     public int getWeight() {
         return weight;
+    }
+
+    protected State getState() {
+        return state;
+    }
+
+    protected void setState(State state) {
+        this.state = state;
+    }
+
+    protected Transition getTransition() {
+        return transition;
+    }
+
+    protected void setTransition(Transition transition) {
+        this.transition = transition;
     }
 
     @Override
