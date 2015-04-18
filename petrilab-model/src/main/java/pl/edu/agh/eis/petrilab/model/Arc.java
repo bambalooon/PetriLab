@@ -83,8 +83,8 @@ public abstract class Arc {
         private Integer weight;
 
         public Builder fromArc(Arc arc) {
-            this.baseArc = arc;
-            this.weight = arc.getWeight();
+            baseArc = arc;
+            weight = arc.getWeight();
             if (arc instanceof StateToTransitionArc) {
                 StateToTransitionArc definedArc = (StateToTransitionArc) arc;
                 from = definedArc.getStartState();
