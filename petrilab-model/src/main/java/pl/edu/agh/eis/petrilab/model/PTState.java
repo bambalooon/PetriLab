@@ -11,6 +11,10 @@ import com.google.common.base.Preconditions;
 public class PTState extends GeneralState {
     private int capacity = Integer.MAX_VALUE;
 
+    public PTState(String name) {
+        super(name);
+    }
+
     public int getCapacity() {
         return capacity;
     }
