@@ -29,8 +29,8 @@ public interface VisualizationViewerGenerator<V, E> {
         public VisualizationViewer<PetriNetVertex, Arc> generateVisualizationViewer(
                 DirectedSparseGraph<PetriNetVertex, Arc> graph) {
 
-            VisualizationViewer<PetriNetVertex, Arc> visualizationViewer = new VisualizationViewer<PetriNetVertex, Arc>
-                    (new CircleLayout<PetriNetVertex, Arc>(graph), new Dimension(VIEWER_WIDTH, VIEWER_HEIGHT));
+            VisualizationViewer<PetriNetVertex, Arc> visualizationViewer = new VisualizationViewer<>
+                    (new CircleLayout<>(graph), new Dimension(VIEWER_WIDTH, VIEWER_HEIGHT));
 
             visualizationViewer.getRenderContext().setVertexLabelTransformer(new Transformer<PetriNetVertex, String>() {
                 @Override
@@ -48,7 +48,7 @@ public interface VisualizationViewerGenerator<V, E> {
 
             visualizationViewer.getRenderer().setVertexRenderer(new PetriNetVertexRenderer());
 
-            final DefaultModalGraphMouse<String,Number> graphMouse = new DefaultModalGraphMouse<String, Number>();
+            final DefaultModalGraphMouse<PetriNetVertex,Arc> graphMouse = new DefaultModalGraphMouse<>();
             visualizationViewer.setGraphMouse(graphMouse);
             graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
 
