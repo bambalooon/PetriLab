@@ -26,11 +26,11 @@ public class PetriNet {
     }
 
     public void addEdge(Arc arc) {
-        if (arc instanceof TransitionToStateArc) {
-            TransitionToStateArc definedArc = (TransitionToStateArc) arc;
+        if (arc instanceof TransitionToPlaceArc) {
+            TransitionToPlaceArc definedArc = (TransitionToPlaceArc) arc;
             graph.addEdge(definedArc, definedArc.getStartTransition(), definedArc.getEndState());
-        } else if (arc instanceof StateToTransitionArc) {
-            StateToTransitionArc definedArc = (StateToTransitionArc) arc;
+        } else if (arc instanceof PlaceToTransitionArc) {
+            PlaceToTransitionArc definedArc = (PlaceToTransitionArc) arc;
             graph.addEdge(definedArc, definedArc.getStartState(), definedArc.getEndTransition());
         } else {
             throw new IllegalArgumentException("Provided arc is of unsupported type: " + arc);
@@ -38,7 +38,7 @@ public class PetriNet {
     }
 
     public void removeEdge(Arc arc) {
-        if (arc instanceof TransitionToStateArc || arc instanceof StateToTransitionArc) {
+        if (arc instanceof TransitionToPlaceArc || arc instanceof PlaceToTransitionArc) {
             graph.removeEdge(arc);
         } else {
             throw new IllegalArgumentException("Provided arc is of unsupported type: " + arc);

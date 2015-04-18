@@ -6,7 +6,7 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
 import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
 import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
-import pl.edu.agh.eis.petrilab.model.State;
+import pl.edu.agh.eis.petrilab.model.Place;
 import pl.edu.agh.eis.petrilab.model.Transition;
 
 import java.awt.*;
@@ -53,7 +53,7 @@ public class PetriNetVertexRenderer implements Renderer.Vertex<PetriNetVertex, A
         Point2D center = layout.transform(vertex);
         Shape shape;
         Color color;
-        if (vertex instanceof State) {
+        if (vertex instanceof Place) {
             shape = new Ellipse2D.Double(
                     center.getX() - stateCircleRadius, center.getY() - stateCircleRadius,
                     stateCircleRadius * 2, stateCircleRadius * 2);

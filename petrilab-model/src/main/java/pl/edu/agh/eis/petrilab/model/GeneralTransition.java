@@ -13,8 +13,8 @@ import java.util.Collections;
  * Created by BamBalooon
  */
 public class GeneralTransition implements Transition {
-    private Collection<StateToTransitionArc> inArcs = Collections.emptySet();
-    private Collection<TransitionToStateArc> outArcs = Collections.emptySet();
+    private Collection<PlaceToTransitionArc> inArcs = Collections.emptySet();
+    private Collection<TransitionToPlaceArc> outArcs = Collections.emptySet();
     private String name;
 
     public GeneralTransition(String name) {
@@ -32,21 +32,21 @@ public class GeneralTransition implements Transition {
     }
 
     @Override
-    public Collection<StateToTransitionArc> getInArcs() {
+    public Collection<PlaceToTransitionArc> getInArcs() {
         return inArcs;
     }
 
     @Override
-    public Collection<TransitionToStateArc> getOutArcs() {
+    public Collection<TransitionToPlaceArc> getOutArcs() {
         return outArcs;
     }
 
-    protected void setInArcs(Collection<StateToTransitionArc> arcs) {
+    protected void setInArcs(Collection<PlaceToTransitionArc> arcs) {
         Preconditions.checkNotNull(arcs);
         inArcs = arcs;
     }
 
-    protected void setOutArcs(Collection<TransitionToStateArc> arcs) {
+    protected void setOutArcs(Collection<TransitionToPlaceArc> arcs) {
         Preconditions.checkNotNull(arcs);
         outArcs = arcs;
     }
@@ -54,8 +54,8 @@ public class GeneralTransition implements Transition {
     public static class Builder {
         private GeneralTransition baseTransition;
         private String name;
-        private Collection<StateToTransitionArc> inArcs = Sets.newHashSet();
-        private Collection<TransitionToStateArc> outArcs = Sets.newHashSet();
+        private Collection<PlaceToTransitionArc> inArcs = Sets.newHashSet();
+        private Collection<TransitionToPlaceArc> outArcs = Sets.newHashSet();
 
         public Builder fromTransition(GeneralTransition transition) {
             baseTransition = transition;
@@ -71,10 +71,10 @@ public class GeneralTransition implements Transition {
         }
 
         public Builder withArc(Arc arc) {
-            if (arc instanceof StateToTransitionArc) {
-                inArcs.add((StateToTransitionArc) arc);
-            } else if (arc instanceof TransitionToStateArc) {
-                outArcs.add((TransitionToStateArc) arc);
+            if (arc instanceof PlaceToTransitionArc) {
+                inArcs.add((PlaceToTransitionArc) arc);
+            } else if (arc instanceof TransitionToPlaceArc) {
+                outArcs.add((TransitionToPlaceArc) arc);
             } else {
                 throw new IllegalArgumentException("Provided arc is of unsupported type: " + arc);
             }

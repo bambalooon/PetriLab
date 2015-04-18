@@ -6,15 +6,15 @@ import com.google.common.collect.Sets;
 import java.util.Collection;
 
 /**
- * Name: PTState
- * Description: PTState
+ * Name: PTPlace
+ * Description: PTPlace
  * Date: 2015-04-18
  * Created by BamBalooon
  */
-public class PTState extends GeneralState {
+public class PTPlace extends GeneralPlace {
     private int capacity = Integer.MAX_VALUE;
 
-    public PTState(String name) {
+    public PTPlace(String name) {
         super(name);
     }
 
@@ -28,20 +28,20 @@ public class PTState extends GeneralState {
     }
 
     public static class Builder {
-        private PTState baseState;
+        private PTPlace basePlace;
         private String name;
         private Integer marking;
         private Integer capacity;
-        private Collection<TransitionToStateArc> inArcs = Sets.newHashSet();
-        private Collection<StateToTransitionArc> outArcs = Sets.newHashSet();
+        private Collection<TransitionToPlaceArc> inArcs = Sets.newHashSet();
+        private Collection<PlaceToTransitionArc> outArcs = Sets.newHashSet();
 
-        public Builder fromState(PTState state) {
-            baseState = state;
-            name = state.getName();
-            marking = state.getMarking();
-            capacity = state.getCapacity();
-            inArcs.addAll(state.getInArcs());
-            outArcs.addAll(state.getOutArcs());
+        public Builder fromPlace(PTPlace place) {
+            basePlace = place;
+            name = place.getName();
+            marking = place.getMarking();
+            capacity = place.getCapacity();
+            inArcs.addAll(place.getInArcs());
+            outArcs.addAll(place.getOutArcs());
             return this;
         }
 
@@ -61,43 +61,42 @@ public class PTState extends GeneralState {
         }
 
         public Builder withArc(Arc arc) {
-            if (arc instanceof TransitionToStateArc) {
-                inArcs.add((TransitionToStateArc) arc);
-            } else if (arc instanceof StateToTransitionArc) {
-                outArcs.add((StateToTransitionArc) arc);
+            if (arc instanceof TransitionToPlaceArc) {
+                inArcs.add((TransitionToPlaceArc) arc);
+            } else if (arc instanceof PlaceToTransitionArc) {
+                outArcs.add((PlaceToTransitionArc) arc);
             } else {
                 throw new IllegalArgumentException("Provided arc is of unsupported type: " + arc);
             }
             return this;
         }
 
-        public PTState build() {
-            PTState state = new PTState(name);
+        public PTPlace build() {
+            PTPlace place = new PTPlace(name);
             if (marking != null) {
-                state.setMarking(marking);
+                place.setMarking(marking);
             }
             if (capacity != null) {
-                state.setCapacity(capacity);
+                place.setCapacity(capacity);
             }
-            state.setInArcs(inArcs);
-            state.setOutArcs(outArcs);
-            return state;
+            place.setInArcs(inArcs);
+            place.setOutArcs(outArcs);
+            return place;
         }
 
-        public PTState modify() {
+        public PTPlace modify() {
             if (name != null) {
-                baseState.setName(name);
+                basePlace.setName(name);
             }
             if (marking != null) {
-                baseState.setMarking(marking);
+                basePlace.setMarking(marking);
             }
             if (capacity != null) {
-                baseState.setCapacity(capacity);
+                basePlace.setCapacity(capacity);
             }
-            baseState.setInArcs(inArcs);
-            baseState.setOutArcs(outArcs);
-            return baseState;
+            basePlace.setInArcs(inArcs);
+            basePlace.setOutArcs(outArcs);
+            return basePlace;
         }
-
     }
 }

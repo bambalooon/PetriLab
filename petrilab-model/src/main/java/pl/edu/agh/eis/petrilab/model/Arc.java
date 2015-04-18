@@ -10,16 +10,16 @@ import com.google.common.base.Preconditions;
  */
 public abstract class Arc {
     private static final int DEFAULT_WEIGHT = 1;
-    private State state;
+    private Place place;
     private Transition transition;
     private int weight;
 
-    public Arc(State state, Transition transition) {
-        this(state, transition, DEFAULT_WEIGHT);
+    public Arc(Place place, Transition transition) {
+        this(place, transition, DEFAULT_WEIGHT);
     }
 
-    public Arc(State state, Transition transition, int weight) {
-        setState(state);
+    public Arc(Place place, Transition transition, int weight) {
+        setPlace(place);
         setTransition(transition);
         setWeight(weight);
     }
@@ -33,13 +33,13 @@ public abstract class Arc {
         this.weight = weight;
     }
 
-    protected State getState() {
-        return state;
+    protected Place getPlace() {
+        return place;
     }
 
-    protected void setState(State state) {
-        Preconditions.checkNotNull(state, "State has to be set.");
-        this.state = state;
+    protected void setPlace(Place place) {
+        Preconditions.checkNotNull(place, "Place has to be set.");
+        this.place = place;
     }
 
     protected Transition getTransition() {
@@ -59,7 +59,7 @@ public abstract class Arc {
         Arc arc = (Arc) o;
 
         if (weight != arc.weight) return false;
-        if (!state.equals(arc.state)) return false;
+        if (!place.equals(arc.place)) return false;
         if (!transition.equals(arc.transition)) return false;
 
         return true;
@@ -67,7 +67,7 @@ public abstract class Arc {
 
     @Override
     public int hashCode() {
-        int result = state.hashCode();
+        int result = place.hashCode();
         result = 31 * result + transition.hashCode();
         result = 31 * result + weight;
         return result;
@@ -82,12 +82,12 @@ public abstract class Arc {
         public Builder fromArc(Arc arc) {
             baseArc = arc;
             weight = arc.getWeight();
-            if (arc instanceof StateToTransitionArc) {
-                StateToTransitionArc definedArc = (StateToTransitionArc) arc;
+            if (arc instanceof PlaceToTransitionArc) {
+                PlaceToTransitionArc definedArc = (PlaceToTransitionArc) arc;
                 from = definedArc.getStartState();
                 to = definedArc.getEndTransition();
-            } else if (arc instanceof TransitionToStateArc) {
-                TransitionToStateArc definedArc = (TransitionToStateArc) arc;
+            } else if (arc instanceof TransitionToPlaceArc) {
+                TransitionToPlaceArc definedArc = (TransitionToPlaceArc) arc;
                 from = definedArc.getStartTransition();
                 to = definedArc.getEndState();
             } else {
@@ -96,8 +96,8 @@ public abstract class Arc {
             return this;
         }
 
-        public Builder from(State state) {
-            from = state;
+        public Builder from(Place place) {
+            from = place;
             return this;
         }
 
@@ -106,8 +106,8 @@ public abstract class Arc {
             return this;
         }
 
-        public Builder to(State state) {
-            to = state;
+        public Builder to(Place place) {
+            to = place;
             return this;
         }
 
@@ -122,14 +122,14 @@ public abstract class Arc {
         }
 
         public Arc build() {
-            if (from instanceof State && to instanceof Transition) {
+            if (from instanceof Place && to instanceof Transition) {
                 return weight == null
-                        ? new StateToTransitionArc((State) from, (Transition) to)
-                        : new StateToTransitionArc((State) from, (Transition) to, weight);
-            } else if (from instanceof Transition && to instanceof State) {
+                        ? new PlaceToTransitionArc((Place) from, (Transition) to)
+                        : new PlaceToTransitionArc((Place) from, (Transition) to, weight);
+            } else if (from instanceof Transition && to instanceof Place) {
                 return weight == null
-                        ? new TransitionToStateArc((Transition) from, (State) to)
-                        : new TransitionToStateArc((Transition) from, (State) to, weight);
+                        ? new TransitionToPlaceArc((Transition) from, (Place) to)
+                        : new TransitionToPlaceArc((Transition) from, (Place) to, weight);
             }
             throw new IllegalStateException("Arc cannot be created with this settings.");
         }
@@ -138,12 +138,12 @@ public abstract class Arc {
             if (weight != null) {
                 baseArc.setWeight(weight);
             }
-            if (from instanceof State && to instanceof Transition) {
-                baseArc.setState((State) from);
+            if (from instanceof Place && to instanceof Transition) {
+                baseArc.setPlace((Place) from);
                 baseArc.setTransition((Transition) to);
-            } else if (from instanceof Transition && to instanceof State) {
+            } else if (from instanceof Transition && to instanceof Place) {
                 baseArc.setTransition((Transition) from);
-                baseArc.setState((State) to);
+                baseArc.setPlace((Place) to);
             } else {
                 throw new IllegalStateException("Arc cannot be modified with this settings.");
             }

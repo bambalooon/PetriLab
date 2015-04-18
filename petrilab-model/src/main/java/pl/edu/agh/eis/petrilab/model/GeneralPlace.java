@@ -1,24 +1,23 @@
 package pl.edu.agh.eis.petrilab.model;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 
 import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Name: GeneralState
- * Description: GeneralState
+ * Name: GeneralPlace
+ * Description: GeneralPlace
  * Date: 2015-04-18
  * Created by BamBalooon
  */
-public class GeneralState implements State {
-    private Collection<TransitionToStateArc> inArcs = Collections.emptySet();
-    private Collection<StateToTransitionArc> outArcs = Collections.emptySet();
+public class GeneralPlace implements Place {
+    private Collection<TransitionToPlaceArc> inArcs = Collections.emptySet();
+    private Collection<PlaceToTransitionArc> outArcs = Collections.emptySet();
     private String name;
     private int marking;
 
-    public GeneralState(String name) {
+    public GeneralPlace(String name) {
         setName(name);
     }
 
@@ -53,21 +52,21 @@ public class GeneralState implements State {
     }
 
     @Override
-    public Collection<TransitionToStateArc> getInArcs() {
+    public Collection<TransitionToPlaceArc> getInArcs() {
         return inArcs;
     }
 
     @Override
-    public Collection<StateToTransitionArc> getOutArcs() {
+    public Collection<PlaceToTransitionArc> getOutArcs() {
         return outArcs;
     }
 
-    protected void setInArcs(Collection<TransitionToStateArc> arcs) {
+    protected void setInArcs(Collection<TransitionToPlaceArc> arcs) {
         Preconditions.checkNotNull(arcs);
         inArcs = arcs;
     }
 
-    protected void setOutArcs(Collection<StateToTransitionArc> arcs) {
+    protected void setOutArcs(Collection<PlaceToTransitionArc> arcs) {
         Preconditions.checkNotNull(arcs);
         outArcs = arcs;
     }
