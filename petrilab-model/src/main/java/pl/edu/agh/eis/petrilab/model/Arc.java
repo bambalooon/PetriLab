@@ -124,7 +124,7 @@ public abstract class Arc {
             return this;
         }
 
-        public Arc create() {
+        public Arc build() {
             if (from instanceof State && to instanceof Transition) {
                 return weight == null
                         ? new StateToTransitionArc((State) from, (Transition) to)
