@@ -13,6 +13,6 @@ public interface State {
     int getMarking();
     void decreaseMarking(int difference);
     void increaseMarking(int difference);
-    Collection<ArcToState> getInArcs();
-    Collection<ArcToTransition> getOutArcs();
+    Collection<TransitionToStateArc> getInArcs();
+    Collection<StateToTransitionArc> getOutArcs();
 }

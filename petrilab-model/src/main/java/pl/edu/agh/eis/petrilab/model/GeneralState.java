@@ -12,8 +12,8 @@ import java.util.Collection;
  * Created by BamBalooon
  */
 public class GeneralState implements State {
-    private final Collection<ArcToState> inArcs = Sets.newHashSet();
-    private final Collection<ArcToTransition> outArcs = Sets.newHashSet();
+    private final Collection<TransitionToStateArc> inArcs = Sets.newHashSet();
+    private final Collection<StateToTransitionArc> outArcs = Sets.newHashSet();
     private String name;
     private int marking;
 
@@ -43,28 +43,28 @@ public class GeneralState implements State {
     }
 
     @Override
-    public Collection<ArcToState> getInArcs() {
+    public Collection<TransitionToStateArc> getInArcs() {
         return inArcs;
     }
 
     @Override
-    public Collection<ArcToTransition> getOutArcs() {
+    public Collection<StateToTransitionArc> getOutArcs() {
         return outArcs;
     }
 
-    protected void addInArc(ArcToState arc) {
+    protected void addInArc(TransitionToStateArc arc) {
         inArcs.add(arc);
     }
 
-    protected void addOutArc(ArcToTransition arc) {
+    protected void addOutArc(StateToTransitionArc arc) {
         outArcs.add(arc);
     }
 
-    protected void removeInArc(ArcToState arc) {
+    protected void removeInArc(TransitionToStateArc arc) {
         inArcs.remove(arc);
     }
 
-    protected void removeOutArc(ArcToTransition arc) {
+    protected void removeOutArc(StateToTransitionArc arc) {
         outArcs.remove(arc);
     }
 }

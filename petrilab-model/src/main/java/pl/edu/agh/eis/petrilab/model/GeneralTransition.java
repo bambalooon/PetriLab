@@ -11,8 +11,8 @@ import java.util.Collection;
  * Created by BamBalooon
  */
 public class GeneralTransition implements Transition {
-    private final Collection<ArcToTransition> inArcs = Sets.newHashSet();
-    private final Collection<ArcToState> outArcs = Sets.newHashSet();
+    private final Collection<StateToTransitionArc> inArcs = Sets.newHashSet();
+    private final Collection<TransitionToStateArc> outArcs = Sets.newHashSet();
     private String name;
 
     @Override
@@ -25,28 +25,28 @@ public class GeneralTransition implements Transition {
     }
 
     @Override
-    public Collection<ArcToTransition> getInArcs() {
+    public Collection<StateToTransitionArc> getInArcs() {
         return inArcs;
     }
 
     @Override
-    public Collection<ArcToState> getOutArcs() {
+    public Collection<TransitionToStateArc> getOutArcs() {
         return outArcs;
     }
 
-    protected void addInArc(ArcToTransition arc) {
+    protected void addInArc(StateToTransitionArc arc) {
         inArcs.add(arc);
     }
 
-    protected void addOutArc(ArcToState arc) {
+    protected void addOutArc(TransitionToStateArc arc) {
         outArcs.add(arc);
     }
 
-    protected void removeInArc(ArcToTransition arc) {
+    protected void removeInArc(StateToTransitionArc arc) {
         inArcs.remove(arc);
     }
 
-    protected void removeOutArc(ArcToState arc) {
+    protected void removeOutArc(TransitionToStateArc arc) {
         outArcs.remove(arc);
     }
 }
