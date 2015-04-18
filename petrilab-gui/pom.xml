@@ -11,5 +11,13 @@
 
     <artifactId>petrilab-gui</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>pl.edu.agh.eis</groupId>
+            <artifactId>petrilab-model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 
 </project>
