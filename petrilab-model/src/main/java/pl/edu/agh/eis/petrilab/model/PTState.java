@@ -1,6 +1,7 @@
 package pl.edu.agh.eis.petrilab.model;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 
 import java.util.Collection;
 
@@ -31,8 +32,8 @@ public class PTState extends GeneralState {
         private String name;
         private Integer marking;
         private Integer capacity;
-        private Collection<TransitionToStateArc> inArcs;
-        private Collection<StateToTransitionArc> outArcs;
+        private Collection<TransitionToStateArc> inArcs = Sets.newHashSet();
+        private Collection<StateToTransitionArc> outArcs = Sets.newHashSet();
 
         public Builder fromState(PTState state) {
             baseState = state;
@@ -72,8 +73,12 @@ public class PTState extends GeneralState {
 
         public PTState build() {
             PTState state = new PTState(name);
-            state.setMarking(marking);
-            state.setCapacity(capacity);
+            if (marking != null) {
+                state.setMarking(marking);
+            }
+            if (capacity != null) {
+                state.setCapacity(capacity);
+            }
             state.setInArcs(inArcs);
             state.setOutArcs(outArcs);
             return state;
