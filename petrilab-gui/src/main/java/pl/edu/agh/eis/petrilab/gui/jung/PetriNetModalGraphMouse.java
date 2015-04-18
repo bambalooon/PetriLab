@@ -68,7 +68,6 @@ public class PetriNetModalGraphMouse extends AbstractModalGraphMouse {
         remove(pickingPlugin);
         remove(translatingPlugin);
         remove(animatedPickingPlugin);
-        remove(scalingPlugin);
         remove(rotatingPlugin);
         remove(shearingPlugin);
         add(editingGraphMousePlugin);
