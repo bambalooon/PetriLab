@@ -1,9 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui.jung;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
-import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import org.apache.commons.collections15.Transformer;
 import pl.edu.agh.eis.petrilab.model.Arc;
@@ -20,17 +18,17 @@ import java.awt.*;
 public interface VisualizationViewerGenerator<V, E> {
     int VIEWER_WIDTH = 400;
     int VIEWER_HEIGHT = 400;
-    VisualizationViewer<V, E> generateVisualizationViewer(DirectedSparseGraph<V, E> graph);
+    VisualizationViewer<V, E> generateVisualizationViewer(PetriNet petriNet);
 
     VisualizationViewerGenerator<PetriNetVertex, Arc> PETRI_NET =
             new VisualizationViewerGenerator<PetriNetVertex, Arc>() {
 
         @Override
         public VisualizationViewer<PetriNetVertex, Arc> generateVisualizationViewer(
-                DirectedSparseGraph<PetriNetVertex, Arc> graph) {
+                PetriNet petriNet) {
 
             VisualizationViewer<PetriNetVertex, Arc> visualizationViewer = new VisualizationViewer<>
-                    (new CircleLayout<>(graph), new Dimension(VIEWER_WIDTH, VIEWER_HEIGHT));
+                    (new CircleLayout<>(petriNet.getGraph()), new Dimension(VIEWER_WIDTH, VIEWER_HEIGHT));
 
             visualizationViewer.getRenderContext().setVertexLabelTransformer(new Transformer<PetriNetVertex, String>() {
                 @Override
@@ -48,9 +46,10 @@ public interface VisualizationViewerGenerator<V, E> {
 
             visualizationViewer.getRenderer().setVertexRenderer(new PetriNetVertexRenderer());
 
-            final DefaultModalGraphMouse<PetriNetVertex,Arc> graphMouse = new DefaultModalGraphMouse<>();
+            PetriNetModalGraphMouse graphMouse = new PetriNetModalGraphMouse(petriNet);
+            graphMouse.setMode(ModalGraphMouse.Mode.EDITING);
             visualizationViewer.setGraphMouse(graphMouse);
-            graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
+            visualizationViewer.addKeyListener(graphMouse.getModeKeyListener());
 
             return visualizationViewer;
         }
