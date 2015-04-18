@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Name: GeneralState
@@ -12,10 +13,14 @@ import java.util.Collection;
  * Created by BamBalooon
  */
 public class GeneralState implements State {
-    private final Collection<TransitionToStateArc> inArcs = Sets.newHashSet();
-    private final Collection<StateToTransitionArc> outArcs = Sets.newHashSet();
+    private Collection<TransitionToStateArc> inArcs = Collections.emptySet();
+    private Collection<StateToTransitionArc> outArcs = Collections.emptySet();
     private String name;
     private int marking;
+
+    public GeneralState(String name) {
+        setName(name);
+    }
 
     @Override
     public String getName() {
@@ -23,12 +28,17 @@ public class GeneralState implements State {
     }
 
     protected void setName(String name) {
+        Preconditions.checkNotNull(name);
         this.name = name;
     }
 
     @Override
     public int getMarking() {
         return marking;
+    }
+
+    protected void setMarking(int marking) {
+        this.marking = marking;
     }
 
     @Override
@@ -52,19 +62,13 @@ public class GeneralState implements State {
         return outArcs;
     }
 
-    protected void addInArc(TransitionToStateArc arc) {
-        inArcs.add(arc);
+    protected void setInArcs(Collection<TransitionToStateArc> arcs) {
+        Preconditions.checkNotNull(arcs);
+        inArcs = arcs;
     }
 
-    protected void addOutArc(StateToTransitionArc arc) {
-        outArcs.add(arc);
-    }
-
-    protected void removeInArc(TransitionToStateArc arc) {
-        inArcs.remove(arc);
-    }
-
-    protected void removeOutArc(StateToTransitionArc arc) {
-        outArcs.remove(arc);
+    protected void setOutArcs(Collection<StateToTransitionArc> arcs) {
+        Preconditions.checkNotNull(arcs);
+        outArcs = arcs;
     }
 }
