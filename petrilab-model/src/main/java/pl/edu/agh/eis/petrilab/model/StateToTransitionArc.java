@@ -7,12 +7,12 @@ package pl.edu.agh.eis.petrilab.model;
  * Created by BamBalooon
  */
 public class StateToTransitionArc extends Arc {
-    public StateToTransitionArc(State state, Transition transition) {
-        super(state, transition);
+    public StateToTransitionArc(State fromState, Transition toTransition) {
+        super(fromState, toTransition);
     }
 
-    public StateToTransitionArc(State state, Transition transition, int weight) {
-        super(state, transition, weight);
+    public StateToTransitionArc(State fromState, Transition toTransition, int weight) {
+        super(fromState, toTransition, weight);
     }
 
     public State getStartState() {
