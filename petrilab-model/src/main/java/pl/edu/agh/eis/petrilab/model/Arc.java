@@ -75,8 +75,8 @@ public abstract class Arc {
 
     public static class Builder {
         private Arc baseArc;
-        private Object to;
-        private Object from;
+        private PetriNetVertex to;
+        private PetriNetVertex from;
         private Integer weight;
 
         public Builder fromArc(Arc arc) {
@@ -96,23 +96,13 @@ public abstract class Arc {
             return this;
         }
 
-        public Builder from(Place place) {
-            from = place;
+        public Builder from(PetriNetVertex vertex) {
+            from = vertex;
             return this;
         }
 
-        public Builder from(Transition transition) {
-            from = transition;
-            return this;
-        }
-
-        public Builder to(Place place) {
-            to = place;
-            return this;
-        }
-
-        public Builder to(Transition transition) {
-            to = transition;
+        public Builder to(PetriNetVertex vertex) {
+            to = vertex;
             return this;
         }
 
