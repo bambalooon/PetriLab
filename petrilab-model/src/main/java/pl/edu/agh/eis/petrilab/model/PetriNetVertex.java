@@ -7,4 +7,5 @@ package pl.edu.agh.eis.petrilab.model;
  * Created by BamBalooon
  */
 public interface PetriNetVertex {
+    String getName();
 }

@@ -9,7 +9,6 @@ import java.util.Collection;
  * Created by BamBalooon
  */
 public interface State extends PetriNetVertex {
-    String getName();
     int getMarking();
     void decreaseMarking(int difference);
     void increaseMarking(int difference);

@@ -9,7 +9,6 @@ import java.util.Collection;
  * Created by BamBalooon
  */
 public interface Transition extends PetriNetVertex {
-    String getName();
     Collection<StateToTransitionArc> getInArcs();
     Collection<TransitionToStateArc> getOutArcs();
 }
