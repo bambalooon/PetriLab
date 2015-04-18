@@ -5,12 +5,12 @@ import com.google.common.collect.Sets;
 import java.util.Collection;
 
 /**
- * Name: PTTransition
- * Description: PTTransition
+ * Name: GeneralTransition
+ * Description: GeneralTransition
  * Date: 2015-04-18
  * Created by BamBalooon
  */
-public class PTTransition implements Transition {
+public class GeneralTransition implements Transition {
     private final Collection<ArcToTransition> inArcs = Sets.newHashSet();
     private final Collection<ArcToState> outArcs = Sets.newHashSet();
     private String name;
