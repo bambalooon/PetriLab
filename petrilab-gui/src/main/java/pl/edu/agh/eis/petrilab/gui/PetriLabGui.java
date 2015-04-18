@@ -4,6 +4,8 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import pl.edu.agh.eis.petrilab.gui.jung.PetriNet;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
 import pl.edu.agh.eis.petrilab.model.Arc;
+import pl.edu.agh.eis.petrilab.model.GeneralTransition;
+import pl.edu.agh.eis.petrilab.model.PTPlace;
 import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
 
 import javax.swing.*;
@@ -32,22 +34,37 @@ public class PetriLabGui extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
         setLayout(new BorderLayout());
-        getContentPane().add(graphViewer, BorderLayout.CENTER);
-        getContentPane().add(menu, BorderLayout.EAST);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphViewer, menu);
+        splitPane.setResizeWeight(1);
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setContinuousLayout(true);
+        getContentPane().add(splitPane, BorderLayout.CENTER);
         pack();
     }
 
-    private class Menu extends JToolBar implements ActionListener {
-        private static final String PETRI_LAB_TOOLBAR = "PetriLab Toolbar";
+    private class Menu extends JPanel implements ActionListener {
         private static final String ADD_PLACE_CMD = "ADD_PLACE_CMD";
+        private static final String ADD_PLACE_DONE_CMD = "ADD_PLACE_DONE_CMD";
+        private static final String ADD_PLACE_CANCEL_CMD = "ADD_PLACE_CANCEL_CMD";
         private static final String ADD_TRANSITION_CMD = "ADD_TRANSITION_CMD";
+        private static final String ADD_TRANSITION_DONE_CMD = "ADD_TRANSITION_DONE_CMD";
+        private static final String ADD_TRANSITION_CANCEL_CMD = "ADD_TRANSITION_CANCEL_CMD";
+        private static final int TEXT_FIELD_WIDTH = 50;
+        private static final int TEXT_FIELD_HEIGHT = 20;
+        private JPanel placeOptionsPanel;
+        private JPanel transitionOptionsPanel;
 
         public Menu() {
-            super(PETRI_LAB_TOOLBAR, JToolBar.VERTICAL);
             JButton addPlaceBtn = generateButton(ADD_PLACE_CMD, "P");
+            placeOptionsPanel = generateOptionsPanel(ADD_PLACE_DONE_CMD, ADD_PLACE_CANCEL_CMD);
+            placeOptionsPanel.setVisible(false);
             JButton addTransitionBtn = generateButton(ADD_TRANSITION_CMD, "T");
+            transitionOptionsPanel = generateOptionsPanel(ADD_TRANSITION_DONE_CMD, ADD_TRANSITION_CANCEL_CMD);
+            transitionOptionsPanel.setVisible(false);
             add(addPlaceBtn);
+            add(placeOptionsPanel);
             add(addTransitionBtn);
+            add(transitionOptionsPanel);
         }
 
         private JButton generateButton(String actionCmd, String text) {
@@ -58,9 +75,62 @@ public class PetriLabGui extends JFrame {
             return button;
         }
 
+        private JPanel generateOptionsPanel(String acceptAction, String cancelAction) {
+            JPanel panel = new JPanel();
+            JTextField nameField = new JTextField();
+            nameField.setPreferredSize(new Dimension(TEXT_FIELD_WIDTH, TEXT_FIELD_HEIGHT));
+            JButton acceptBtn = new JButton();
+            acceptBtn.addActionListener(this);
+            acceptBtn.setActionCommand(acceptAction);
+            acceptBtn.setText("ok");
+            JButton cancelBtn = new JButton();
+            cancelBtn.addActionListener(this);
+            cancelBtn.setActionCommand(cancelAction);
+            cancelBtn.setText("x");
+            panel.add(nameField);
+            panel.add(acceptBtn);
+            panel.add(cancelBtn);
+            return panel;
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            switch (e.getActionCommand()) {
+                case ADD_PLACE_CMD:
+                    placeOptionsPanel.setVisible(true);
+                    revalidate();
+                    break;
+                case ADD_PLACE_DONE_CMD:
+                    PTPlace newPlace = new PTPlace.Builder()
+                            .withName(((JTextField) placeOptionsPanel.getComponent(0)).getText())
+                            .build();
+                    petriNet.addVertex(newPlace);
+                    placeOptionsPanel.setVisible(false);
+                    PetriLabGui.this.revalidate();
+                    PetriLabGui.this.repaint();
+                    break;
+                case ADD_PLACE_CANCEL_CMD:
+                    placeOptionsPanel.setVisible(false);
+                    revalidate();
+                    break;
+                case ADD_TRANSITION_CMD:
+                    transitionOptionsPanel.setVisible(true);
+                    revalidate();
+                    break;
+                case ADD_TRANSITION_DONE_CMD:
+                    transitionOptionsPanel.setVisible(false);
+                    GeneralTransition newTransition = new GeneralTransition.Builder()
+                            .withName(((JTextField) transitionOptionsPanel.getComponent(0)).getText())
+                            .build();
+                    petriNet.addVertex(newTransition);
+                    PetriLabGui.this.revalidate();
+                    PetriLabGui.this.repaint();
+                    break;
+                case ADD_TRANSITION_CANCEL_CMD:
+                    transitionOptionsPanel.setVisible(false);
+                    revalidate();
+                    break;
+            }
         }
     }
 }
