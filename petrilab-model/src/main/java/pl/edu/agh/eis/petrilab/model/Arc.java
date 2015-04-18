@@ -8,7 +8,7 @@ import com.google.common.base.Preconditions;
  * Date: 2015-04-18
  * Created by BamBalooon
  */
-public abstract class Arc implements PetriNetEdge {
+public abstract class Arc {
     private static final int DEFAULT_WEIGHT = 1;
     private State state;
     private Transition transition;
