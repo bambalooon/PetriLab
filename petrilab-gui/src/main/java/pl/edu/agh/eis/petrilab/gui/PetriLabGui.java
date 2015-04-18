@@ -1,6 +1,9 @@
 package pl.edu.agh.eis.petrilab.gui;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.GraphMouseListener;
+import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import pl.edu.agh.eis.petrilab.gui.jung.PetriNet;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
 import pl.edu.agh.eis.petrilab.model.Arc;
@@ -12,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 
 /**
  * Name: PetriLabGui
@@ -23,11 +27,15 @@ public class PetriLabGui extends JFrame {
     private static final int MIN_WIDTH = 600;
     private static final int MIN_HEIGHT = 600;
     private PetriNet petriNet;
+    private GraphMouseBehaviourSwitcher graphMouseBehaviourSwitcher;
 
     public PetriLabGui() {
         super(PetriLabApplication.TITLE);
-        this.petriNet = new PetriNet();
-        setUpFrame(VisualizationViewerGenerator.PETRI_NET.generateVisualizationViewer(petriNet.getGraph()), new Menu());
+        petriNet = new PetriNet();
+        VisualizationViewer<PetriNetVertex, Arc> graphViewer = VisualizationViewerGenerator.PETRI_NET
+                .generateVisualizationViewer(petriNet.getGraph());
+        graphMouseBehaviourSwitcher = new GraphMouseBehaviourSwitcher(graphViewer);
+        setUpFrame(graphViewer, new Menu());
     }
 
     private void setUpFrame(VisualizationViewer<PetriNetVertex, Arc> graphViewer, JComponent menu) {
@@ -49,10 +57,13 @@ public class PetriLabGui extends JFrame {
         private static final String ADD_TRANSITION_CMD = "ADD_TRANSITION_CMD";
         private static final String ADD_TRANSITION_DONE_CMD = "ADD_TRANSITION_DONE_CMD";
         private static final String ADD_TRANSITION_CANCEL_CMD = "ADD_TRANSITION_CANCEL_CMD";
+        private static final String ADD_ARC_CMD = "ADD_ARC_CMD";
+        private static final String ADD_ARC_CANCEL_CMD = "ADD_ARC_CANCEL_CMD";
         private static final int TEXT_FIELD_WIDTH = 50;
         private static final int TEXT_FIELD_HEIGHT = 20;
         private JPanel placeOptionsPanel;
         private JPanel transitionOptionsPanel;
+        private JButton addArcButton;
 
         public Menu() {
             JButton addPlaceBtn = generateButton(ADD_PLACE_CMD, "P");
@@ -61,10 +72,12 @@ public class PetriLabGui extends JFrame {
             JButton addTransitionBtn = generateButton(ADD_TRANSITION_CMD, "T");
             transitionOptionsPanel = generateOptionsPanel(ADD_TRANSITION_DONE_CMD, ADD_TRANSITION_CANCEL_CMD);
             transitionOptionsPanel.setVisible(false);
+            addArcButton = generateButton(ADD_ARC_CMD, "A");
             add(addPlaceBtn);
             add(placeOptionsPanel);
             add(addTransitionBtn);
             add(transitionOptionsPanel);
+            add(addArcButton);
         }
 
         private JButton generateButton(String actionCmd, String text) {
@@ -130,6 +143,101 @@ public class PetriLabGui extends JFrame {
                     transitionOptionsPanel.setVisible(false);
                     revalidate();
                     break;
+                case ADD_ARC_CMD:
+                    addArcButton.setText("X");
+                    addArcButton.setActionCommand(ADD_ARC_CANCEL_CMD);
+                    graphMouseBehaviourSwitcher.startArcCreation();
+                    break;
+                case ADD_ARC_CANCEL_CMD:
+                    addArcButton.setText("A");
+                    addArcButton.setActionCommand(ADD_ARC_CMD);
+                    graphMouseBehaviourSwitcher.endArcCreation();
+            }
+        }
+    }
+
+    private class GraphMouseBehaviourSwitcher {
+        private final VisualizationViewer<PetriNetVertex, Arc> graphViewer;
+        private final DefaultModalGraphMouse<PetriNetVertex, Arc> graphMouse;
+        private final ArcCreationListener arcCreationListener;
+
+        public GraphMouseBehaviourSwitcher(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
+            this.graphViewer = graphViewer;
+
+            this.graphMouse = new DefaultModalGraphMouse<>();
+            graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
+            graphViewer.setGraphMouse(graphMouse);
+
+            this.arcCreationListener = new ArcCreationListener();
+            graphViewer.addGraphMouseListener(arcCreationListener);
+        }
+
+        public void startArcCreation() {
+            graphViewer.setGraphMouse(null);
+            arcCreationListener.enable();
+        }
+
+        public void endArcCreation() {
+            graphViewer.setGraphMouse(graphMouse);
+            arcCreationListener.disable();
+        }
+
+        private class ArcCreationListener implements GraphMouseListener<PetriNetVertex> {
+            private boolean enabled;
+            private PetriNetVertex arcFromVertex;
+
+            public void enable() {
+                enabled = true;
+            }
+
+            public void disable() {
+                enabled = false;
+                arcFromVertex = null;
+            }
+
+            @Override
+            public void graphClicked(PetriNetVertex vertex, MouseEvent me) {
+                //do nothing
+            }
+
+            @Override
+            public void graphPressed(PetriNetVertex vertex, MouseEvent me) {
+                if (enabled) {
+                    if (arcFromVertex == null) {
+                        arcFromVertex = vertex;
+                    } else {
+                        try {
+                            Arc arc = new Arc.Builder().from(arcFromVertex).to(vertex).build();
+                            if (arcFromVertex instanceof PTPlace) {
+                                new PTPlace.Builder().fromPlace((PTPlace) arcFromVertex)
+                                        .withArc(arc)
+                                        .modify();
+                                new GeneralTransition.Builder().fromTransition((GeneralTransition) vertex)
+                                        .withArc(arc)
+                                        .modify();
+                            } else {
+                                new PTPlace.Builder().fromPlace((PTPlace) vertex)
+                                        .withArc(arc)
+                                        .modify();
+                                new GeneralTransition.Builder().fromTransition((GeneralTransition) arcFromVertex)
+                                        .withArc(arc)
+                                        .modify();
+                            }
+                            petriNet.addEdge(arc);
+                            PetriLabGui.this.revalidate();
+                            PetriLabGui.this.repaint();
+                        } catch (IllegalStateException e) {
+                            JOptionPane.showMessageDialog(null, "Nie można łączyć miejsc i przejść między sobą.");
+                        } finally {
+                            arcFromVertex = null;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void graphReleased(PetriNetVertex vertex, MouseEvent me) {
+                //do nothing
             }
         }
     }
