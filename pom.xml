@@ -25,6 +25,7 @@
         <fest-assert.version>1.4</fest-assert.version>
 
         <maven-compiler.version>3.1</maven-compiler.version>
+        <exec-maven.version>1.4.0</exec-maven.version>
         <jdk.version>1.7</jdk.version>
     </properties>
 
@@ -91,6 +92,4 @@
             </plugin>
         </plugins>
     </build>
-
-
 </project>
