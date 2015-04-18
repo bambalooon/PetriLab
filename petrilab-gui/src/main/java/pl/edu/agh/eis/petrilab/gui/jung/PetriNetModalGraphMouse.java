@@ -28,6 +28,9 @@ public class PetriNetModalGraphMouse extends AbstractModalGraphMouse {
         scalingPlugin = new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, in, out);
         rotatingPlugin = new RotatingGraphMousePlugin();
         shearingPlugin = new ShearingGraphMousePlugin();
+
+        add(scalingPlugin);
+        setMode(Mode.EDITING);
     }
 
     public void setMode(Mode mode) {

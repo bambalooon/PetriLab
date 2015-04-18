@@ -47,7 +47,6 @@ public interface VisualizationViewerGenerator<V, E> {
             visualizationViewer.getRenderer().setVertexRenderer(new PetriNetVertexRenderer());
 
             PetriNetModalGraphMouse graphMouse = new PetriNetModalGraphMouse(petriNet);
-            graphMouse.setMode(ModalGraphMouse.Mode.EDITING);
             visualizationViewer.setGraphMouse(graphMouse);
             visualizationViewer.addKeyListener(graphMouse.getModeKeyListener());
 
