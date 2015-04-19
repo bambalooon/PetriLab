@@ -3,6 +3,7 @@ package pl.edu.agh.eis.petrilab.gui.jung;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
 import org.apache.commons.collections15.Transformer;
 import pl.edu.agh.eis.petrilab.gui.jung.transform.VertexFillPaintTransformer;
 import pl.edu.agh.eis.petrilab.gui.jung.transform.VertexShapeTransformer;
@@ -21,14 +22,14 @@ public interface VisualizationViewerGenerator<V, E> {
     int VIEWER_WIDTH = 400;
     int VIEWER_HEIGHT = 400;
     VisualizationViewer<V, E> generateVisualizationViewer(DirectedSparseGraph<PetriNetVertex, Arc> graph,
-                                                          VisualizationViewer.GraphMouse graphMouse);
+                                                          AbstractModalGraphMouse graphMouse);
 
     VisualizationViewerGenerator<PetriNetVertex, Arc> PETRI_NET =
             new VisualizationViewerGenerator<PetriNetVertex, Arc>() {
 
         @Override
         public VisualizationViewer<PetriNetVertex, Arc> generateVisualizationViewer(
-                DirectedSparseGraph<PetriNetVertex, Arc> graph, VisualizationViewer.GraphMouse graphMouse) {
+                DirectedSparseGraph<PetriNetVertex, Arc> graph, AbstractModalGraphMouse graphMouse) {
 
             VisualizationViewer<PetriNetVertex, Arc> visualizationViewer = new VisualizationViewer<>
                     (new CircleLayout<>(graph), new Dimension(VIEWER_WIDTH, VIEWER_HEIGHT));
@@ -51,6 +52,7 @@ public interface VisualizationViewerGenerator<V, E> {
             visualizationViewer.getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer());
 
             visualizationViewer.setGraphMouse(graphMouse);
+            visualizationViewer.addKeyListener(graphMouse.getModeKeyListener());
 
             return visualizationViewer;
         }
