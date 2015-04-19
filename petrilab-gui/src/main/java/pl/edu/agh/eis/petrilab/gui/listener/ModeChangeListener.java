@@ -24,6 +24,7 @@ public class ModeChangeListener implements ItemListener {
         if (e.getStateChange() == ItemEvent.DESELECTED && e.getItem() == ModalGraphMouse.Mode.PICKING) {
             menu.cancelPlace();
             menu.cancelTransition();
+            menu.cancelArc();
         }
     }
 }
