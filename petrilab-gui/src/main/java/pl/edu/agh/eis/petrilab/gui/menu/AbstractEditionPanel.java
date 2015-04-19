@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
  * Created by BamBalooon
  */
 public abstract class AbstractEditionPanel<T> extends JPanel implements ActionListener {
-    protected static final int BUTTON_WIDTH = 50;
+    protected static final int BUTTON_WIDTH = 80;
     protected static final int BUTTON_HEIGHT = 20;
     protected static final int TEXT_FIELD_WIDTH = 50;
     protected static final int TEXT_FIELD_HEIGHT = 20;
@@ -30,6 +30,7 @@ public abstract class AbstractEditionPanel<T> extends JPanel implements ActionLi
     private T item;
 
     protected AbstractEditionPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setVisible(false);
         this.graphViewer = graphViewer;
         acceptButton = new JButton();
