@@ -1,6 +1,7 @@
 package pl.edu.agh.eis.petrilab.model;
 
 import com.google.common.collect.Sets;
+import org.apache.commons.collections15.collection.UnmodifiableCollection;
 
 import java.util.Collection;
 
@@ -36,4 +37,17 @@ public class PetriNet {
         arcs.add(arc);
     }
 
+    //TODO: add methods to remove objects
+
+    public Collection<Place> getPlaces() {
+        return UnmodifiableCollection.decorate(places);
+    }
+
+    public Collection<Transition> getTransitions() {
+        return UnmodifiableCollection.decorate(transitions);
+    }
+
+    public Collection<Arc> getArcs() {
+        return UnmodifiableCollection.decorate(arcs);
+    }
 }
