@@ -5,6 +5,7 @@ import edu.uci.ics.jung.visualization.picking.PickedState;
 import pl.edu.agh.eis.petrilab.gui.jung.PetriNetManager;
 import pl.edu.agh.eis.petrilab.gui.jung.PetriNetModalGraphMouse;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
+import pl.edu.agh.eis.petrilab.gui.listener.EdgePickListener;
 import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
 import pl.edu.agh.eis.petrilab.gui.listener.VertexPickListener;
 import pl.edu.agh.eis.petrilab.gui.menu.PetriNetEditionMenu;
@@ -33,11 +34,14 @@ public class PetriLabGui extends JFrame {
         VisualizationViewer<PetriNetVertex, Arc> graphViewer = VisualizationViewerGenerator.PETRI_NET
                 .generateVisualizationViewer(petriNetManager.getGraph(), graphMouse);
 
-        final PetriNetEditionMenu menu = new PetriNetEditionMenu(graphViewer);
+        PetriNetEditionMenu menu = new PetriNetEditionMenu(graphViewer);
         graphMouse.addItemListener(new ModeChangeListener(menu));
 
-        final PickedState<PetriNetVertex> pickedVertexState = graphViewer.getPickedVertexState();
+        PickedState<PetriNetVertex> pickedVertexState = graphViewer.getPickedVertexState();
         pickedVertexState.addItemListener(new VertexPickListener(pickedVertexState, menu));
+
+        PickedState<Arc> pickedArcState = graphViewer.getPickedEdgeState();
+        pickedArcState.addItemListener(new EdgePickListener(pickedArcState, menu));
 
         setUpFrame(graphViewer, menu);
     }
