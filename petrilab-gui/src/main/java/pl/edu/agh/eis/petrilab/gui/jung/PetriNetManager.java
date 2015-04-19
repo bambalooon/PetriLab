@@ -1,10 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui.jung;
 
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
-import pl.edu.agh.eis.petrilab.model.Arc;
-import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
-import pl.edu.agh.eis.petrilab.model.PlaceToTransitionArc;
-import pl.edu.agh.eis.petrilab.model.TransitionToPlaceArc;
+import pl.edu.agh.eis.petrilab.model.*;
 
 /**
  * Name: JungPetriNet
@@ -15,12 +12,29 @@ import pl.edu.agh.eis.petrilab.model.TransitionToPlaceArc;
 public class PetriNetManager {
     private DirectedSparseGraph<PetriNetVertex, Arc> graph =
             new DirectedSparseGraph<>();
+    private PetriNet petriNet;
+
+    public PetriNetManager() {
+        this(new PetriNet());
+    }
+
+    public PetriNetManager(PetriNet petriNet) {
+        this.petriNet = petriNet;
+        //TODO: create graph from provided Petri net
+    }
 
     public DirectedSparseGraph<PetriNetVertex, Arc> getGraph() {
         return graph;
     }
 
     public void addVertex(PetriNetVertex vertex) {
+        if (vertex instanceof Place) {
+            petriNet.addPlace((Place) vertex);
+        } else if (vertex instanceof Transition) {
+            petriNet.addTransition((Transition) vertex);
+        } else {
+            throw new IllegalArgumentException("Vertex of this type isn't supported: " + vertex);
+        }
         graph.addVertex(vertex);
     }
 
@@ -29,6 +43,7 @@ public class PetriNetManager {
     }
 
     public void addEdge(Arc arc) {
+        petriNet.addArc(arc);
         if (arc instanceof TransitionToPlaceArc) {
             graph.addEdge(arc, arc.getTransition(), arc.getPlace());
         } else if (arc instanceof PlaceToTransitionArc) {
@@ -44,6 +59,5 @@ public class PetriNetManager {
         } else {
             throw new IllegalArgumentException("Provided arc is of unsupported type: " + arc);
         }
-
     }
 }
