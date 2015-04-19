@@ -15,17 +15,12 @@ import java.awt.*;
  * Created by BamBalooon
  */
 public class GeneralTransitionEditionPanel extends AbstractEditionPanel<GeneralTransition> {
-    private static final String ACCEPT_BUTTON_LABEL = "ok";
     private final JTextField nameField;
 
     public GeneralTransitionEditionPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
         super(graphViewer);
         nameField = new JTextField();
         nameField.setPreferredSize(new Dimension(TEXT_FIELD_WIDTH, TEXT_FIELD_HEIGHT));
-        JButton acceptButton = new JButton();
-        acceptButton.setActionCommand(ACCEPT_BUTTON_CMD);
-        acceptButton.addActionListener(this);
-        acceptButton.setText(ACCEPT_BUTTON_LABEL);
         add(nameField);
         add(acceptButton);
     }

@@ -5,6 +5,7 @@ import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,17 +16,27 @@ import java.awt.event.ActionListener;
  * Created by BamBalooon
  */
 public abstract class AbstractEditionPanel<T> extends JPanel implements ActionListener {
+    protected static final int BUTTON_WIDTH = 50;
+    protected static final int BUTTON_HEIGHT = 20;
     protected static final int TEXT_FIELD_WIDTH = 50;
     protected static final int TEXT_FIELD_HEIGHT = 20;
     protected static final int SPINNER_WIDTH = 40;
     protected static final int SPINNER_HEIGHT = 20;
-    protected static final String ACCEPT_BUTTON_CMD = "ACCEPT_BUTTON_CMD";
+    private static final String ACCEPT_BUTTON_CMD = "ACCEPT_BUTTON_CMD";
+    private static final String ACCEPT_BUTTON_LABEL = "ok";
+
+    protected JButton acceptButton;
     private final VisualizationViewer<PetriNetVertex, Arc> graphViewer;
     private T item;
 
     protected AbstractEditionPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
         setVisible(false);
         this.graphViewer = graphViewer;
+        acceptButton = new JButton();
+        acceptButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        acceptButton.setActionCommand(ACCEPT_BUTTON_CMD);
+        acceptButton.addActionListener(this);
+        acceptButton.setText(ACCEPT_BUTTON_LABEL);
     }
 
     public void edit(T item) {

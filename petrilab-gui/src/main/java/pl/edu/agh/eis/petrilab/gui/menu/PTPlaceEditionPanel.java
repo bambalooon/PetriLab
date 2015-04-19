@@ -16,7 +16,6 @@ import java.awt.*;
  * Created by BamBalooon
  */
 public class PTPlaceEditionPanel extends AbstractEditionPanel<PTPlace> {
-    private static final String ACCEPT_BUTTON_LABEL = "ok";
     private final JTextField nameField;
     private final JSpinner markingSpinner;
     private final JSpinner capacitySpinner;
@@ -39,10 +38,6 @@ public class PTPlaceEditionPanel extends AbstractEditionPanel<PTPlace> {
                 1);
         capacitySpinner = new JSpinner(capacityModel);
         capacitySpinner.setPreferredSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
-        JButton acceptButton = new JButton();
-        acceptButton.setActionCommand(ACCEPT_BUTTON_CMD);
-        acceptButton.addActionListener(this);
-        acceptButton.setText(ACCEPT_BUTTON_LABEL);
         add(nameField);
         add(markingSpinner);
         add(capacitySpinner);

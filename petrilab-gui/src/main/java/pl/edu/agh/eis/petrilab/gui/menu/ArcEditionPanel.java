@@ -14,7 +14,6 @@ import java.awt.*;
  * Created by BamBalooon
  */
 public class ArcEditionPanel extends AbstractEditionPanel<Arc> {
-    private static final String ACCEPT_BUTTON_LABEL = "ok";
     private final JSpinner weightSpinner;
 
     public ArcEditionPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
@@ -26,10 +25,6 @@ public class ArcEditionPanel extends AbstractEditionPanel<Arc> {
                 1);
         weightSpinner = new JSpinner(weightModel);
         weightSpinner.setPreferredSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
-        JButton acceptButton = new JButton();
-        acceptButton.setActionCommand(ACCEPT_BUTTON_CMD);
-        acceptButton.addActionListener(this);
-        acceptButton.setText(ACCEPT_BUTTON_LABEL);
         add(weightSpinner);
         add(acceptButton);
     }
