@@ -15,7 +15,12 @@
         <dependency>
             <groupId>pl.edu.agh.eis</groupId>
             <artifactId>petrilab-model</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.edu.agh.eis</groupId>
+            <artifactId>petrilab-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

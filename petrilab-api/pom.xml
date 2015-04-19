@@ -11,5 +11,11 @@
 
     <artifactId>petrilab-api</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>pl.edu.agh.eis</groupId>
+            <artifactId>petrilab-model</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>
