@@ -1,7 +1,10 @@
 package pl.edu.agh.eis.petrilab.gui.jung;
 
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
-import pl.edu.agh.eis.petrilab.model.*;
+import pl.edu.agh.eis.petrilab.model.Arc;
+import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
+import pl.edu.agh.eis.petrilab.model.PlaceToTransitionArc;
+import pl.edu.agh.eis.petrilab.model.TransitionToPlaceArc;
 
 /**
  * Name: JungPetriNet
@@ -27,11 +30,9 @@ public class PetriNetManager {
 
     public void addEdge(Arc arc) {
         if (arc instanceof TransitionToPlaceArc) {
-            TransitionToPlaceArc definedArc = (TransitionToPlaceArc) arc;
-            graph.addEdge(definedArc, definedArc.getStartTransition(), definedArc.getEndState());
+            graph.addEdge(arc, arc.getTransition(), arc.getPlace());
         } else if (arc instanceof PlaceToTransitionArc) {
-            PlaceToTransitionArc definedArc = (PlaceToTransitionArc) arc;
-            graph.addEdge(definedArc, definedArc.getStartState(), definedArc.getEndTransition());
+            graph.addEdge(arc, arc.getPlace(), arc.getTransition());
         } else {
             throw new IllegalArgumentException("Provided arc is of unsupported type: " + arc);
         }

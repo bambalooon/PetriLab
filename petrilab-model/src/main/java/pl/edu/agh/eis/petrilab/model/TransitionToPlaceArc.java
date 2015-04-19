@@ -15,14 +15,6 @@ public class TransitionToPlaceArc extends Arc {
         super(toPlace, fromTransition, weight);
     }
 
-    public Transition getStartTransition() {
-        return getTransition();
-    }
-
-    public Place getEndState() {
-        return getPlace();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

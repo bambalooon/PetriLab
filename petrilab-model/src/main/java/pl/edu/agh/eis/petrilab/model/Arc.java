@@ -33,7 +33,7 @@ public abstract class Arc {
         this.weight = weight;
     }
 
-    protected Place getPlace() {
+    public Place getPlace() {
         return place;
     }
 
@@ -42,7 +42,7 @@ public abstract class Arc {
         this.place = place;
     }
 
-    protected Transition getTransition() {
+    public Transition getTransition() {
         return transition;
     }
 
@@ -83,13 +83,11 @@ public abstract class Arc {
             baseArc = arc;
             weight = arc.getWeight();
             if (arc instanceof PlaceToTransitionArc) {
-                PlaceToTransitionArc definedArc = (PlaceToTransitionArc) arc;
-                from = definedArc.getStartState();
-                to = definedArc.getEndTransition();
+                from = arc.getPlace();
+                to = arc.getTransition();
             } else if (arc instanceof TransitionToPlaceArc) {
-                TransitionToPlaceArc definedArc = (TransitionToPlaceArc) arc;
-                from = definedArc.getStartTransition();
-                to = definedArc.getEndState();
+                from = arc.getTransition();
+                to = arc.getPlace();
             } else {
                 throw new IllegalArgumentException("Provided arc is of unsupported type: " + arc);
             }
