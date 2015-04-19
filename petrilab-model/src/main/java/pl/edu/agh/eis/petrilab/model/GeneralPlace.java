@@ -1,6 +1,7 @@
 package pl.edu.agh.eis.petrilab.model;
 
 import com.google.common.base.Preconditions;
+import org.apache.commons.collections15.collection.UnmodifiableCollection;
 import pl.edu.agh.eis.petrilab.model.util.NameGenerator;
 
 import java.util.Collection;
@@ -58,12 +59,12 @@ public class GeneralPlace implements Place {
 
     @Override
     public Collection<TransitionToPlaceArc> getInArcs() {
-        return inArcs;
+        return UnmodifiableCollection.decorate(inArcs);
     }
 
     @Override
     public Collection<PlaceToTransitionArc> getOutArcs() {
-        return outArcs;
+        return UnmodifiableCollection.decorate(outArcs);
     }
 
     protected void setInArcs(Collection<TransitionToPlaceArc> arcs) {

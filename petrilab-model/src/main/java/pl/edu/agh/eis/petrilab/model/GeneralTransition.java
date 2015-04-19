@@ -2,6 +2,7 @@ package pl.edu.agh.eis.petrilab.model;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
+import org.apache.commons.collections15.collection.UnmodifiableCollection;
 import pl.edu.agh.eis.petrilab.model.util.NameGenerator;
 
 import java.util.Collection;
@@ -38,12 +39,12 @@ public class GeneralTransition implements Transition {
 
     @Override
     public Collection<PlaceToTransitionArc> getInArcs() {
-        return inArcs;
+        return UnmodifiableCollection.decorate(inArcs);
     }
 
     @Override
     public Collection<TransitionToPlaceArc> getOutArcs() {
-        return outArcs;
+        return UnmodifiableCollection.decorate(outArcs);
     }
 
     protected void setInArcs(Collection<PlaceToTransitionArc> arcs) {
