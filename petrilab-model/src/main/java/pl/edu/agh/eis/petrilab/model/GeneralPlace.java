@@ -46,6 +46,7 @@ public class GeneralPlace implements Place {
     }
 
     protected void setMarking(int marking) {
+        Preconditions.checkArgument(marking >= MARKING_MIN, "Place marking has to be greater or equal to 0.");
         this.marking = marking;
     }
 
