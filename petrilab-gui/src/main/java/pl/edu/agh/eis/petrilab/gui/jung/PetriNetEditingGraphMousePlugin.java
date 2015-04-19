@@ -33,9 +33,9 @@ public class PetriNetEditingGraphMousePlugin extends EditingGraphMousePlugin<Pet
 
     private PetriNetVertex createVertex(MouseEvent e) {
         if (e.isControlDown()) {
-            return new GeneralTransition.Builder().withName("").build();
+            return new GeneralTransition.Builder().build();
         }
-        return new PTPlace.Builder().withName("").build();
+        return new PTPlace.Builder().build();
     }
 
     private Arc createArc(PetriNetVertex startVertex, PetriNetVertex endVertex) {
