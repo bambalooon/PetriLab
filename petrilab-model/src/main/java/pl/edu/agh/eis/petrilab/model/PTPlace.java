@@ -75,7 +75,9 @@ public class PTPlace extends GeneralPlace {
         }
 
         public PTPlace build() {
-            PTPlace place = new PTPlace(name);
+            PTPlace place = name == null
+                    ? new PTPlace()
+                    : new PTPlace(name);
             if (marking != null) {
                 place.setMarking(marking);
             }

@@ -87,7 +87,9 @@ public class GeneralTransition implements Transition {
         }
 
         public GeneralTransition build() {
-            GeneralTransition transition = new GeneralTransition(name);
+            GeneralTransition transition = name == null
+                    ? new GeneralTransition()
+                    : new GeneralTransition(name);
             transition.setInArcs(inArcs);
             transition.setOutArcs(outArcs);
             return transition;
