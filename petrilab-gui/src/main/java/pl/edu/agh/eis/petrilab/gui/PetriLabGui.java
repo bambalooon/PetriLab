@@ -32,11 +32,12 @@ public class PetriLabGui extends JFrame {
         VisualizationViewer<PetriNetVertex, Arc> graphViewer = VisualizationViewerGenerator.PETRI_NET
                 .generateVisualizationViewer(petriNetManager.getGraph(), graphMouse);
 
-        PetriNetEditionMenu menu = new PetriNetEditionMenu(graphViewer);
-        graphMouse.addItemListener(new ModeChangeListener(menu));
-
         PickedState<PetriNetVertex> vertexPickedState = graphViewer.getPickedVertexState();
         PickedState<Arc> arcPickedState = graphViewer.getPickedEdgeState();
+
+        graphMouse.addItemListener(new ModeChangeListener(vertexPickedState, arcPickedState));
+
+        PetriNetEditionMenu menu = new PetriNetEditionMenu(graphViewer);
 
         PickListener pickListener = new PickListener(vertexPickedState, arcPickedState, menu);
         vertexPickedState.addItemListener(pickListener);

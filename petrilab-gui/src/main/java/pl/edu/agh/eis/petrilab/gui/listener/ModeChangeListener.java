@@ -1,7 +1,9 @@
 package pl.edu.agh.eis.petrilab.gui.listener;
 
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
-import pl.edu.agh.eis.petrilab.gui.menu.PetriNetEditionMenu;
+import edu.uci.ics.jung.visualization.picking.PickedState;
+import pl.edu.agh.eis.petrilab.model.Arc;
+import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -13,18 +15,19 @@ import java.awt.event.ItemListener;
  * Created by BamBalooon
  */
 public class ModeChangeListener implements ItemListener {
-    private final PetriNetEditionMenu menu;
+    private final PickedState<PetriNetVertex> vertexPickedState;
+    private final PickedState<Arc> arcPickedState;
 
-    public ModeChangeListener(PetriNetEditionMenu menu) {
-        this.menu = menu;
+    public ModeChangeListener(PickedState<PetriNetVertex> vertexPickedState, PickedState<Arc> arcPickedState) {
+        this.vertexPickedState = vertexPickedState;
+        this.arcPickedState = arcPickedState;
     }
 
     @Override
     public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.DESELECTED && e.getItem() == ModalGraphMouse.Mode.PICKING) {
-            menu.cancelPlace();
-            menu.cancelTransition();
-            menu.cancelArc();
+            vertexPickedState.clear();
+            arcPickedState.clear();
         }
     }
 }
