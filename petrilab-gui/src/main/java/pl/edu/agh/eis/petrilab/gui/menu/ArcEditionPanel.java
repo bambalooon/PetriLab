@@ -5,6 +5,7 @@ import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -30,6 +31,8 @@ public class ArcEditionPanel extends JPanel implements ActionListener {
                 Arc.WEIGHT_MAX,
                 1);
         weightSpinner = new JSpinner(weightModel);
+        weightSpinner.setPreferredSize(new Dimension(
+                PetriNetEditionMenu.SPINNER_WIDTH, PetriNetEditionMenu.SPINNER_HEIGHT));
         JButton acceptButton = new JButton();
         acceptButton.setActionCommand(ACCEPT_BUTTON_CMD);
         acceptButton.addActionListener(this);

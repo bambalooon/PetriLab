@@ -17,6 +17,8 @@ import javax.swing.*;
 public class PetriNetEditionMenu extends JPanel {
     public static final int TEXT_FIELD_WIDTH = 50;
     public static final int TEXT_FIELD_HEIGHT = 20;
+    public static final int SPINNER_WIDTH = 40;
+    public static final int SPINNER_HEIGHT = 20;
     private final PTPlaceEditionPanel placeEditionPanel;
     private final GeneralTransitionEditionPanel transitionEditionPanel;
     private final ArcEditionPanel arcEditionPanel;
