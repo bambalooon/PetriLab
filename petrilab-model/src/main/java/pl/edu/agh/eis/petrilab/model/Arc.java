@@ -53,6 +53,7 @@ public abstract class Arc {
         this.transition = transition;
     }
 
+    //TODO: remove equals/hashcode methods? this implementation doesn't allow for multigraph
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,7 +61,6 @@ public abstract class Arc {
 
         Arc arc = (Arc) o;
 
-        if (weight != arc.weight) return false;
         if (!place.equals(arc.place)) return false;
         if (!transition.equals(arc.transition)) return false;
 
@@ -71,7 +71,6 @@ public abstract class Arc {
     public int hashCode() {
         int result = place.hashCode();
         result = 31 * result + transition.hashCode();
-        result = 31 * result + weight;
         return result;
     }
 
@@ -125,9 +124,7 @@ public abstract class Arc {
         }
 
         public Arc modify() {
-            if (weight != null) {
-                baseArc.setWeight(weight);
-            }
+            baseArc.setWeight(weight);
             if (from instanceof Place && to instanceof Transition) {
                 baseArc.setPlace((Place) from);
                 baseArc.setTransition((Transition) to);
