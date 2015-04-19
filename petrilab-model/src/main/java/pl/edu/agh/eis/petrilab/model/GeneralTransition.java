@@ -2,6 +2,7 @@ package pl.edu.agh.eis.petrilab.model;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
+import pl.edu.agh.eis.petrilab.model.util.NameGenerator;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +20,10 @@ public class GeneralTransition implements Transition {
 
     public GeneralTransition(String name) {
         setName(name);
+    }
+
+    public GeneralTransition() {
+        this(NameGenerator.TRANSITION.getName());
     }
 
     @Override

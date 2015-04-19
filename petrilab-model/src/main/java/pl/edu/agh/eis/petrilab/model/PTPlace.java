@@ -18,6 +18,9 @@ public class PTPlace extends GeneralPlace {
         super(name);
     }
 
+    public PTPlace() {
+    }
+
     public int getCapacity() {
         return capacity;
     }

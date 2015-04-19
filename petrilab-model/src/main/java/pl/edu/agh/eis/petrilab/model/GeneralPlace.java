@@ -1,6 +1,7 @@
 package pl.edu.agh.eis.petrilab.model;
 
 import com.google.common.base.Preconditions;
+import pl.edu.agh.eis.petrilab.model.util.NameGenerator;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +20,10 @@ public class GeneralPlace implements Place {
 
     public GeneralPlace(String name) {
         setName(name);
+    }
+
+    public GeneralPlace() {
+        this(NameGenerator.PLACE.getName());
     }
 
     @Override
