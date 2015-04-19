@@ -3,6 +3,8 @@ package pl.edu.agh.eis.petrilab.gui.jung;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import org.apache.commons.collections15.Transformer;
+import pl.edu.agh.eis.petrilab.gui.jung.transform.VertexFillPaintTransformer;
+import pl.edu.agh.eis.petrilab.gui.jung.transform.VertexShapeTransformer;
 import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
 
@@ -43,7 +45,8 @@ public interface VisualizationViewerGenerator<V, E> {
                 }
             });
 
-            visualizationViewer.getRenderer().setVertexRenderer(new PetriNetVertexRenderer());
+            visualizationViewer.getRenderContext().setVertexFillPaintTransformer(new VertexFillPaintTransformer());
+            visualizationViewer.getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer());
 
             PetriNetModalGraphMouse graphMouse = new PetriNetModalGraphMouse(petriNetManager);
             visualizationViewer.setGraphMouse(graphMouse);
