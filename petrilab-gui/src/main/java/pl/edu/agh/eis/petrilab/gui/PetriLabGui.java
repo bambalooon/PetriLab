@@ -5,9 +5,8 @@ import edu.uci.ics.jung.visualization.picking.PickedState;
 import pl.edu.agh.eis.petrilab.gui.jung.PetriNetManager;
 import pl.edu.agh.eis.petrilab.gui.jung.PetriNetModalGraphMouse;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
-import pl.edu.agh.eis.petrilab.gui.listener.EdgePickListener;
 import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
-import pl.edu.agh.eis.petrilab.gui.listener.VertexPickListener;
+import pl.edu.agh.eis.petrilab.gui.listener.PickListener;
 import pl.edu.agh.eis.petrilab.gui.menu.PetriNetEditionMenu;
 import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
@@ -24,11 +23,10 @@ import java.awt.*;
 public class PetriLabGui extends JFrame {
     private static final int MIN_WIDTH = 600;
     private static final int MIN_HEIGHT = 600;
-    private PetriNetManager petriNetManager;
 
     public PetriLabGui() {
         super(PetriLabApplication.TITLE);
-        petriNetManager = new PetriNetManager();
+        PetriNetManager petriNetManager = new PetriNetManager();
 
         PetriNetModalGraphMouse graphMouse = new PetriNetModalGraphMouse(petriNetManager);
         VisualizationViewer<PetriNetVertex, Arc> graphViewer = VisualizationViewerGenerator.PETRI_NET
@@ -37,11 +35,12 @@ public class PetriLabGui extends JFrame {
         PetriNetEditionMenu menu = new PetriNetEditionMenu(graphViewer);
         graphMouse.addItemListener(new ModeChangeListener(menu));
 
-        PickedState<PetriNetVertex> pickedVertexState = graphViewer.getPickedVertexState();
-        pickedVertexState.addItemListener(new VertexPickListener(pickedVertexState, menu));
+        PickedState<PetriNetVertex> vertexPickedState = graphViewer.getPickedVertexState();
+        PickedState<Arc> arcPickedState = graphViewer.getPickedEdgeState();
 
-        PickedState<Arc> pickedArcState = graphViewer.getPickedEdgeState();
-        pickedArcState.addItemListener(new EdgePickListener(pickedArcState, menu));
+        PickListener pickListener = new PickListener(vertexPickedState, arcPickedState, menu);
+        vertexPickedState.addItemListener(pickListener);
+        arcPickedState.addItemListener(pickListener);
 
         setUpFrame(graphViewer, menu);
     }
