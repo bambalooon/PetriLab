@@ -9,9 +9,9 @@ import pl.edu.agh.eis.petrilab.model.*;
  * Date: 2015-04-18
  * Created by BamBalooon
  */
-public class PetriNet {
+public class PetriNetManager {
     private DirectedSparseGraph<PetriNetVertex, Arc> graph =
-            new DirectedSparseGraph<PetriNetVertex, Arc>();
+            new DirectedSparseGraph<>();
 
     public DirectedSparseGraph<PetriNetVertex, Arc> getGraph() {
         return graph;

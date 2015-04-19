@@ -25,10 +25,10 @@ import java.awt.geom.Point2D;
  * Created by BamBalooon
  */
 public class PetriNetEditingGraphMousePlugin extends EditingGraphMousePlugin<PetriNetVertex, Arc> {
-    private final PetriNet petriNet;
-    public PetriNetEditingGraphMousePlugin(PetriNet petriNet) {
+    private final PetriNetManager petriNetManager;
+    public PetriNetEditingGraphMousePlugin(PetriNetManager petriNetManager) {
         super(null, null);
-        this.petriNet = petriNet;
+        this.petriNetManager = petriNetManager;
     }
 
     private PetriNetVertex createVertex(MouseEvent e) {
@@ -89,7 +89,7 @@ public class PetriNetEditingGraphMousePlugin extends EditingGraphMousePlugin<Pet
 
                     PetriNetVertex newVertex = createVertex(e);
                     Layout<PetriNetVertex, Arc> layout = vv.getModel().getGraphLayout();
-                    petriNet.addVertex(newVertex);
+                    petriNetManager.addVertex(newVertex);
                     layout.setLocation(newVertex, vv.getRenderContext().getMultiLayerTransformer().inverseTransform(e.getPoint()));
                 }
             }
@@ -110,7 +110,7 @@ public class PetriNetEditingGraphMousePlugin extends EditingGraphMousePlugin<Pet
                 if(vertex != null && startVertex != null) {
                     Arc newArc = createArc(startVertex, vertex);
                     if (newArc != null) {
-                        petriNet.addEdge(newArc);
+                        petriNetManager.addEdge(newArc);
                     }
                 }
             }

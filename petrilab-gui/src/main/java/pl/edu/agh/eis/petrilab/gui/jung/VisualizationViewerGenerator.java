@@ -2,7 +2,6 @@ package pl.edu.agh.eis.petrilab.gui.jung;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import org.apache.commons.collections15.Transformer;
 import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
@@ -18,17 +17,17 @@ import java.awt.*;
 public interface VisualizationViewerGenerator<V, E> {
     int VIEWER_WIDTH = 400;
     int VIEWER_HEIGHT = 400;
-    VisualizationViewer<V, E> generateVisualizationViewer(PetriNet petriNet);
+    VisualizationViewer<V, E> generateVisualizationViewer(PetriNetManager petriNetManager);
 
     VisualizationViewerGenerator<PetriNetVertex, Arc> PETRI_NET =
             new VisualizationViewerGenerator<PetriNetVertex, Arc>() {
 
         @Override
         public VisualizationViewer<PetriNetVertex, Arc> generateVisualizationViewer(
-                PetriNet petriNet) {
+                PetriNetManager petriNetManager) {
 
             VisualizationViewer<PetriNetVertex, Arc> visualizationViewer = new VisualizationViewer<>
-                    (new CircleLayout<>(petriNet.getGraph()), new Dimension(VIEWER_WIDTH, VIEWER_HEIGHT));
+                    (new CircleLayout<>(petriNetManager.getGraph()), new Dimension(VIEWER_WIDTH, VIEWER_HEIGHT));
 
             visualizationViewer.getRenderContext().setVertexLabelTransformer(new Transformer<PetriNetVertex, String>() {
                 @Override
@@ -46,7 +45,7 @@ public interface VisualizationViewerGenerator<V, E> {
 
             visualizationViewer.getRenderer().setVertexRenderer(new PetriNetVertexRenderer());
 
-            PetriNetModalGraphMouse graphMouse = new PetriNetModalGraphMouse(petriNet);
+            PetriNetModalGraphMouse graphMouse = new PetriNetModalGraphMouse(petriNetManager);
             visualizationViewer.setGraphMouse(graphMouse);
             visualizationViewer.addKeyListener(graphMouse.getModeKeyListener());
 

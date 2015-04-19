@@ -1,7 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import pl.edu.agh.eis.petrilab.gui.jung.PetriNet;
+import pl.edu.agh.eis.petrilab.gui.jung.PetriNetManager;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
 import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
@@ -18,14 +18,14 @@ import java.awt.*;
 public class PetriLabGui extends JFrame {
     private static final int MIN_WIDTH = 600;
     private static final int MIN_HEIGHT = 600;
-    private PetriNet petriNet;
+    private PetriNetManager petriNetManager;
 
     public PetriLabGui() {
         super(PetriLabApplication.TITLE);
-        petriNet = new PetriNet();
+        petriNetManager = new PetriNetManager();
 
         VisualizationViewer<PetriNetVertex, Arc> graphViewer = VisualizationViewerGenerator.PETRI_NET
-                .generateVisualizationViewer(petriNet);
+                .generateVisualizationViewer(petriNetManager);
 
         setUpFrame(graphViewer, new JPanel());
     }
