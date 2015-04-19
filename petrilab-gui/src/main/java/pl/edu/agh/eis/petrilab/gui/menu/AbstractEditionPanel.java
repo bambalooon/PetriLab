@@ -15,6 +15,10 @@ import java.awt.event.ActionListener;
  * Created by BamBalooon
  */
 public abstract class AbstractEditionPanel<T> extends JPanel implements ActionListener {
+    protected static final int TEXT_FIELD_WIDTH = 50;
+    protected static final int TEXT_FIELD_HEIGHT = 20;
+    protected static final int SPINNER_WIDTH = 40;
+    protected static final int SPINNER_HEIGHT = 20;
     protected static final String ACCEPT_BUTTON_CMD = "ACCEPT_BUTTON_CMD";
     private final VisualizationViewer<PetriNetVertex, Arc> graphViewer;
     private T item;

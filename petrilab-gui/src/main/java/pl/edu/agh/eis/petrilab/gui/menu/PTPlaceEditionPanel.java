@@ -24,24 +24,21 @@ public class PTPlaceEditionPanel extends AbstractEditionPanel<PTPlace> {
     public PTPlaceEditionPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
         super(graphViewer);
         nameField = new JTextField();
-        nameField.setPreferredSize(
-                new Dimension(PetriNetEditionMenu.TEXT_FIELD_WIDTH, PetriNetEditionMenu.TEXT_FIELD_HEIGHT));
+        nameField.setPreferredSize(new Dimension(TEXT_FIELD_WIDTH, TEXT_FIELD_HEIGHT));
         SpinnerNumberModel markingModel = new SpinnerNumberModel(
                 GeneralPlace.MARKING_DEFAULT,
                 GeneralPlace.MARKING_MIN,
                 GeneralPlace.MARKING_MAX,
                 1);
         markingSpinner = new JSpinner(markingModel);
-        markingSpinner.setPreferredSize(new Dimension(
-                PetriNetEditionMenu.SPINNER_WIDTH, PetriNetEditionMenu.SPINNER_HEIGHT));
+        markingSpinner.setPreferredSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
         SpinnerNumberModel capacityModel = new SpinnerNumberModel(
                 PTPlace.CAPACITY_DEFAULT,
                 PTPlace.CAPACITY_MIN,
                 PTPlace.CAPACITY_MAX,
                 1);
         capacitySpinner = new JSpinner(capacityModel);
-        capacitySpinner.setPreferredSize(new Dimension(
-                PetriNetEditionMenu.SPINNER_WIDTH, PetriNetEditionMenu.SPINNER_HEIGHT));
+        capacitySpinner.setPreferredSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
         JButton acceptButton = new JButton();
         acceptButton.setActionCommand(ACCEPT_BUTTON_CMD);
         acceptButton.addActionListener(this);

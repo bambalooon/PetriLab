@@ -25,8 +25,7 @@ public class ArcEditionPanel extends AbstractEditionPanel<Arc> {
                 Arc.WEIGHT_MAX,
                 1);
         weightSpinner = new JSpinner(weightModel);
-        weightSpinner.setPreferredSize(new Dimension(
-                PetriNetEditionMenu.SPINNER_WIDTH, PetriNetEditionMenu.SPINNER_HEIGHT));
+        weightSpinner.setPreferredSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
         JButton acceptButton = new JButton();
         acceptButton.setActionCommand(ACCEPT_BUTTON_CMD);
         acceptButton.addActionListener(this);

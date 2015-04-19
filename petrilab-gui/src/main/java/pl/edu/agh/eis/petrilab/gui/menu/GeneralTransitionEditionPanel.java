@@ -21,8 +21,7 @@ public class GeneralTransitionEditionPanel extends AbstractEditionPanel<GeneralT
     public GeneralTransitionEditionPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
         super(graphViewer);
         nameField = new JTextField();
-        nameField.setPreferredSize(
-                new Dimension(PetriNetEditionMenu.TEXT_FIELD_WIDTH, PetriNetEditionMenu.TEXT_FIELD_HEIGHT));
+        nameField.setPreferredSize(new Dimension(TEXT_FIELD_WIDTH, TEXT_FIELD_HEIGHT));
         JButton acceptButton = new JButton();
         acceptButton.setActionCommand(ACCEPT_BUTTON_CMD);
         acceptButton.addActionListener(this);
