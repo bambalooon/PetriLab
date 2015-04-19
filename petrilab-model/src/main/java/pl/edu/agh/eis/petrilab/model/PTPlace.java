@@ -12,7 +12,10 @@ import java.util.Collection;
  * Created by BamBalooon
  */
 public class PTPlace extends GeneralPlace {
-    private int capacity = Integer.MAX_VALUE;
+    public static final int CAPACITY_MIN = 1;
+    public static final int CAPACITY_MAX = Integer.MAX_VALUE;
+    public static final int CAPACITY_DEFAULT = CAPACITY_MAX;
+    private int capacity = CAPACITY_DEFAULT;
 
     public PTPlace(String name) {
         super(name);
@@ -26,7 +29,7 @@ public class PTPlace extends GeneralPlace {
     }
 
     protected void setCapacity(int capacity) {
-        Preconditions.checkArgument(capacity > 0, "Capacity has to be greater than 0.");
+        Preconditions.checkArgument(capacity >= CAPACITY_MIN, "Capacity has to be greater than 0.");
         this.capacity = capacity;
     }
 

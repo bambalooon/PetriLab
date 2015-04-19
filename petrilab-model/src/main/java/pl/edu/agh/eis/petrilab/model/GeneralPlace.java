@@ -14,10 +14,13 @@ import java.util.Collections;
  * Created by BamBalooon
  */
 public class GeneralPlace implements Place {
+    public static final int MARKING_MIN = 0;
+    public static final int MARKING_MAX = Integer.MAX_VALUE;
+    public static final int MARKING_DEFAULT = MARKING_MIN;
     private Collection<TransitionToPlaceArc> inArcs = Collections.emptySet();
     private Collection<PlaceToTransitionArc> outArcs = Collections.emptySet();
     private String name;
-    private int marking;
+    private int marking = MARKING_DEFAULT;
 
     public GeneralPlace(String name) {
         setName(name);
