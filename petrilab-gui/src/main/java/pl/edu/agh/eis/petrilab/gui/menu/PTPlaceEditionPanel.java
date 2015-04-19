@@ -23,7 +23,6 @@ public class PTPlaceEditionPanel extends JPanel implements ActionListener {
     private final JTextField nameField;
     private final JSpinner markingSpinner;
     private final JSpinner capacitySpinner;
-    private final JButton acceptButton;
     private final VisualizationViewer<PetriNetVertex, Arc> graphViewer;
     private PTPlace place;
 
@@ -45,7 +44,7 @@ public class PTPlaceEditionPanel extends JPanel implements ActionListener {
                 PTPlace.CAPACITY_MAX,
                 1);
         capacitySpinner = new JSpinner(capacityModel);
-        acceptButton = new JButton();
+        JButton acceptButton = new JButton();
         acceptButton.setActionCommand(ACCEPT_BUTTON_CMD);
         acceptButton.addActionListener(this);
         acceptButton.setText(ACCEPT_BUTTON_LABEL);
