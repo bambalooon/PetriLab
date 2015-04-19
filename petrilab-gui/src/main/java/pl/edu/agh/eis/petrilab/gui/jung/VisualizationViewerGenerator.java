@@ -1,6 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui.jung;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import org.apache.commons.collections15.Transformer;
 import pl.edu.agh.eis.petrilab.gui.jung.transform.VertexFillPaintTransformer;
@@ -19,17 +20,18 @@ import java.awt.*;
 public interface VisualizationViewerGenerator<V, E> {
     int VIEWER_WIDTH = 400;
     int VIEWER_HEIGHT = 400;
-    VisualizationViewer<V, E> generateVisualizationViewer(PetriNetManager petriNetManager);
+    VisualizationViewer<V, E> generateVisualizationViewer(DirectedSparseGraph<PetriNetVertex, Arc> graph,
+                                                          VisualizationViewer.GraphMouse graphMouse);
 
     VisualizationViewerGenerator<PetriNetVertex, Arc> PETRI_NET =
             new VisualizationViewerGenerator<PetriNetVertex, Arc>() {
 
         @Override
         public VisualizationViewer<PetriNetVertex, Arc> generateVisualizationViewer(
-                PetriNetManager petriNetManager) {
+                DirectedSparseGraph<PetriNetVertex, Arc> graph, VisualizationViewer.GraphMouse graphMouse) {
 
             VisualizationViewer<PetriNetVertex, Arc> visualizationViewer = new VisualizationViewer<>
-                    (new CircleLayout<>(petriNetManager.getGraph()), new Dimension(VIEWER_WIDTH, VIEWER_HEIGHT));
+                    (new CircleLayout<>(graph), new Dimension(VIEWER_WIDTH, VIEWER_HEIGHT));
 
             visualizationViewer.getRenderContext().setVertexLabelTransformer(new Transformer<PetriNetVertex, String>() {
                 @Override
@@ -48,9 +50,7 @@ public interface VisualizationViewerGenerator<V, E> {
             visualizationViewer.getRenderContext().setVertexFillPaintTransformer(new VertexFillPaintTransformer());
             visualizationViewer.getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer());
 
-            PetriNetModalGraphMouse graphMouse = new PetriNetModalGraphMouse(petriNetManager);
             visualizationViewer.setGraphMouse(graphMouse);
-            visualizationViewer.addKeyListener(graphMouse.getModeKeyListener());
 
             return visualizationViewer;
         }
