@@ -7,8 +7,6 @@ import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Name: GeneralTransitionEditionPanel
@@ -16,16 +14,12 @@ import java.awt.event.ActionListener;
  * Date: 2015-04-19
  * Created by BamBalooon
  */
-public class GeneralTransitionEditionPanel extends JPanel implements ActionListener {
+public class GeneralTransitionEditionPanel extends AbstractEditionPanel<GeneralTransition> {
     private static final String ACCEPT_BUTTON_LABEL = "ok";
-    private static final String ACCEPT_BUTTON_CMD = "ACCEPT_BUTTON_CMD";
     private final JTextField nameField;
-    private final VisualizationViewer<PetriNetVertex, Arc> graphViewer;
-    private GeneralTransition transition;
 
     public GeneralTransitionEditionPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
-        setVisible(false);
-        this.graphViewer = graphViewer;
+        super(graphViewer);
         nameField = new JTextField();
         nameField.setPreferredSize(
                 new Dimension(PetriNetEditionMenu.TEXT_FIELD_WIDTH, PetriNetEditionMenu.TEXT_FIELD_HEIGHT));
@@ -37,33 +31,16 @@ public class GeneralTransitionEditionPanel extends JPanel implements ActionListe
         add(acceptButton);
     }
 
-    public void edit(GeneralTransition transition) {
-        setVisible(true);
-        this.transition = transition;
+    @Override
+    protected void loadItemState(GeneralTransition transition) {
         nameField.setText(transition.getName());
-        revalidate();
     }
 
-    public void accept() {
+    @Override
+    protected void modify(GeneralTransition transition) {
         new GeneralTransition.Builder()
                 .fromTransition(transition)
                 .withName(nameField.getText())
                 .modify();
-        graphViewer.repaint();
-    }
-
-    public void cancel() {
-        transition = null;
-        setVisible(false);
-        revalidate();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case ACCEPT_BUTTON_CMD:
-                accept();
-                break;
-        }
     }
 }

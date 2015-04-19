@@ -6,8 +6,6 @@ import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Name: GeneralTransitionEditionPanel
@@ -15,16 +13,12 @@ import java.awt.event.ActionListener;
  * Date: 2015-04-19
  * Created by BamBalooon
  */
-public class ArcEditionPanel extends JPanel implements ActionListener {
+public class ArcEditionPanel extends AbstractEditionPanel<Arc> {
     private static final String ACCEPT_BUTTON_LABEL = "ok";
-    private static final String ACCEPT_BUTTON_CMD = "ACCEPT_BUTTON_CMD";
     private final JSpinner weightSpinner;
-    private final VisualizationViewer<PetriNetVertex, Arc> graphViewer;
-    private Arc arc;
 
     public ArcEditionPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
-        setVisible(false);
-        this.graphViewer = graphViewer;
+        super(graphViewer);
         SpinnerNumberModel weightModel = new SpinnerNumberModel(
                 Arc.WEIGHT_DEFAULT,
                 Arc.WEIGHT_MIN,
@@ -41,33 +35,16 @@ public class ArcEditionPanel extends JPanel implements ActionListener {
         add(acceptButton);
     }
 
-    public void edit(Arc arc) {
-        setVisible(true);
-        this.arc = arc;
+    @Override
+    protected void loadItemState(Arc arc) {
         weightSpinner.setValue(arc.getWeight());
-        revalidate();
     }
 
-    public void accept() {
+    @Override
+    protected void modify(Arc arc) {
         new Arc.Builder()
                 .fromArc(arc)
                 .withWeight((Integer) weightSpinner.getValue())
                 .modify();
-        graphViewer.repaint();
-    }
-
-    public void cancel() {
-        arc = null;
-        setVisible(false);
-        revalidate();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case ACCEPT_BUTTON_CMD:
-                accept();
-                break;
-        }
     }
 }

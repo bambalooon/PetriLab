@@ -8,8 +8,6 @@ import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Name: PTPlaceEditionPanel
@@ -17,18 +15,14 @@ import java.awt.event.ActionListener;
  * Date: 2015-04-19
  * Created by BamBalooon
  */
-public class PTPlaceEditionPanel extends JPanel implements ActionListener {
+public class PTPlaceEditionPanel extends AbstractEditionPanel<PTPlace> {
     private static final String ACCEPT_BUTTON_LABEL = "ok";
-    private static final String ACCEPT_BUTTON_CMD = "ACCEPT_BUTTON_CMD";
     private final JTextField nameField;
     private final JSpinner markingSpinner;
     private final JSpinner capacitySpinner;
-    private final VisualizationViewer<PetriNetVertex, Arc> graphViewer;
-    private PTPlace place;
 
     public PTPlaceEditionPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
-        setVisible(false);
-        this.graphViewer = graphViewer;
+        super(graphViewer);
         nameField = new JTextField();
         nameField.setPreferredSize(
                 new Dimension(PetriNetEditionMenu.TEXT_FIELD_WIDTH, PetriNetEditionMenu.TEXT_FIELD_HEIGHT));
@@ -58,37 +52,20 @@ public class PTPlaceEditionPanel extends JPanel implements ActionListener {
         add(acceptButton);
     }
 
-    public void edit(PTPlace place) {
-        setVisible(true);
-        this.place = place;
+    @Override
+    protected void loadItemState(PTPlace place) {
         nameField.setText(place.getName());
         markingSpinner.setValue(place.getMarking());
         capacitySpinner.setValue(place.getCapacity());
-        revalidate();
     }
 
-    public void accept() {
+    @Override
+    protected void modify(PTPlace place) {
         new PTPlace.Builder()
                 .fromPlace(place)
                 .withName(nameField.getText())
                 .withMarking((Integer) markingSpinner.getValue())
                 .withCapacity((Integer) capacitySpinner.getValue())
                 .modify();
-        graphViewer.repaint();
-    }
-
-    public void cancel() {
-        place = null;
-        setVisible(false);
-        revalidate();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case ACCEPT_BUTTON_CMD:
-                accept();
-                break;
-        }
     }
 }
