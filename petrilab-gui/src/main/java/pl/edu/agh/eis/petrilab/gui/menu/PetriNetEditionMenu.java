@@ -19,12 +19,15 @@ public class PetriNetEditionMenu extends JPanel {
     public static final int TEXT_FIELD_HEIGHT = 20;
     private final PTPlaceEditionPanel placeEditionPanel;
     private final GeneralTransitionEditionPanel transitionEditionPanel;
+    private final ArcEditionPanel arcEditionPanel;
 
     public PetriNetEditionMenu(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
         placeEditionPanel = new PTPlaceEditionPanel(graphViewer);
         transitionEditionPanel = new GeneralTransitionEditionPanel(graphViewer);
+        arcEditionPanel = new ArcEditionPanel(graphViewer);
         add(placeEditionPanel);
         add(transitionEditionPanel);
+        add(arcEditionPanel);
     }
 
     public void editPlace(PTPlace place) {
@@ -41,5 +44,13 @@ public class PetriNetEditionMenu extends JPanel {
 
     public void cancelTransition() {
         transitionEditionPanel.cancel();
+    }
+
+    public void editArc(Arc arc) {
+        arcEditionPanel.edit(arc);
+    }
+
+    public void cancelArc() {
+        arcEditionPanel.cancel();
     }
 }
