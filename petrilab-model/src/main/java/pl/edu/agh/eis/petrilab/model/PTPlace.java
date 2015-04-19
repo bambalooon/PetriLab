@@ -29,7 +29,7 @@ public class PTPlace extends GeneralPlace {
     }
 
     protected void setCapacity(int capacity) {
-        Preconditions.checkArgument(capacity >= CAPACITY_MIN, "Capacity has to be greater than 0.");
+        Preconditions.checkArgument(capacity >= CAPACITY_MIN, "Capacity has to be greater or equal to 1.");
         this.capacity = capacity;
     }
 
