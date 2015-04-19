@@ -9,9 +9,9 @@ import com.google.common.base.Preconditions;
  * Created by BamBalooon
  */
 public abstract class Arc {
-    private static final int WEIGHT_MIN = 1;
-    private static final int WEIGHT_MAX = Integer.MAX_VALUE;
-    private static final int WEIGHT_DEFAULT = WEIGHT_MIN;
+    public static final int WEIGHT_MIN = 1;
+    public static final int WEIGHT_MAX = Integer.MAX_VALUE;
+    public static final int WEIGHT_DEFAULT = WEIGHT_MIN;
     private Place place;
     private Transition transition;
     private int weight;
