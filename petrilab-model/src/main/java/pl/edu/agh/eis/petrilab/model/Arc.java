@@ -9,13 +9,15 @@ import com.google.common.base.Preconditions;
  * Created by BamBalooon
  */
 public abstract class Arc {
-    private static final int DEFAULT_WEIGHT = 1;
+    private static final int WEIGHT_MIN = 1;
+    private static final int WEIGHT_MAX = Integer.MAX_VALUE;
+    private static final int WEIGHT_DEFAULT = WEIGHT_MIN;
     private Place place;
     private Transition transition;
     private int weight;
 
     public Arc(Place place, Transition transition) {
-        this(place, transition, DEFAULT_WEIGHT);
+        this(place, transition, WEIGHT_DEFAULT);
     }
 
     public Arc(Place place, Transition transition, int weight) {
@@ -29,7 +31,7 @@ public abstract class Arc {
     }
 
     protected void setWeight(int weight) {
-        Preconditions.checkArgument(weight > 0, "Arc weight has to be greater than 0.");
+        Preconditions.checkArgument(weight >= WEIGHT_MIN, "Arc weight has to be greater or equal to 1.");
         this.weight = weight;
     }
 
