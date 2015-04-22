@@ -12,4 +12,3 @@
 * https://kahdev.wordpress.com/category/java/jung-java/
 * http://jung.sourceforge.net/doc/JUNGVisualizationGuide.html
 
-cokko
