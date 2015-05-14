@@ -7,7 +7,7 @@ import pl.edu.agh.eis.petrilab.gui.jung.PetriNetModalGraphMouse;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
 import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
 import pl.edu.agh.eis.petrilab.gui.listener.PickListener;
-import pl.edu.agh.eis.petrilab.gui.menu.PetriNetEditionMenu;
+import pl.edu.agh.eis.petrilab.gui.menu.edition.PetriNetEditionMenu;
 import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
 

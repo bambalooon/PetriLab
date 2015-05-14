@@ -1,4 +1,4 @@
-package pl.edu.agh.eis.petrilab.gui.menu;
+package pl.edu.agh.eis.petrilab.gui.menu.edition;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import pl.edu.agh.eis.petrilab.model.Arc;

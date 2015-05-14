@@ -1,7 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui.listener;
 
 import edu.uci.ics.jung.visualization.picking.PickedState;
-import pl.edu.agh.eis.petrilab.gui.menu.PetriNetEditionMenu;
+import pl.edu.agh.eis.petrilab.gui.menu.edition.PetriNetEditionMenu;
 import pl.edu.agh.eis.petrilab.model.*;
 
 import java.awt.event.ItemEvent;
