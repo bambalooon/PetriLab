@@ -6,6 +6,7 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
 import org.apache.commons.collections15.Transformer;
 import pl.edu.agh.eis.petrilab.gui.jung.transform.VertexFillPaintTransformer;
+import pl.edu.agh.eis.petrilab.gui.jung.transform.VertexIconTransformer;
 import pl.edu.agh.eis.petrilab.gui.jung.transform.VertexShapeTransformer;
 import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
@@ -50,6 +51,7 @@ public interface VisualizationViewerGenerator<V, E> {
 
             visualizationViewer.getRenderContext().setVertexFillPaintTransformer(new VertexFillPaintTransformer());
             visualizationViewer.getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer());
+            visualizationViewer.getRenderContext().setVertexIconTransformer(new VertexIconTransformer());
 
             visualizationViewer.setGraphMouse(graphMouse);
             visualizationViewer.addKeyListener(graphMouse.getModeKeyListener());
