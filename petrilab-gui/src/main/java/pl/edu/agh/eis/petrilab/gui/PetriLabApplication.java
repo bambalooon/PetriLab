@@ -3,6 +3,7 @@ package pl.edu.agh.eis.petrilab.gui;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import pl.edu.agh.eis.petrilab.gui.jung.PetriNetManager;
 import pl.edu.agh.eis.petrilab.model.Arc;
+import pl.edu.agh.eis.petrilab.model.PetriNet;
 import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
 
 import javax.swing.*;
@@ -41,6 +42,10 @@ public class PetriLabApplication {
 
     public DirectedSparseGraph<PetriNetVertex, Arc> getPetriNetGraph() {
         return petriNetManager.getGraph();
+    }
+
+    public PetriNet getPetriNet() {
+        return petriNetManager.getPetriNet();
     }
 
     public static void main(String... args) {

@@ -27,6 +27,10 @@ public class PetriNetManager {
         return graph;
     }
 
+    public PetriNet getPetriNet() {
+        return petriNet;
+    }
+
     public void addVertex(PetriNetVertex vertex) {
         if (vertex instanceof Place) {
             petriNet.addPlace((Place) vertex);
