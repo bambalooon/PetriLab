@@ -26,10 +26,10 @@ import java.awt.geom.Point2D;
  * Date: 2015-04-18
  * Created by BamBalooon
  */
+@Deprecated
 public class PetriNetEditingGraphMousePlugin extends EditingGraphMousePlugin<PetriNetVertex, Arc> {
     private final PetriNetManager petriNetManager;
 
-    @Deprecated
     public PetriNetEditingGraphMousePlugin() {
         this(null);
     }

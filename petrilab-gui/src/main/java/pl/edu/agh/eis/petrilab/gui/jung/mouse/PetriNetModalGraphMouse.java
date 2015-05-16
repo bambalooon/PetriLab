@@ -10,6 +10,7 @@ import java.awt.event.ItemEvent;
  * Date: 2015-04-18
  * Created by BamBalooon
  */
+@Deprecated
 public class PetriNetModalGraphMouse extends AbstractModalGraphMouse {
     private GraphMousePlugin editingPlugin;
     private GraphMousePlugin selectingPlugin;

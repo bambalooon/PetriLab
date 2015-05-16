@@ -19,6 +19,7 @@ import java.awt.geom.Point2D;
  * Date: 2015-05-16
  * Created by BamBalooon
  */
+@Deprecated
 public class PetriNetSelectGraphMousePlugin extends AbstractGraphMousePlugin implements MouseListener {
     private PTPlace selectedFromPlace;
     private PTPlace selectedToPlace;
