@@ -24,7 +24,7 @@ public class PetriNetMatrixGenerator {
 	}
 	
 	public int[][] getFinalMatrix(){
-		return finalMatrix;
+		return petriNetMatrix;
 	}
 
 
