@@ -2,7 +2,7 @@ package pl.edu.agh.eis.petrilab.gui.listener;
 
 import edu.uci.ics.jung.visualization.picking.PickedState;
 import pl.edu.agh.eis.petrilab.gui.menu.edition.PetriNetEditionPanel;
-import pl.edu.agh.eis.petrilab.model.*;
+import pl.edu.agh.eis.petrilab.model2.*;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -30,16 +30,16 @@ public class PickListener implements ItemListener {
     @Override
     public void itemStateChanged(ItemEvent e) {
         Object item = e.getItem();
-        if (item instanceof PTPlace) {
-            PTPlace place = (PTPlace) item;
+        if (item instanceof Place) {
+            Place place = (Place) item;
             if (vertexPickedState.isPicked(place)) {
                 menu.editPlace(place);
                 arcPickedState.clear();
             } else {
                 menu.cancelPlace();
             }
-        } else if (item instanceof GeneralTransition) {
-            GeneralTransition transition = (GeneralTransition) item;
+        } else if (item instanceof Transition) {
+            Transition transition = (Transition) item;
             if (vertexPickedState.isPicked(transition)) {
                 menu.editTransition(transition);
                 arcPickedState.clear();
