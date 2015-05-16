@@ -1,10 +1,8 @@
 package pl.edu.agh.eis.petrilab.gui;
 
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
-import pl.edu.agh.eis.petrilab.gui.jung.PetriNetManager;
-import pl.edu.agh.eis.petrilab.model.Arc;
-import pl.edu.agh.eis.petrilab.model.PetriNet;
-import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
+import pl.edu.agh.eis.petrilab.model2.Arc;
+import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
 import javax.swing.*;
 
@@ -24,7 +22,8 @@ public class PetriLabApplication {
         return INSTANCE;
     }
     private PetriLabGui petriLabGui;
-    private PetriNetManager petriNetManager = new PetriNetManager();
+    private DirectedSparseGraph<PetriNetVertex, Arc> petriNetGraph = new DirectedSparseGraph<>();
+    private Configuration configuration = new Configuration();
 
     public void startGui() {
         SwingUtilities.invokeLater(new Runnable() {
@@ -36,16 +35,12 @@ public class PetriLabApplication {
         });
     }
 
-    public PetriNetManager getPetriNetManager() {
-        return petriNetManager;
-    }
-
     public DirectedSparseGraph<PetriNetVertex, Arc> getPetriNetGraph() {
-        return petriNetManager.getGraph();
+        return petriNetGraph;
     }
 
-    public PetriNet getPetriNet() {
-        return petriNetManager.getPetriNet();
+    public Configuration getConfiguration() {
+        return configuration;
     }
 
     public static void main(String... args) {
