@@ -1,6 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui.menu.edition;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import pl.edu.agh.eis.petrilab.gui.jung.PetriNetModalGraphMouse;
 import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.GeneralTransition;
 import pl.edu.agh.eis.petrilab.model.PTPlace;
@@ -14,15 +15,17 @@ import javax.swing.*;
  * Date: 2015-04-19
  * Created by BamBalooon
  */
-public class PetriNetEditionMenu extends JPanel {
+public class PetriNetEditionPanel extends JPanel {
     private final PTPlaceEditionPanel placeEditionPanel;
     private final GeneralTransitionEditionPanel transitionEditionPanel;
     private final ArcEditionPanel arcEditionPanel;
 
-    public PetriNetEditionMenu(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
+    public PetriNetEditionPanel(PetriNetModalGraphMouse graphMouse,
+                                VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
         placeEditionPanel = new PTPlaceEditionPanel(graphViewer);
         transitionEditionPanel = new GeneralTransitionEditionPanel(graphViewer);
         arcEditionPanel = new ArcEditionPanel(graphViewer);
+        add(new PetriNetEditionModePanel(graphMouse));
         add(placeEditionPanel);
         add(transitionEditionPanel);
         add(arcEditionPanel);
