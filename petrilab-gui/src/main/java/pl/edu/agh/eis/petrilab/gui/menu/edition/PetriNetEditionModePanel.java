@@ -1,7 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui.menu.edition;
 
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
-import pl.edu.agh.eis.petrilab.gui.jung.PetriNetModalGraphMouse;
+import pl.edu.agh.eis.petrilab.gui.jung.mouse.PetriNetModalGraphMouse;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

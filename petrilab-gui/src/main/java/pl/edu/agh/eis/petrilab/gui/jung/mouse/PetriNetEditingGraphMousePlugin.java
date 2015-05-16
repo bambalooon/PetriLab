@@ -1,4 +1,4 @@
-package pl.edu.agh.eis.petrilab.gui.jung;
+package pl.edu.agh.eis.petrilab.gui.jung.mouse;
 
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -8,6 +8,7 @@ import edu.uci.ics.jung.graph.UndirectedGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.EditingGraphMousePlugin;
+import pl.edu.agh.eis.petrilab.gui.jung.PetriNetManager;
 import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.GeneralTransition;
 import pl.edu.agh.eis.petrilab.model.PTPlace;

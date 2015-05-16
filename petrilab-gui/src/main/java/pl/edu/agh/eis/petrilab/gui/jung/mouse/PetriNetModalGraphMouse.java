@@ -1,4 +1,4 @@
-package pl.edu.agh.eis.petrilab.gui.jung;
+package pl.edu.agh.eis.petrilab.gui.jung.mouse;
 
 import edu.uci.ics.jung.visualization.control.*;
 

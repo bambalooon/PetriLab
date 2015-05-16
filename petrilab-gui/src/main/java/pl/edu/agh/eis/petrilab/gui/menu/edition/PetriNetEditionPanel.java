@@ -1,7 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui.menu.edition;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import pl.edu.agh.eis.petrilab.gui.jung.PetriNetModalGraphMouse;
+import pl.edu.agh.eis.petrilab.gui.jung.mouse.PetriNetModalGraphMouse;
 import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.GeneralTransition;
 import pl.edu.agh.eis.petrilab.model.PTPlace;
