@@ -2,9 +2,10 @@ package pl.edu.agh.eis.petrilab.gui;
 
 import com.google.common.collect.ImmutableList;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.EditingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.picking.PickedState;
-import pl.edu.agh.eis.petrilab.gui.jung.PetriNetManager;
+import pl.edu.agh.eis.petrilab.gui.jung.PetriNetEditingGraphMousePlugin;
 import pl.edu.agh.eis.petrilab.gui.jung.PetriNetModalGraphMouse;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
 import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
@@ -30,27 +31,32 @@ public class PetriLabGui extends JFrame {
     private static final int MIN_WIDTH = 600;
     private static final int MIN_HEIGHT = 600;
 
+    private final PetriNetModalGraphMouse graphMouse;
+    private final VisualizationViewer<PetriNetVertex, Arc> graphViewer;
+    private final MenuPanel menuPanel;
+
     public PetriLabGui() {
         super(PetriLabApplication.TITLE);
-        PetriNetManager petriNetManager = new PetriNetManager();
 
-        PetriNetModalGraphMouse graphMouse = new PetriNetModalGraphMouse(petriNetManager);
-        VisualizationViewer<PetriNetVertex, Arc> graphViewer = VisualizationViewerGenerator.PETRI_NET
-                .generateVisualizationViewer(petriNetManager.getGraph(), graphMouse);
+        EditingGraphMousePlugin<PetriNetVertex, Arc> editingGraphMousePlugin =
+                new PetriNetEditingGraphMousePlugin(PetriLabApplication.getInstance().getPetriNetManager());
+        graphMouse = new PetriNetModalGraphMouse(editingGraphMousePlugin);
 
-        PickedState<PetriNetVertex> vertexPickedState = graphViewer.getPickedVertexState();
-        PickedState<Arc> arcPickedState = graphViewer.getPickedEdgeState();
+        graphViewer = VisualizationViewerGenerator.PETRI_NET
+                .generateVisualizationViewer(PetriLabApplication.getInstance().getPetriNetGraph(), graphMouse);
 
-        graphMouse.addItemListener(new ModeChangeListener(vertexPickedState, arcPickedState));
+        graphMouse.addItemListener(
+                new ModeChangeListener(graphViewer.getPickedVertexState(), graphViewer.getPickedEdgeState()));
 
-        setUpFrame(graphViewer, setUpMenu(graphMouse, graphViewer));
+        menuPanel = setUpMenu();
+        setUpFrame();
     }
 
-    private void setUpFrame(VisualizationViewer<PetriNetVertex, Arc> graphViewer, Component menu) {
+    private void setUpFrame() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
         setLayout(new BorderLayout());
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphViewer, menu);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphViewer, menuPanel);
         splitPane.setResizeWeight(1);
         splitPane.setOneTouchExpandable(true);
         splitPane.setContinuousLayout(true);
@@ -58,9 +64,7 @@ public class PetriLabGui extends JFrame {
         pack();
     }
 
-    private Component setUpMenu(PetriNetModalGraphMouse graphMouse,
-                                VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
-
+    private MenuPanel setUpMenu() {
         PetriNetEditionPanel petriNetEditionPanel = new PetriNetEditionPanel(graphMouse, graphViewer);
         MenuPanel menuPanel = new MenuPanel(ImmutableList.<TabComponent>builder()
                 .add(new TabComponent<>("Edit", petriNetEditionPanel,
