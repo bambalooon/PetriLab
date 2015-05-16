@@ -1,11 +1,12 @@
 package pl.edu.agh.eis.petrilab.gui.menu.edition;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import pl.edu.agh.eis.petrilab.model.Arc;
-import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
+import pl.edu.agh.eis.petrilab.model2.Arc;
+import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import java.awt.Dimension;
 
 /**
  * Name: GeneralTransitionEditionPanel
@@ -36,9 +37,6 @@ public class ArcEditionPanel extends AbstractEditionPanel<Arc> {
 
     @Override
     protected void modify(Arc arc) {
-        new Arc.Builder()
-                .fromArc(arc)
-                .withWeight((Integer) weightSpinner.getValue())
-                .modify();
+        arc.setWeight((Integer) weightSpinner.getValue());
     }
 }

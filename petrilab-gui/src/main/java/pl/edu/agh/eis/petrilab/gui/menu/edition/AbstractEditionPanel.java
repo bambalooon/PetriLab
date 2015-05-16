@@ -1,8 +1,8 @@
 package pl.edu.agh.eis.petrilab.gui.menu.edition;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import pl.edu.agh.eis.petrilab.model.Arc;
-import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
+import pl.edu.agh.eis.petrilab.model2.Arc;
+import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
 import javax.swing.*;
 import java.awt.*;
