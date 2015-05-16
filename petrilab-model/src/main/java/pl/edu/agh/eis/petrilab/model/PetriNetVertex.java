@@ -6,6 +6,7 @@ package pl.edu.agh.eis.petrilab.model;
  * Date: 2015-04-18
  * Created by BamBalooon
  */
+@Deprecated
 public interface PetriNetVertex {
     String getName();
 }

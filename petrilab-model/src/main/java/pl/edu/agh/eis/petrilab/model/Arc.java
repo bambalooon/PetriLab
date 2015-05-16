@@ -8,6 +8,7 @@ import com.google.common.base.Preconditions;
  * Date: 2015-04-18
  * Created by BamBalooon
  */
+@Deprecated
 public abstract class Arc {
     public static final int WEIGHT_MIN = 1;
     public static final int WEIGHT_MAX = Integer.MAX_VALUE;

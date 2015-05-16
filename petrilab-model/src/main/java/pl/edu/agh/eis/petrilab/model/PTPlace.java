@@ -11,6 +11,7 @@ import java.util.Collection;
  * Date: 2015-04-18
  * Created by BamBalooon
  */
+@Deprecated
 public class PTPlace extends GeneralPlace {
     public static final int CAPACITY_MIN = 1;
     public static final int CAPACITY_MAX = Integer.MAX_VALUE;

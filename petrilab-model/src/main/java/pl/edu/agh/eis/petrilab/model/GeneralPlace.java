@@ -13,6 +13,7 @@ import java.util.Collections;
  * Date: 2015-04-18
  * Created by BamBalooon
  */
+@Deprecated
 public class GeneralPlace implements Place {
     public static final int MARKING_MIN = 0;
     public static final int MARKING_MAX = Integer.MAX_VALUE;

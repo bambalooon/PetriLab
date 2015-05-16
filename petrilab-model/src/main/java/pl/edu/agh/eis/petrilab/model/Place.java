@@ -8,6 +8,7 @@ import java.util.Collection;
  * Date: 2015-04-18
  * Created by BamBalooon
  */
+@Deprecated
 public interface Place extends PetriNetVertex {
     int getMarking();
     void decreaseMarking(int difference);

@@ -11,6 +11,7 @@ import java.util.Collection;
  * Date: 2015-04-19
  * Created by BamBalooon
  */
+@Deprecated
 public class PetriNet {
     private final Collection<Place> places = Sets.newHashSet();
     private final Collection<Transition> transitions = Sets.newHashSet();

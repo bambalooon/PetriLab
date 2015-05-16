@@ -6,6 +6,7 @@ package pl.edu.agh.eis.petrilab.model.util;
  * Date: 2015-04-19
  * Created by BamBalooon
  */
+@Deprecated
 public enum NameGenerator {
     PLACE("P%d"), TRANSITION("T%d");
 

@@ -8,6 +8,7 @@ import java.util.Collection;
  * Date: 2015-04-18
  * Created by BamBalooon
  */
+@Deprecated
 public interface Transition extends PetriNetVertex {
     Collection<PlaceToTransitionArc> getInArcs();
     Collection<TransitionToPlaceArc> getOutArcs();

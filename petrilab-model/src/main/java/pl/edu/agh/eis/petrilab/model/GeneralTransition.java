@@ -14,6 +14,7 @@ import java.util.Collections;
  * Date: 2015-04-18
  * Created by BamBalooon
  */
+@Deprecated
 public class GeneralTransition implements Transition {
     private Collection<PlaceToTransitionArc> inArcs = Collections.emptySet();
     private Collection<TransitionToPlaceArc> outArcs = Collections.emptySet();
