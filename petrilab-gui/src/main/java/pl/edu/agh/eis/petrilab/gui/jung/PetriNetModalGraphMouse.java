@@ -44,6 +44,8 @@ public class PetriNetModalGraphMouse extends AbstractModalGraphMouse {
                 setPickingMode();
             } else if (mode == Mode.EDITING) {
                 setEditingMode();
+            } else if (mode == Mode.ANNOTATING) {
+                setOffMode();
             }
             if(modeBox != null) {
                 modeBox.setSelectedItem(mode);
@@ -71,5 +73,14 @@ public class PetriNetModalGraphMouse extends AbstractModalGraphMouse {
         remove(rotatingPlugin);
         remove(shearingPlugin);
         add(editingGraphMousePlugin);
+    }
+
+    private void setOffMode() {
+        remove(pickingPlugin);
+        remove(translatingPlugin);
+        remove(animatedPickingPlugin);
+        remove(rotatingPlugin);
+        remove(shearingPlugin);
+        remove(editingGraphMousePlugin);
     }
 }
