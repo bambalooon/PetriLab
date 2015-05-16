@@ -1,6 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui;
 
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
+import pl.edu.agh.eis.petrilab.gui.jung.PetriNetGraph;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
@@ -22,7 +23,7 @@ public class PetriLabApplication {
         return INSTANCE;
     }
     private PetriLabGui petriLabGui;
-    private DirectedSparseGraph<PetriNetVertex, Arc> petriNetGraph = new DirectedSparseGraph<>();
+    private DirectedSparseGraph<PetriNetVertex, Arc> petriNetGraph = new PetriNetGraph();
     private Configuration configuration = new Configuration();
 
     public void startGui() {
@@ -46,5 +47,4 @@ public class PetriLabApplication {
     public static void main(String... args) {
         PetriLabApplication.getInstance().startGui();
     }
-
 }
