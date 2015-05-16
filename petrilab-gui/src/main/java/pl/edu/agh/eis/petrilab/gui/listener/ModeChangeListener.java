@@ -2,8 +2,8 @@ package pl.edu.agh.eis.petrilab.gui.listener;
 
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.picking.PickedState;
-import pl.edu.agh.eis.petrilab.model.Arc;
-import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
+import pl.edu.agh.eis.petrilab.model2.Arc;
+import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
