@@ -2,24 +2,26 @@ package pl.edu.agh.eis.petrilab.gui;
 
 import com.google.common.collect.ImmutableList;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.EditingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.picking.PickedState;
-import pl.edu.agh.eis.petrilab.gui.jung.mouse.PetriNetEditingGraphMousePlugin;
-import pl.edu.agh.eis.petrilab.gui.jung.mouse.PetriNetModalGraphMouse;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
+import pl.edu.agh.eis.petrilab.gui.jung.mouse.PetriNetModalGraphMouse;
 import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
 import pl.edu.agh.eis.petrilab.gui.listener.PickListener;
 import pl.edu.agh.eis.petrilab.gui.menu.MenuPanel;
 import pl.edu.agh.eis.petrilab.gui.menu.TabComponent;
-import pl.edu.agh.eis.petrilab.gui.menu.action.*;
 import pl.edu.agh.eis.petrilab.gui.menu.action.Action;
+import pl.edu.agh.eis.petrilab.gui.menu.action.ModeChangeAction;
 import pl.edu.agh.eis.petrilab.gui.menu.edition.PetriNetEditionPanel;
 import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 /**
  * Name: PetriLabGui
@@ -38,9 +40,7 @@ public class PetriLabGui extends JFrame {
     public PetriLabGui() {
         super(PetriLabApplication.TITLE);
 
-        EditingGraphMousePlugin<PetriNetVertex, Arc> editingGraphMousePlugin =
-                new PetriNetEditingGraphMousePlugin(PetriLabApplication.getInstance().getPetriNetManager());
-        graphMouse = new PetriNetModalGraphMouse(editingGraphMousePlugin);
+        graphMouse = new PetriNetModalGraphMouse();
 
         graphViewer = VisualizationViewerGenerator.PETRI_NET
                 .generateVisualizationViewer(PetriLabApplication.getInstance().getPetriNetGraph(), graphMouse);
