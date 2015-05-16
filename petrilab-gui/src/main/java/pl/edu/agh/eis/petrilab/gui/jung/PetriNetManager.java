@@ -39,6 +39,7 @@ public class PetriNetManager {
     }
 
     public void removeVertex(PetriNetVertex vertex) {
+        //FIXME: remove vertex from PetriNet
         graph.removeVertex(vertex);
     }
 
@@ -54,6 +55,7 @@ public class PetriNetManager {
     }
 
     public void removeEdge(Arc arc) {
+        //FIXME: remove arc from PetriNet
         if (arc instanceof TransitionToPlaceArc || arc instanceof PlaceToTransitionArc) {
             graph.removeEdge(arc);
         } else {
