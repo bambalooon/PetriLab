@@ -11,17 +11,20 @@ import java.awt.event.ItemEvent;
  * Created by BamBalooon
  */
 public class PetriNetModalGraphMouse extends AbstractModalGraphMouse {
-    private final EditingGraphMousePlugin<?, ?> editingGraphMousePlugin;
+    private GraphMousePlugin editingPlugin;
+    private GraphMousePlugin selectingPlugin;
 
-    public PetriNetModalGraphMouse(EditingGraphMousePlugin<?, ?> editingGraphMousePlugin) {
+
+    public PetriNetModalGraphMouse() {
         super(1.1f, 1 / 1.1f);
-        this.editingGraphMousePlugin = editingGraphMousePlugin;
         loadPlugins();
         setModeKeyListener(new EditingModalGraphMouse.ModeKeyAdapter(this));
     }
 
     @Override
     protected void loadPlugins() {
+        editingPlugin = new PetriNetEditingGraphMousePlugin();
+        selectingPlugin = new PetriNetSelectGraphMousePlugin();
         pickingPlugin = new PickingGraphMousePlugin<>();
         translatingPlugin = new TranslatingGraphMousePlugin();
         animatedPickingPlugin = new AnimatedPickingGraphMousePlugin<>();
@@ -56,13 +59,15 @@ public class PetriNetModalGraphMouse extends AbstractModalGraphMouse {
 
     @Override
     protected void setPickingMode() {
-        remove(editingGraphMousePlugin);
+        remove(editingPlugin);
+        remove(selectingPlugin);
         super.setPickingMode();
     }
 
     @Override
     protected void setTransformingMode() {
-        remove(editingGraphMousePlugin);
+        remove(editingPlugin);
+        remove(selectingPlugin);
         super.setTransformingMode();
     }
 
@@ -72,7 +77,8 @@ public class PetriNetModalGraphMouse extends AbstractModalGraphMouse {
         remove(animatedPickingPlugin);
         remove(rotatingPlugin);
         remove(shearingPlugin);
-        add(editingGraphMousePlugin);
+        remove(selectingPlugin);
+        add(editingPlugin);
     }
 
     private void setOffMode() {
@@ -81,6 +87,7 @@ public class PetriNetModalGraphMouse extends AbstractModalGraphMouse {
         remove(animatedPickingPlugin);
         remove(rotatingPlugin);
         remove(shearingPlugin);
-        remove(editingGraphMousePlugin);
+        remove(editingPlugin);
+        add(selectingPlugin);
     }
 }
