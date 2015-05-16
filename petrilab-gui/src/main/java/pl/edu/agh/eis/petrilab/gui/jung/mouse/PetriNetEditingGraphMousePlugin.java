@@ -8,6 +8,7 @@ import edu.uci.ics.jung.graph.UndirectedGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.EditingGraphMousePlugin;
+import pl.edu.agh.eis.petrilab.gui.PetriLabApplication;
 import pl.edu.agh.eis.petrilab.gui.jung.PetriNetManager;
 import pl.edu.agh.eis.petrilab.model.Arc;
 import pl.edu.agh.eis.petrilab.model.GeneralTransition;
@@ -27,6 +28,11 @@ import java.awt.geom.Point2D;
  */
 public class PetriNetEditingGraphMousePlugin extends EditingGraphMousePlugin<PetriNetVertex, Arc> {
     private final PetriNetManager petriNetManager;
+
+    public PetriNetEditingGraphMousePlugin() {
+        this(PetriLabApplication.getInstance().getPetriNetManager());
+    }
+
     public PetriNetEditingGraphMousePlugin(PetriNetManager petriNetManager) {
         super(null, null);
         this.petriNetManager = petriNetManager;
