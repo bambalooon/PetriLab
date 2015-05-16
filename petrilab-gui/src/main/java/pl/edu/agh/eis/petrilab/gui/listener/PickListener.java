@@ -1,7 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui.listener;
 
 import edu.uci.ics.jung.visualization.picking.PickedState;
-import pl.edu.agh.eis.petrilab.gui.menu.edition.PetriNetEditionMenu;
+import pl.edu.agh.eis.petrilab.gui.menu.edition.PetriNetEditionPanel;
 import pl.edu.agh.eis.petrilab.model.*;
 
 import java.awt.event.ItemEvent;
@@ -16,11 +16,11 @@ import java.awt.event.ItemListener;
 public class PickListener implements ItemListener {
     private final PickedState<PetriNetVertex> vertexPickedState;
     private final PickedState<Arc> arcPickedState;
-    private final PetriNetEditionMenu menu;
+    private final PetriNetEditionPanel menu;
 
     public PickListener(PickedState<PetriNetVertex> vertexPickedState,
                         PickedState<Arc> arcPickedState,
-                        PetriNetEditionMenu menu) {
+                        PetriNetEditionPanel menu) {
 
         this.vertexPickedState = vertexPickedState;
         this.arcPickedState = arcPickedState;
