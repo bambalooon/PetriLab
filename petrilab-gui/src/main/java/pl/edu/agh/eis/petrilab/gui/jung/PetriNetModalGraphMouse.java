@@ -11,11 +11,11 @@ import java.awt.event.ItemEvent;
  * Created by BamBalooon
  */
 public class PetriNetModalGraphMouse extends AbstractModalGraphMouse {
-    private PetriNetEditingGraphMousePlugin editingGraphMousePlugin;
+    private final EditingGraphMousePlugin<?, ?> editingGraphMousePlugin;
 
-    public PetriNetModalGraphMouse(PetriNetManager petriNetManager) {
+    public PetriNetModalGraphMouse(EditingGraphMousePlugin<?, ?> editingGraphMousePlugin) {
         super(1.1f, 1 / 1.1f);
-        editingGraphMousePlugin = new PetriNetEditingGraphMousePlugin(petriNetManager);
+        this.editingGraphMousePlugin = editingGraphMousePlugin;
         loadPlugins();
         setModeKeyListener(new EditingModalGraphMouse.ModeKeyAdapter(this));
     }
