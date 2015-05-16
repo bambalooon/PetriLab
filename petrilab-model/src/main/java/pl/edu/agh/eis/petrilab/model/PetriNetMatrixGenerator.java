@@ -1,25 +1,25 @@
 package pl.edu.agh.eis.petrilab.model;
 
-public class MatrixGenerator {
+public class PetriNetMatrixGenerator {
 	private int[][] inputMatrix;
 	private int[][] outputMatrix;
-	private int[][] finalMatrix;
+	private int[][] petriNetMatrix;
 	
-	public MatrixGenerator (PetriNet petriNet){
+	public PetriNetMatrixGenerator (PetriNet petriNet){
 		
 		int rows = petriNet.getPlaces().size();
 		int columns = petriNet.getTransitions().size();
 				
 		inputMatrix = new int [rows][columns];
 		outputMatrix = new int [rows][columns];
-		finalMatrix = new int [rows][columns];		
+		petriNetMatrix = new int [rows][columns];		
 				
 	}
 	public int[][] getInputMatrix(){
 		return inputMatrix;
 	}
 	
-	public int[][] getOutPutMatrix(){
+	public int[][] getOutputMatrix(){
 		return outputMatrix;
 	}
 	
