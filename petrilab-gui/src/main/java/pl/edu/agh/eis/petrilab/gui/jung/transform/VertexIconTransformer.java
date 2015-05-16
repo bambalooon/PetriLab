@@ -1,9 +1,9 @@
 package pl.edu.agh.eis.petrilab.gui.jung.transform;
 
 import org.apache.commons.collections15.Transformer;
-import pl.edu.agh.eis.petrilab.model.PetriNetVertex;
-import pl.edu.agh.eis.petrilab.model.Place;
-import pl.edu.agh.eis.petrilab.model.Transition;
+import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
+import pl.edu.agh.eis.petrilab.model2.Place;
+import pl.edu.agh.eis.petrilab.model2.Transition;
 
 import javax.swing.*;
 import java.awt.*;
