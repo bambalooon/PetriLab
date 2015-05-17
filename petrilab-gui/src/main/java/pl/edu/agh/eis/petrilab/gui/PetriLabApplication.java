@@ -1,7 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui;
 
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
-import pl.edu.agh.eis.petrilab.gui.jung.PetriNetGraph;
+import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 

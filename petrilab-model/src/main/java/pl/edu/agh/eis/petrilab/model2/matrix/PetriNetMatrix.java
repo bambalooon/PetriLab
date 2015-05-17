@@ -1,4 +1,4 @@
-package pl.edu.agh.eis.petrilab.api.matrix;
+package pl.edu.agh.eis.petrilab.model2.matrix;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
