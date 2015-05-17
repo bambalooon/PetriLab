@@ -1,4 +1,4 @@
-package pl.edu.agh.eis.petrilab.gui.jung;
+package pl.edu.agh.eis.petrilab.jung;
 
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
