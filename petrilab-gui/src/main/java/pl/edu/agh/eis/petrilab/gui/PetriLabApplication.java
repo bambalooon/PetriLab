@@ -40,6 +40,11 @@ public class PetriLabApplication {
         return petriNetGraph;
     }
 
+    public void updatePetriNetGraph(DirectedSparseGraph<PetriNetVertex, Arc> petriNetGraph) {
+        this.petriNetGraph = petriNetGraph;
+        this.petriLabGui.updatePetriNetGraph();
+    }
+
     public Configuration getConfiguration() {
         return configuration;
     }

@@ -19,6 +19,7 @@ import pl.edu.agh.eis.petrilab.gui.menu.edition.EditionPanel;
 import pl.edu.agh.eis.petrilab.gui.menu.edition.MainPanel;
 import pl.edu.agh.eis.petrilab.gui.menu.edition.ModePanel;
 import pl.edu.agh.eis.petrilab.gui.menu.edition.PickingPanel;
+import pl.edu.agh.eis.petrilab.gui.menu.file.FilePanel;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
@@ -40,13 +41,21 @@ public class PetriLabGui extends JFrame {
     private static final int MIN_WIDTH = 600;
     private static final int MIN_HEIGHT = 600;
 
-    private final AbstractModalGraphMouse graphMouse;
-    private final VisualizationViewer<PetriNetVertex, Arc> graphViewer;
-    private final Component menuPanel;
+    private AbstractModalGraphMouse graphMouse;
+    private VisualizationViewer<PetriNetVertex, Arc> graphViewer;
+    private Component menuPanel;
+    private final JSplitPane mainPanel;
 
     public PetriLabGui() {
         super(PetriLabApplication.TITLE);
 
+        setUpGraphViewer();
+        setUpMenu();
+        mainPanel = setUpMainPanel();
+        setUpFrame();
+    }
+
+    private void setUpGraphViewer() {
         graphViewer = VisualizationViewerGenerator.PETRI_NET
                 .generateVisualizationViewer(PetriLabApplication.getInstance().getPetriNetGraph());
 
@@ -58,29 +67,16 @@ public class PetriLabGui extends JFrame {
 
         graphMouse.addItemListener(
                 new ModeChangeListener(graphViewer.getPickedVertexState(), graphViewer.getPickedEdgeState()));
-
-        menuPanel = setUpMenu();
-        setUpFrame();
     }
 
-    private void setUpFrame() {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
-        setLayout(new BorderLayout());
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphViewer, menuPanel);
-        splitPane.setResizeWeight(1);
-        splitPane.setOneTouchExpandable(true);
-        splitPane.setContinuousLayout(true);
-        getContentPane().add(splitPane, BorderLayout.CENTER);
-        pack();
-    }
-
-    private MenuPanel setUpMenu() {
+    private void setUpMenu() {
         PickingPanel pickingPanel = new PickingPanel(graphMouse, graphViewer);
         MainPanel mainPanel = new MainPanel(new ModePanel(graphMouse), new EditionPanel(), pickingPanel);
         graphMouse.addItemListener(mainPanel);
 
-        MenuPanel menuPanel = new MenuPanel(ImmutableList.<TabComponent>builder()
+        menuPanel = new MenuPanel(ImmutableList.<TabComponent>builder()
+                .add(new TabComponent<>("File", new FilePanel(),
+                        new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
                 .add(new TabComponent<>("Edit", mainPanel,
                         new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
                 .add(new TabComponent<>("Simulation", new JPanel(),
@@ -93,6 +89,30 @@ public class PetriLabGui extends JFrame {
         PickListener pickListener = new PickListener(vertexPickedState, arcPickedState, pickingPanel);
         vertexPickedState.addItemListener(pickListener);
         arcPickedState.addItemListener(pickListener);
-        return menuPanel;
+    }
+
+    private JSplitPane setUpMainPanel() {
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphViewer, menuPanel);
+        splitPane.setResizeWeight(1);
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setContinuousLayout(true);
+        return splitPane;
+    }
+
+    private void setUpFrame() {
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
+        setLayout(new BorderLayout());
+        getContentPane().add(mainPanel, BorderLayout.CENTER);
+        pack();
+    }
+
+    public void updatePetriNetGraph() {
+        mainPanel.removeAll();
+        setUpGraphViewer();
+        setUpMenu();
+        mainPanel.setLeftComponent(graphViewer);
+        mainPanel.setRightComponent(menuPanel);
+        mainPanel.updateUI();
     }
 }
