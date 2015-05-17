@@ -23,7 +23,7 @@ public class Place implements PetriNetVertex {
         this(name, MARKING_DEFAULT, CAPACITY_DEFAULT);
     }
 
-    protected Place(String name, int marking, int capacity) {
+    public Place(String name, int marking, int capacity) {
         this.name = name;
         this.marking = marking;
         this.capacity = capacity;
