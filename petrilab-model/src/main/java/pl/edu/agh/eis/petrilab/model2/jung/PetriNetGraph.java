@@ -1,5 +1,6 @@
 package pl.edu.agh.eis.petrilab.model2.jung;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
@@ -11,6 +12,7 @@ import pl.edu.agh.eis.petrilab.model2.Place;
 import pl.edu.agh.eis.petrilab.model2.Transition;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,6 +41,34 @@ public class PetriNetGraph extends DirectedSparseGraph<PetriNetVertex, Arc> {
         return FluentIterable.from(getVertices())
                 .filter(Transition.class)
                 .toList();
+    }
+
+    public boolean isTransitionActive(Transition transition) {
+        Collection<Arc> inArcs = getInEdges(transition);
+        Collection<Arc> outArcs = getOutEdges(transition);
+        for (Arc inArc : inArcs) {
+            Place inPlace = (Place) getOpposite(transition, inArc);
+            if (inPlace.getMarking() < inArc.getWeight()) {
+                return false;
+            }
+        }
+        for (Arc outArc : outArcs) {
+            Place outPlace = (Place) getOpposite(transition, outArc);
+            if ((outPlace.getMarking() + outArc.getWeight()) > outPlace.getCapacity()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public List<Transition> getActiveTransitions() {
+        return FluentIterable.from(getTransitions())
+                .filter(new Predicate<Transition>() {
+                    @Override
+                    public boolean apply(Transition transition) {
+                        return isTransitionActive(transition);
+                    }
+                }).toList();
     }
 
     public static PetriNetGraph fromMatrix(PetriNetMatrix matrix) {
