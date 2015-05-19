@@ -1,5 +1,6 @@
 package pl.edu.agh.eis.petrilab.model2.jung;
 
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
@@ -26,6 +27,18 @@ public class PetriNetGraph extends DirectedSparseGraph<PetriNetVertex, Arc> {
             return false;
         }
         return super.addEdge(edge, endpoints, edgeType);
+    }
+
+    public List<Place> getPlaces() {
+        return FluentIterable.from(getVertices())
+                .filter(Place.class)
+                .toList();
+    }
+
+    public List<Transition> getTransitions() {
+        return FluentIterable.from(getVertices())
+                .filter(Transition.class)
+                .toList();
     }
 
     public static PetriNetGraph fromMatrix(PetriNetMatrix matrix) {

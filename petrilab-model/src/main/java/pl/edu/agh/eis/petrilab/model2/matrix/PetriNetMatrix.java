@@ -1,14 +1,13 @@
 package pl.edu.agh.eis.petrilab.model2.matrix;
 
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
-import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.Place;
 import pl.edu.agh.eis.petrilab.model2.Transition;
+import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Name: PetriNetMatrix
@@ -59,15 +58,11 @@ public class PetriNetMatrix {
         return transitionsNames;
     }
 
-    public static PetriNetMatrix generateMatrix(DirectedSparseGraph<PetriNetVertex, Arc> petriNetGraph) {
+    public static PetriNetMatrix generateMatrix(PetriNetGraph petriNetGraph) {
         Collection<PetriNetVertex> vertices = petriNetGraph.getVertices();
 
-        ImmutableList<Place> places = FluentIterable.from(vertices)
-                .filter(Place.class)
-                .toList();
-        ImmutableList<Transition> transitions = FluentIterable.from(vertices)
-                .filter(Transition.class)
-                .toList();
+        List<Place> places = petriNetGraph.getPlaces();
+        List<Transition> transitions = petriNetGraph.getTransitions();
 
         int placesCount = places.size();
         int transitionsCount = transitions.size();
@@ -107,6 +102,4 @@ public class PetriNetMatrix {
 
         return new PetriNetMatrix(inMatrix, outMatrix, markingVector, capacityVector, placesNames, transitionsNames);
     }
-
-
 }
