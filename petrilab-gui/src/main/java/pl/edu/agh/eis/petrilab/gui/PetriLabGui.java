@@ -14,17 +14,20 @@ import pl.edu.agh.eis.petrilab.gui.listener.PickListener;
 import pl.edu.agh.eis.petrilab.gui.menu.MenuPanel;
 import pl.edu.agh.eis.petrilab.gui.menu.TabComponent;
 import pl.edu.agh.eis.petrilab.gui.menu.action.Action;
+import pl.edu.agh.eis.petrilab.gui.menu.action.ActionGroup;
 import pl.edu.agh.eis.petrilab.gui.menu.action.ModeChangeAction;
+import pl.edu.agh.eis.petrilab.gui.menu.action.StartSimulationModeAction;
+import pl.edu.agh.eis.petrilab.gui.menu.action.StopSimulationModeAction;
 import pl.edu.agh.eis.petrilab.gui.menu.edition.EditionPanel;
 import pl.edu.agh.eis.petrilab.gui.menu.edition.MainPanel;
 import pl.edu.agh.eis.petrilab.gui.menu.edition.ModePanel;
 import pl.edu.agh.eis.petrilab.gui.menu.edition.PickingPanel;
 import pl.edu.agh.eis.petrilab.gui.menu.file.FilePanel;
+import pl.edu.agh.eis.petrilab.gui.menu.simulation.SimulationPanel;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
@@ -79,8 +82,11 @@ public class PetriLabGui extends JFrame {
                         new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
                 .add(new TabComponent<>("Edit", mainPanel,
                         new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
-                .add(new TabComponent<>("Simulation", new JPanel(),
-                        new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
+                .add(new TabComponent<>("Simulation", new SimulationPanel(),
+                        new ActionGroup(
+                                new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING),
+                                new StartSimulationModeAction(graphViewer)
+                        ), new StopSimulationModeAction(graphViewer)))
                 .build());
 
         PickedState<PetriNetVertex> vertexPickedState = graphViewer.getPickedVertexState();
