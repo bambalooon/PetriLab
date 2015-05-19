@@ -31,6 +31,16 @@ public class PetriNetGraph extends DirectedSparseGraph<PetriNetVertex, Arc> {
         return super.addEdge(edge, endpoints, edgeType);
     }
 
+    public boolean isPetriNetCorrect() {
+        return !FluentIterable.from(getTransitions())
+                .anyMatch(new Predicate<Transition>() {
+                    @Override
+                    public boolean apply(Transition transition) {
+                        return getInEdges(transition).isEmpty() || getOutEdges(transition).isEmpty();
+                    }
+                });
+    }
+
     public List<Place> getPlaces() {
         return FluentIterable.from(getVertices())
                 .filter(Place.class)
