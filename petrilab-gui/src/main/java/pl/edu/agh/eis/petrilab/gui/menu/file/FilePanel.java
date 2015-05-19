@@ -1,15 +1,17 @@
 package pl.edu.agh.eis.petrilab.gui.menu.file;
 
-import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
-import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 import pl.edu.agh.eis.petrilab.gui.PetriLabApplication;
 import pl.edu.agh.eis.petrilab.gui.util.FileUtilities;
+import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
+import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -22,6 +24,8 @@ import java.io.IOException;
  * Created by BamBalooon
  */
 public class FilePanel extends JPanel implements ActionListener {
+    private static final String NEW_FILE_BUTTON_LABEL = "Nowy plik...";
+    private static final String NEW_FILE_BUTTON_ACTION = "NEW_FILE_BUTTON_ACTION";
     private static final String OPEN_FILE_BUTTON_LABEL = "Otwórz plik...";
     private static final String OPEN_FILE_BUTTON_ACTION = "OPEN_FILE_BUTTON_ACTION";
     private static final String SAVE_FILE_BUTTON_LABEL = "Zapisz plik...";
@@ -31,9 +35,14 @@ public class FilePanel extends JPanel implements ActionListener {
     private final JFileChooser fileChooser;
 
     public FilePanel() {
+        setLayout(new FlowLayout(FlowLayout.LEFT));
         fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new PetriLabFileFilter());
         fileChooser.setAcceptAllFileFilterUsed(false);
+
+        JButton newFileButton = new JButton(NEW_FILE_BUTTON_LABEL);
+        newFileButton.setActionCommand(NEW_FILE_BUTTON_ACTION);
+        newFileButton.addActionListener(this);
         
         JButton openFileButton = new JButton(OPEN_FILE_BUTTON_LABEL);
         openFileButton.setActionCommand(OPEN_FILE_BUTTON_ACTION);
@@ -43,14 +52,22 @@ public class FilePanel extends JPanel implements ActionListener {
         saveFileButton.setActionCommand(SAVE_FILE_BUTTON_ACTION);
         saveFileButton.addActionListener(this);
 
-        add(openFileButton);
-        add(saveFileButton);
+        JPanel containerPanel = new JPanel();
+        containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.PAGE_AXIS));
+        containerPanel.add(newFileButton);
+        containerPanel.add(openFileButton);
+        containerPanel.add(saveFileButton);
+
+        add(containerPanel);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         int fileChooserReturnValue;
         switch (e.getActionCommand()) {
+            case NEW_FILE_BUTTON_ACTION:
+                PetriLabApplication.getInstance().updatePetriNetGraph(new PetriNetGraph());
+                break;
             case OPEN_FILE_BUTTON_ACTION:
                 fileChooserReturnValue = fileChooser.showOpenDialog(this);
                 if (fileChooserReturnValue == JFileChooser.APPROVE_OPTION) {
