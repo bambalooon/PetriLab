@@ -32,7 +32,7 @@ public class ActiveTransitionsBoundingRectangleCollector extends BoundingRectang
     public void compute() {
         rectangles.clear();
 
-        for(Transition transition : ((PetriNetGraph) graph).getTransitions()) {
+        for(Transition transition : ((PetriNetGraph) graph).getActiveTransitions()) {
             Shape shape = rc.getVertexShapeTransformer().transform(transition);
             Point2D p = layout.transform(transition);
             float x = (float)p.getX();
