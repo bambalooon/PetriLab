@@ -23,6 +23,7 @@ public class StopSimulationModeAction implements Action {
 
     @Override
     public void invoke() {
+        PetriLabApplication.getInstance().loadPetriNetGraph();
         VisualizationServer.Paintable activeTransitionPreRenderPaintable = PetriLabApplication.getInstance().getConfiguration()
                 .removeProperty(SIMULATION_ACTIVE_TRANSITIONS_PRE_RENDER_PAINTABLE);
         graphViewer.removePreRenderPaintable(activeTransitionPreRenderPaintable);

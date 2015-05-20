@@ -24,6 +24,7 @@ public class StartSimulationModeAction implements Action {
 
     @Override
     public void invoke() {
+        PetriLabApplication.getInstance().loadSimulationGraph();
         VisualizationServer.Paintable activeTransitionPreRenderPaintable = new ActiveTransitionsBoundingRectanglePaintable(
                 graphViewer.getRenderContext(), graphViewer.getGraphLayout());
         PetriLabApplication.getInstance().getConfiguration()
