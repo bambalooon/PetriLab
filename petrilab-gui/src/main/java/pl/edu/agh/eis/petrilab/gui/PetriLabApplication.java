@@ -1,6 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui;
 
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
+import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 
 import javax.swing.SwingUtilities;
 
@@ -21,6 +22,7 @@ public class PetriLabApplication {
     }
     private PetriLabGui petriLabGui;
     private PetriNetGraph petriNetGraph = new PetriNetGraph();
+    private PetriNetGraph simulationGraph;
     private Configuration configuration = new Configuration();
 
     public void startGui() {
@@ -37,9 +39,22 @@ public class PetriLabApplication {
         return petriNetGraph;
     }
 
-    public void updatePetriNetGraph(PetriNetGraph petriNetGraph) {
+    public PetriNetGraph getSimulationGraph() {
+        return simulationGraph;
+    }
+
+    public void loadPetriNetGraph() {
+        this.petriLabGui.loadPetriNetGraph();
+    }
+
+    public void loadPetriNetGraph(PetriNetGraph petriNetGraph) {
         this.petriNetGraph = petriNetGraph;
-        this.petriLabGui.updatePetriNetGraph();
+        this.petriLabGui.loadPetriNetGraph();
+    }
+
+    public void loadSimulationGraph() {
+        this.simulationGraph = PetriNetGraph.fromMatrix(PetriNetMatrix.generateMatrix(petriNetGraph));
+        this.petriLabGui.loadSimulationGraph();
     }
 
     public Configuration getConfiguration() {
