@@ -66,7 +66,7 @@ public class FilePanel extends JPanel implements ActionListener {
         int fileChooserReturnValue;
         switch (e.getActionCommand()) {
             case NEW_FILE_BUTTON_ACTION:
-                PetriLabApplication.getInstance().updatePetriNetGraph(new PetriNetGraph());
+                PetriLabApplication.getInstance().loadPetriNetGraph(new PetriNetGraph());
                 break;
             case OPEN_FILE_BUTTON_ACTION:
                 fileChooserReturnValue = fileChooser.showOpenDialog(this);
@@ -75,7 +75,7 @@ public class FilePanel extends JPanel implements ActionListener {
                     try {
                         PetriNetGraph loadedGraph = PetriNetGraph
                                 .fromMatrix(FileUtilities.openFile(file, PetriNetMatrix.class));
-                        PetriLabApplication.getInstance().updatePetriNetGraph(loadedGraph);
+                        PetriLabApplication.getInstance().loadPetriNetGraph(loadedGraph);
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(this, "Błąd w trakcie odczytu pliku.");
                         ex.printStackTrace();
