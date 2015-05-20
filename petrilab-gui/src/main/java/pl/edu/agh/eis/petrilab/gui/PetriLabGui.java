@@ -1,6 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui;
 
 import com.google.common.collect.ImmutableList;
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
@@ -65,6 +66,8 @@ public class PetriLabGui extends JFrame {
         graphMouse = new EditingModalGraphMouse<>(graphViewer.getRenderContext(),
                 new VertexFactory(), new ArcFactory());
 
+        graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
+
         graphViewer.setGraphMouse(graphMouse);
         graphViewer.addKeyListener(graphMouse.getModeKeyListener());
 
@@ -114,11 +117,7 @@ public class PetriLabGui extends JFrame {
     }
 
     public void updatePetriNetGraph() {
-        mainPanel.removeAll();
-        setUpGraphViewer();
-        setUpMenu();
-        mainPanel.setLeftComponent(graphViewer);
-        mainPanel.setRightComponent(menuPanel);
-        mainPanel.updateUI();
+        graphViewer.setGraphLayout(new CircleLayout<>(PetriLabApplication.getInstance().getPetriNetGraph()));
+        graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
     }
 }
