@@ -23,6 +23,7 @@ public class TransitionEditionPanel extends AbstractEditionPanel<Transition> {
         nameField.setPreferredSize(new Dimension(TEXT_FIELD_WIDTH, TEXT_FIELD_HEIGHT));
         add(nameField);
         add(acceptButton);
+        add(removeButton);
     }
 
     @Override
@@ -33,5 +34,10 @@ public class TransitionEditionPanel extends AbstractEditionPanel<Transition> {
     @Override
     protected void modify(Transition transition) {
         transition.setName(nameField.getText());
+    }
+
+    @Override
+    protected void remove(Transition transition) {
+        graphViewer.getGraphLayout().getGraph().removeVertex(transition);
     }
 }

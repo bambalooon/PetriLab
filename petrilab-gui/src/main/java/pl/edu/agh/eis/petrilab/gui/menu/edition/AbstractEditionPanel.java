@@ -24,20 +24,26 @@ public abstract class AbstractEditionPanel<T> extends JPanel implements ActionLi
     protected static final int SPINNER_HEIGHT = 20;
     private static final String ACCEPT_BUTTON_CMD = "ACCEPT_BUTTON_CMD";
     private static final String ACCEPT_BUTTON_LABEL = "ok";
+    private static final String REMOVE_BUTTON_CMD = "REMOVE_BUTTON_CMD";
+    private static final String REMOVE_BUTTON_LABEL = "rm";
 
     protected JButton acceptButton;
-    private final VisualizationViewer<PetriNetVertex, Arc> graphViewer;
+    protected JButton removeButton;
+    protected final VisualizationViewer<PetriNetVertex, Arc> graphViewer;
     private T item;
 
     protected AbstractEditionPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setVisible(false);
         this.graphViewer = graphViewer;
-        acceptButton = new JButton();
+        acceptButton = new JButton(ACCEPT_BUTTON_LABEL);
         acceptButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         acceptButton.setActionCommand(ACCEPT_BUTTON_CMD);
         acceptButton.addActionListener(this);
-        acceptButton.setText(ACCEPT_BUTTON_LABEL);
+        removeButton = new JButton(REMOVE_BUTTON_LABEL);
+        removeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+        removeButton.setActionCommand(REMOVE_BUTTON_CMD);
+        removeButton.addActionListener(this);
     }
 
     public void edit(T item) {
@@ -60,10 +66,16 @@ public abstract class AbstractEditionPanel<T> extends JPanel implements ActionLi
                 modify(item);
                 graphViewer.repaint();
                 break;
+            case REMOVE_BUTTON_CMD:
+                remove(item);
+                graphViewer.repaint();
+                break;
         }
     }
 
     protected abstract void loadItemState(T item);
 
     protected abstract void modify(T item);
+
+    protected abstract void remove(T item);
 }

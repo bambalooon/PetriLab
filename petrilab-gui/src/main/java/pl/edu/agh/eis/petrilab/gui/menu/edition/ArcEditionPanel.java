@@ -28,6 +28,7 @@ public class ArcEditionPanel extends AbstractEditionPanel<Arc> {
         weightSpinner.setPreferredSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
         add(weightSpinner);
         add(acceptButton);
+        add(removeButton);
     }
 
     @Override
@@ -38,5 +39,10 @@ public class ArcEditionPanel extends AbstractEditionPanel<Arc> {
     @Override
     protected void modify(Arc arc) {
         arc.setWeight((Integer) weightSpinner.getValue());
+    }
+
+    @Override
+    protected void remove(Arc arc) {
+        graphViewer.getGraphLayout().getGraph().removeEdge(arc);
     }
 }

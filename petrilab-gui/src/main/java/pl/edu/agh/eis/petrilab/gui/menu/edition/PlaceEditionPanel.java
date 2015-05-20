@@ -43,6 +43,7 @@ public class PlaceEditionPanel extends AbstractEditionPanel<Place> {
         add(markingSpinner);
         add(capacitySpinner);
         add(acceptButton);
+        add(removeButton);
     }
 
     @Override
@@ -57,5 +58,10 @@ public class PlaceEditionPanel extends AbstractEditionPanel<Place> {
         place.setName(nameField.getText());
         place.setMarking((Integer) markingSpinner.getValue());
         place.setCapacity((Integer) capacitySpinner.getValue());
+    }
+
+    @Override
+    protected void remove(Place place) {
+        graphViewer.getGraphLayout().getGraph().removeVertex(place);
     }
 }
