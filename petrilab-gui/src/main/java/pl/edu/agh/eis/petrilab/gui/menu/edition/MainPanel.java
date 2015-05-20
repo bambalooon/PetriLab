@@ -23,6 +23,7 @@ public class MainPanel extends JPanel implements ItemListener {
         cardsPanel.add(editionPanel, ModalGraphMouse.Mode.EDITING.name());
         cardsPanel.add(pickingPanel, ModalGraphMouse.Mode.PICKING.name());
         cardsPanel.add(new JPanel(), ModalGraphMouse.Mode.TRANSFORMING.name());
+        ((CardLayout) cardsPanel.getLayout()).show(cardsPanel, ModalGraphMouse.Mode.PICKING.name());
         add(cardsPanel, BorderLayout.CENTER);
     }
 
