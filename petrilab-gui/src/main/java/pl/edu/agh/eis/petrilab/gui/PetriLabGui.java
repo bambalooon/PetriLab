@@ -116,8 +116,13 @@ public class PetriLabGui extends JFrame {
         pack();
     }
 
-    public void updatePetriNetGraph() {
+    public void loadPetriNetGraph() {
         graphViewer.setGraphLayout(new CircleLayout<>(PetriLabApplication.getInstance().getPetriNetGraph()));
+        graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
+    }
+
+    public void loadSimulationGraph() {
+        graphViewer.setGraphLayout(new CircleLayout<>(PetriLabApplication.getInstance().getSimulationGraph()));
         graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
     }
 }
