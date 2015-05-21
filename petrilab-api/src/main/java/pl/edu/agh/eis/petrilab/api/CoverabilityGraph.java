@@ -9,20 +9,23 @@ import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
  * Created by PW on 26-04-2015.
  */
 public class CoverabilityGraph {
-    private static int jeden = 1;
 
     public DirectedSparseGraph Generate(PetriNetMatrix net) {
-        DirectedSparseGraph<String[], String> graph = new DirectedSparseGraph<>();
-        int[] marking = net.getMarkingVector();
+        DirectedSparseGraph<int[], String> graph = new DirectedSparseGraph<>();
 
+        int[] newVertex = net.getMarkingVector();
+        if(net.getActiveTransitions(newVertex).isEmpty()) {
+            graph.addVertex(newVertex);
+            return graph;
+        }
 
+        // FluentIterable.from(Arrays.asList(net.getMarkingVector())).transform(Functions.toStringFunction()).toArray(String.class);
         //smieci
-        //graph.addVertex(marking);
+        //
         //graph.addVertex(net3.getMarking());
         //graph.addEdge("T1", marking, net3.getMarking());
         return graph;
     }
-//wyswietlanie nieskonczonosci
-
+//wyswietlanie nieskonczonosci - to jest na razie problem
 
 }
