@@ -80,8 +80,6 @@ public class PetriNetMatrix {
     }
 
     public static PetriNetMatrix generateMatrix(PetriNetGraph petriNetGraph) {
-        Collection<PetriNetVertex> vertices = petriNetGraph.getVertices();
-
         List<Place> places = petriNetGraph.getPlaces();
         List<Transition> transitions = petriNetGraph.getTransitions();
 
