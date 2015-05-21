@@ -13,14 +13,14 @@ import java.awt.event.ItemListener;
  * Date: 2015-04-19
  * Created by BamBalooon
  */
-public class PickListener implements ItemListener {
+public class EditionPickListener implements ItemListener {
     private final PickedState<PetriNetVertex> vertexPickedState;
     private final PickedState<Arc> arcPickedState;
     private final PickingPanel menu;
 
-    public PickListener(PickedState<PetriNetVertex> vertexPickedState,
-                        PickedState<Arc> arcPickedState,
-                        PickingPanel menu) {
+    public EditionPickListener(PickedState<PetriNetVertex> vertexPickedState,
+                               PickedState<Arc> arcPickedState,
+                               PickingPanel menu) {
 
         this.vertexPickedState = vertexPickedState;
         this.arcPickedState = arcPickedState;
