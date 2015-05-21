@@ -10,8 +10,10 @@ import edu.uci.ics.jung.visualization.picking.PickedState;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
 import pl.edu.agh.eis.petrilab.gui.jung.factory.ArcFactory;
 import pl.edu.agh.eis.petrilab.gui.jung.factory.VertexFactory;
+import pl.edu.agh.eis.petrilab.gui.listener.ModalPickListener;
 import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
-import pl.edu.agh.eis.petrilab.gui.listener.PickListener;
+import pl.edu.agh.eis.petrilab.gui.listener.EditionPickListener;
+import pl.edu.agh.eis.petrilab.gui.listener.SimulationPickListener;
 import pl.edu.agh.eis.petrilab.gui.menu.MenuPanel;
 import pl.edu.agh.eis.petrilab.gui.menu.TabComponent;
 import pl.edu.agh.eis.petrilab.gui.menu.action.Action;
@@ -95,7 +97,11 @@ public class PetriLabGui extends JFrame {
         PickedState<PetriNetVertex> vertexPickedState = graphViewer.getPickedVertexState();
         PickedState<Arc> arcPickedState = graphViewer.getPickedEdgeState();
 
-        PickListener pickListener = new PickListener(vertexPickedState, arcPickedState, pickingPanel);
+        ModalPickListener pickListener = new ModalPickListener(
+                new EditionPickListener(vertexPickedState, arcPickedState, pickingPanel),
+                new SimulationPickListener(vertexPickedState)
+        );
+
         vertexPickedState.addItemListener(pickListener);
         arcPickedState.addItemListener(pickListener);
     }
