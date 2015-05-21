@@ -4,13 +4,12 @@ import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.Layer;
 import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.VisualizationServer;
-import edu.uci.ics.jung.visualization.util.ChangeEventSupport;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
@@ -23,6 +22,7 @@ import java.util.List;
 public class ActiveTransitionsBoundingRectanglePaintable implements VisualizationServer.Paintable {
     private static final Color DEFAULT_RECTANGLES_COLOR = Color.yellow;
     protected RenderContext<PetriNetVertex, Arc> rc;
+    protected ActiveTransitionsBoundingRectangleCollector brc;
     protected List<Rectangle2D> rectangles;
     protected Color rectanglesColor;
 
@@ -35,16 +35,8 @@ public class ActiveTransitionsBoundingRectanglePaintable implements Visualizatio
                                                        Color rectanglesColor) {
         this.rc = rc;
         this.rectanglesColor = rectanglesColor;
-        final ActiveTransitionsBoundingRectangleCollector brc = new ActiveTransitionsBoundingRectangleCollector(rc, layout);
+        this.brc = new ActiveTransitionsBoundingRectangleCollector(rc, layout);
         this.rectangles = brc.getRectangles();
-        if(layout instanceof ChangeEventSupport) {
-            ((ChangeEventSupport)layout).addChangeListener(new ChangeListener() {
-
-                public void stateChanged(ChangeEvent e) {
-                    brc.compute();
-                    rectangles = brc.getRectangles();
-                }});
-        }
     }
 
     @Override
@@ -52,7 +44,8 @@ public class ActiveTransitionsBoundingRectanglePaintable implements Visualizatio
         Graphics2D g2d = (Graphics2D) g;
         g.setColor(rectanglesColor);
 
-        for (Rectangle2D rectangle : rectangles) {
+        brc.compute();
+        for (Rectangle2D rectangle : brc.getRectangles()) {
             g2d.fill(rc.getMultiLayerTransformer().transform(Layer.LAYOUT, rectangle));
         }
     }
