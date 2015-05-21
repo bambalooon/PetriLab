@@ -71,6 +71,21 @@ public class PetriNetGraph extends DirectedSparseGraph<PetriNetVertex, Arc> {
         return true;
     }
 
+    public void fireTransition(Transition transition) {
+        if (isTransitionActive(transition)) {
+            Collection<Arc> inArcs = getInEdges(transition);
+            Collection<Arc> outArcs = getOutEdges(transition);
+            for (Arc inArc : inArcs) {
+                Place inPlace = (Place) getOpposite(transition, inArc);
+                inPlace.setMarking(inPlace.getMarking() - inArc.getWeight());
+            }
+            for (Arc outArc : outArcs) {
+                Place outPlace = (Place) getOpposite(transition, outArc);
+                outPlace.setMarking(outPlace.getMarking() + outArc.getWeight());
+            }
+        }
+    }
+
     public List<Transition> getActiveTransitions() {
         return FluentIterable.from(getTransitions())
                 .filter(new Predicate<Transition>() {
