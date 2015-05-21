@@ -7,6 +7,7 @@ import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
 import static pl.edu.agh.eis.petrilab.gui.Configuration.SIMULATION_ACTIVE_TRANSITIONS_PRE_RENDER_PAINTABLE;
+import static pl.edu.agh.eis.petrilab.gui.Configuration.SIMULATION_MODE_ACTIVE;
 
 /**
  * Name: StopSimulationMode
@@ -24,6 +25,7 @@ public class StopSimulationModeAction implements Action {
     @Override
     public void invoke() {
         PetriLabApplication.getInstance().loadPetriNetGraph();
+        PetriLabApplication.getInstance().getConfiguration().setProperty(SIMULATION_MODE_ACTIVE, false);
         VisualizationServer.Paintable activeTransitionPreRenderPaintable = PetriLabApplication.getInstance().getConfiguration()
                 .removeProperty(SIMULATION_ACTIVE_TRANSITIONS_PRE_RENDER_PAINTABLE);
         graphViewer.removePreRenderPaintable(activeTransitionPreRenderPaintable);
