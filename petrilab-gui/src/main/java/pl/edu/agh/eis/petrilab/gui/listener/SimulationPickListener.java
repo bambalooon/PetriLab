@@ -37,6 +37,8 @@ public class SimulationPickListener implements ItemListener {
                 vertexPickedState.pick(transition, false);
                 graphViewer.repaint();
             }
+        } else {
+            vertexPickedState.pick((PetriNetVertex) e.getItem(), false);
         }
     }
 }
