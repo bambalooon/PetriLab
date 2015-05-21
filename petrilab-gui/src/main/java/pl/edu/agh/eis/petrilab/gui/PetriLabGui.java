@@ -99,7 +99,7 @@ public class PetriLabGui extends JFrame {
 
         ModalPickListener pickListener = new ModalPickListener(
                 new EditionPickListener(vertexPickedState, arcPickedState, pickingPanel),
-                new SimulationPickListener(vertexPickedState)
+                new SimulationPickListener(graphViewer, vertexPickedState)
         );
 
         vertexPickedState.addItemListener(pickListener);
