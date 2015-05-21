@@ -26,4 +26,7 @@ public enum NameGenerator {
         return String.format(nameFormat, nameCounter++);
     }
 
+    public void setNameCounter(int nameCounter) {
+        this.nameCounter = nameCounter;
+    }
 }

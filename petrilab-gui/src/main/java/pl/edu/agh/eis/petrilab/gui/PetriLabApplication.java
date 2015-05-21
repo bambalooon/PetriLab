@@ -1,5 +1,6 @@
 package pl.edu.agh.eis.petrilab.gui;
 
+import pl.edu.agh.eis.petrilab.gui.util.NameGenerator;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 
@@ -50,6 +51,8 @@ public class PetriLabApplication {
     public void loadPetriNetGraph(PetriNetGraph petriNetGraph) {
         this.petriNetGraph = petriNetGraph;
         this.petriLabGui.loadPetriNetGraph();
+        NameGenerator.PLACE.setNameCounter(petriNetGraph.getPlaces().size() + 1);
+        NameGenerator.TRANSITION.setNameCounter(petriNetGraph.getTransitions().size() + 1);
     }
 
     public void loadSimulationGraph() {
