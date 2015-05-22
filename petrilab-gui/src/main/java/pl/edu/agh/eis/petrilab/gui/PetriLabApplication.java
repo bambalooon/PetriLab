@@ -8,11 +8,11 @@ import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
 import pl.edu.agh.eis.petrilab.gui.jung.factory.ArcFactory;
 import pl.edu.agh.eis.petrilab.gui.jung.factory.VertexFactory;
 import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
-import pl.edu.agh.eis.petrilab.gui.util.NameGenerator;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
+import pl.edu.agh.eis.petrilab.model2.util.NameGenerator;
 
 import javax.swing.SwingUtilities;
 
@@ -49,6 +49,8 @@ public class PetriLabApplication {
     }
 
     private void initGraphViewer() {
+        configuration.setProperty(Configuration.NAME_GENERATOR, new NameGenerator(petriNetGraph));
+
         graphViewer = VisualizationViewerGenerator.PETRI_NET.generateVisualizationViewer(petriNetGraph);
 
         graphMouse = new EditingModalGraphMouse<>(graphViewer.getRenderContext(),
@@ -82,12 +84,11 @@ public class PetriLabApplication {
     public void loadPetriNetGraph() {
         graphViewer.setGraphLayout(new CircleLayout<>(petriNetGraph));
         graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-        NameGenerator.PLACE.setNameCounter(petriNetGraph.getPlaces().size() + 1);
-        NameGenerator.TRANSITION.setNameCounter(petriNetGraph.getTransitions().size() + 1);
     }
 
     public void loadPetriNetGraph(PetriNetGraph graph) {
         petriNetGraph = graph;
+        configuration.setProperty(Configuration.NAME_GENERATOR, new NameGenerator(petriNetGraph));
         loadPetriNetGraph();
     }
 
