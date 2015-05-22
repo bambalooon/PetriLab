@@ -1,10 +1,12 @@
 package pl.edu.agh.eis.petrilab.gui.menu.edition;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import pl.edu.agh.eis.petrilab.gui.PetriLabApplication;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.Transition;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Dimension;
 
@@ -33,7 +35,17 @@ public class TransitionEditionPanel extends AbstractEditionPanel<Transition> {
 
     @Override
     protected void modify(Transition transition) {
-        transition.setName(nameField.getText());
+        String newName = nameField.getText();
+        if (newName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Przejście musi mieć nazwę.");
+        } else {
+            String oldName = transition.getName();
+            transition.setName(newName);
+            if (!PetriLabApplication.getInstance().getPetriNetGraph().areTransitionsNamesUnique()) {
+                transition.setName(oldName);
+                JOptionPane.showMessageDialog(this, "Nazwa przejścia musi być unikalna.");
+            }
+        }
     }
 
     @Override

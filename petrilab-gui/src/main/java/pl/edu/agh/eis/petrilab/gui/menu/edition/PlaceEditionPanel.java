@@ -1,10 +1,12 @@
 package pl.edu.agh.eis.petrilab.gui.menu.edition;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import pl.edu.agh.eis.petrilab.gui.PetriLabApplication;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.Place;
 
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -55,7 +57,17 @@ public class PlaceEditionPanel extends AbstractEditionPanel<Place> {
 
     @Override
     protected void modify(Place place) {
-        place.setName(nameField.getText());
+        String newName = nameField.getText();
+        if (newName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Miejsce musi mieć nazwę.");
+        } else {
+            String oldName = place.getName();
+            place.setName(newName);
+            if (!PetriLabApplication.getInstance().getPetriNetGraph().arePlacesNamesUnique()) {
+                place.setName(oldName);
+                JOptionPane.showMessageDialog(this, "Nazwa miejsca musi być unikalna.");
+            }
+        }
         place.setMarking((Integer) markingSpinner.getValue());
         place.setCapacity((Integer) capacitySpinner.getValue());
     }
