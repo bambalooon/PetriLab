@@ -1,7 +1,6 @@
 package pl.edu.agh.eis.petrilab.gui.menu.edition;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.Place;
@@ -20,8 +19,7 @@ public class PickingPanel extends JPanel {
     private final TransitionEditionPanel transitionEditionPanel;
     private final ArcEditionPanel arcEditionPanel;
 
-    public PickingPanel(AbstractModalGraphMouse graphMouse,
-                        VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
+    public PickingPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
         placeEditionPanel = new PlaceEditionPanel(graphViewer);
         transitionEditionPanel = new TransitionEditionPanel(graphViewer);
         arcEditionPanel = new ArcEditionPanel(graphViewer);
