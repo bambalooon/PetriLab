@@ -1,18 +1,13 @@
 package pl.edu.agh.eis.petrilab.gui;
 
 import com.google.common.collect.ImmutableList;
-import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.picking.PickedState;
-import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
-import pl.edu.agh.eis.petrilab.gui.jung.factory.ArcFactory;
-import pl.edu.agh.eis.petrilab.gui.jung.factory.VertexFactory;
-import pl.edu.agh.eis.petrilab.gui.listener.ModalPickListener;
-import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
 import pl.edu.agh.eis.petrilab.gui.listener.EditionPickListener;
+import pl.edu.agh.eis.petrilab.gui.listener.ModalPickListener;
 import pl.edu.agh.eis.petrilab.gui.listener.SimulationPickListener;
 import pl.edu.agh.eis.petrilab.gui.menu.MenuPanel;
 import pl.edu.agh.eis.petrilab.gui.menu.TabComponent;
@@ -47,38 +42,22 @@ public class PetriLabGui extends JFrame {
     private static final int MIN_WIDTH = 600;
     private static final int MIN_HEIGHT = 600;
 
-    private AbstractModalGraphMouse graphMouse;
-    private VisualizationViewer<PetriNetVertex, Arc> graphViewer;
     private Component menuPanel;
     private final JSplitPane mainPanel;
 
     public PetriLabGui() {
         super(PetriLabApplication.TITLE);
 
-        setUpGraphViewer();
-        setUpMenu();
-        mainPanel = setUpMainPanel();
+        VisualizationViewer<PetriNetVertex, Arc> graphViewer = PetriLabApplication.getInstance().getGraphViewer();
+        EditingModalGraphMouse<PetriNetVertex, Arc> graphMouse = PetriLabApplication.getInstance().getGraphMouse();
+
+        setUpMenu(graphViewer, graphMouse);
+        mainPanel = setUpMainPanel(graphViewer);
         setUpFrame();
     }
 
-    private void setUpGraphViewer() {
-        graphViewer = VisualizationViewerGenerator.PETRI_NET
-                .generateVisualizationViewer(PetriLabApplication.getInstance().getPetriNetGraph());
-
-        graphMouse = new EditingModalGraphMouse<>(graphViewer.getRenderContext(),
-                new VertexFactory(), new ArcFactory());
-
-        graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-
-        graphViewer.setGraphMouse(graphMouse);
-        graphViewer.addKeyListener(graphMouse.getModeKeyListener());
-
-        graphMouse.addItemListener(
-                new ModeChangeListener(graphViewer.getPickedVertexState(), graphViewer.getPickedEdgeState()));
-    }
-
-    private void setUpMenu() {
-        PickingPanel pickingPanel = new PickingPanel(graphMouse, graphViewer);
+    private void setUpMenu(VisualizationViewer<PetriNetVertex, Arc> graphViewer, AbstractModalGraphMouse graphMouse) {
+        PickingPanel pickingPanel = new PickingPanel(graphViewer);
         MainPanel mainPanel = new MainPanel(new ModePanel(graphMouse), new EditionPanel(), pickingPanel);
         graphMouse.addItemListener(mainPanel);
 
@@ -106,7 +85,7 @@ public class PetriLabGui extends JFrame {
         arcPickedState.addItemListener(pickListener);
     }
 
-    private JSplitPane setUpMainPanel() {
+    private JSplitPane setUpMainPanel(Component graphViewer) {
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphViewer, menuPanel);
         splitPane.setResizeWeight(1);
         splitPane.setOneTouchExpandable(true);
@@ -120,15 +99,5 @@ public class PetriLabGui extends JFrame {
         setLayout(new BorderLayout());
         getContentPane().add(mainPanel, BorderLayout.CENTER);
         pack();
-    }
-
-    public void loadPetriNetGraph() {
-        graphViewer.setGraphLayout(new CircleLayout<>(PetriLabApplication.getInstance().getPetriNetGraph()));
-        graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-    }
-
-    public void loadSimulationGraph() {
-        graphViewer.setGraphLayout(new CircleLayout<>(PetriLabApplication.getInstance().getSimulationGraph()));
-        graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
     }
 }
