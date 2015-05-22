@@ -41,6 +41,39 @@ public class PetriNetGraph extends DirectedSparseGraph<PetriNetVertex, Arc> {
                 });
     }
 
+    public boolean arePlacesNamesUnique() {
+        return !FluentIterable.from(getPlaces())
+                .anyMatch(new Predicate<Place>() {
+                    @Override
+                    public boolean apply(final Place place) {
+                        return FluentIterable.from(getPlaces())
+                                .anyMatch(new Predicate<Place>() {
+                                    @Override
+                                    public boolean apply(Place otherPlace) {
+                                        return place != otherPlace && place.getName().equals(otherPlace.getName());
+                                    }
+                                });
+                    }
+                });
+    }
+
+    public boolean areTransitionsNamesUnique() {
+        return !FluentIterable.from(getTransitions())
+                .anyMatch(new Predicate<Transition>() {
+                    @Override
+                    public boolean apply(final Transition transition) {
+                        return FluentIterable.from(getTransitions())
+                                .anyMatch(new Predicate<Transition>() {
+                                    @Override
+                                    public boolean apply(Transition otherTransition) {
+                                        return transition != otherTransition
+                                                && transition.getName().equals(otherTransition.getName());
+                                    }
+                                });
+                    }
+                });
+    }
+
     public List<Place> getPlaces() {
         return FluentIterable.from(getVertices())
                 .filter(Place.class)
