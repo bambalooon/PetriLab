@@ -3,11 +3,12 @@ package pl.edu.agh.eis.petrilab.gui.jung.factory;
 import org.apache.commons.collections15.Factory;
 import pl.edu.agh.eis.petrilab.gui.Configuration;
 import pl.edu.agh.eis.petrilab.gui.PetriLabApplication;
-import pl.edu.agh.eis.petrilab.gui.util.NameGenerator;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.Place;
 import pl.edu.agh.eis.petrilab.model2.Transition;
+import pl.edu.agh.eis.petrilab.model2.util.NameGenerator;
 
+import static pl.edu.agh.eis.petrilab.gui.Configuration.NAME_GENERATOR;
 import static pl.edu.agh.eis.petrilab.gui.Configuration.VERTEX_FACTORY_TYPE;
 
 /**
@@ -30,10 +31,11 @@ public class VertexFactory implements Factory<PetriNetVertex> {
     @Override
     public PetriNetVertex create() {
         Class<?> vertexClass = configuration.getProperty(VERTEX_FACTORY_TYPE);
+        NameGenerator nameGenerator = configuration.getProperty(NAME_GENERATOR);
         if (Place.class.equals(vertexClass)) {
-            return new Place(NameGenerator.PLACE.getName());
+            return new Place(nameGenerator.getPlaceName());
         } else if (Transition.class.equals(vertexClass)) {
-            return new Transition(NameGenerator.TRANSITION.getName());
+            return new Transition(nameGenerator.getTransitionName());
         }
         throw new IllegalStateException("Property VERTEX_FACTORY_TYPE contains illegal value.");
     }
