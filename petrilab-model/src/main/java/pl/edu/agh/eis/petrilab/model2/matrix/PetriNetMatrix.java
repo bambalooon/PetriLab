@@ -79,6 +79,55 @@ public class PetriNetMatrix {
         return transitionsList;
     }
 
+    public int[][] add (boolean positive, int[][] matrix1, int[][] matrix2) {
+        int rows = matrix1.length, cols = matrix1[0].length;
+        int[][] result = new int[rows][cols];
+        for(int i = 0; i < rows; i++)
+            for(int j = 0; j < cols; j++) {
+                if (positive)
+                    result[i][j] = matrix1[i][j] + matrix2[i][j];
+                else
+                    result[i][j] = matrix1[i][j] - matrix2[i][j];
+            }
+        return result;
+    }
+
+    public int[] add (boolean positive, int[] vector1, int[] vector2) {
+        int length = vector1.length;
+        int[] result = new int[length];
+            for(int i = 0; i < length; i++) {
+                if (positive)
+                    result[i] = vector1[i] + vector2[i];
+                else
+                    result[i] = vector1[i] - vector2[i];
+            }
+        return result;
+    }
+
+    public int[] multiply (int[] vector, int scalar) {
+        int length = vector.length;
+        int[] result = new int[length];
+        for(int i = 0; i < length; i++)
+                result[i] = vector[i] * scalar;
+        return result;
+    }
+
+    public int[] col (int[][] matrix, int index) {
+        int rows = matrix.length;
+        int[] result = new int[rows];
+        for(int i = 0; i < rows; i++)
+                    result[i] = matrix[i][index];
+        return result;
+    }
+
+    public int[] row (int[][] matrix, int index) {
+        int cols = matrix[0].length;
+        int[] result = new int[cols];
+        for(int i = 0; i < cols; i++)
+            result[i] = matrix[index][i];
+        return result;
+    }
+
     public static PetriNetMatrix generateMatrix(PetriNetGraph petriNetGraph) {
         List<Place> places = petriNetGraph.getPlaces();
         List<Transition> transitions = petriNetGraph.getTransitions();
