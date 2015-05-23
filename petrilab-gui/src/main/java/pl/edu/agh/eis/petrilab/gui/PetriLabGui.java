@@ -61,15 +61,16 @@ public class PetriLabGui extends JFrame {
         MainPanel mainPanel = new MainPanel(new ModePanel(graphMouse), new EditionPanel(), pickingPanel);
         graphMouse.addItemListener(mainPanel);
 
+        SimulationPanel simulationPanel = new SimulationPanel();
         menuPanel = new MenuPanel(ImmutableList.<TabComponent>builder()
                 .add(new TabComponent<>("File", new FilePanel(),
                         new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
                 .add(new TabComponent<>("Edit", mainPanel,
                         new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
-                .add(new TabComponent<>("Simulation", new SimulationPanel(),
+                .add(new TabComponent<>("Simulation", simulationPanel,
                         new ActionGroup(
                                 new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING),
-                                new StartSimulationModeAction(graphViewer)
+                                new StartSimulationModeAction(graphViewer, simulationPanel)
                         ), new StopSimulationModeAction(graphViewer)))
                 .build());
 
@@ -78,7 +79,7 @@ public class PetriLabGui extends JFrame {
 
         ModalPickListener pickListener = new ModalPickListener(
                 new EditionPickListener(vertexPickedState, arcPickedState, pickingPanel),
-                new SimulationPickListener(graphViewer, vertexPickedState)
+                new SimulationPickListener(graphViewer, vertexPickedState, simulationPanel)
         );
 
         vertexPickedState.addItemListener(pickListener);
