@@ -1,79 +1,112 @@
 package pl.edu.agh.eis.petrilab.api;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
+import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
-import edu.uci.ics.jung.graph.util.Pair;
-import pl.edu.agh.eis.petrilab.model.PetriNet;
+import pl.edu.agh.eis.petrilab.model2.Transition;
+import pl.edu.agh.eis.petrilab.model2.matrix.Marking;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 
-import java.util.Iterator;
+import java.util.LinkedList;
+
+import static pl.edu.agh.eis.petrilab.model2.matrix.Matrix.add;
+import static pl.edu.agh.eis.petrilab.model2.matrix.Matrix.row;
 
 /**
  * Created by PW on 26-04-2015.
  */
 public class CoverabilityGraph {
+    public DirectedSparseGraph<Marking, Transition> getCoverabilityGraph(PetriNetMatrix matrix) {
+        DirectedSparseGraph<Marking, Transition> graph = new DirectedSparseGraph<>();
+        LinkedList<Marking> markingQueue = Lists.newLinkedList();
+        Marking m0 = new Marking(matrix.getMarkingVector());
+        graph.addVertex(m0);
+        markingQueue.add(m0);
 
-    public DirectedSparseGraph Generate(PetriNetMatrix net) {
-        DirectedSparseGraph<int[], String> graph = new DirectedSparseGraph<>();
-        int[][] incidenceMatrix = net.add(false,net.getInMatrix(),net.getOutMatrix());
-        int transitionNumber = incidenceMatrix[0].length;
-        int placesNumber = incidenceMatrix.length;
+        int[][] incidenceMatrix = add(false, matrix.getInMatrix(), matrix.getOutMatrix());
+        int transitionNumber = incidenceMatrix.length;
 
-        Iterator graphItr = graph.getVertices().iterator();
+        while (!markingQueue.isEmpty()) {
+            Marking marking = markingQueue.pop();
 
-        int[] m0 = net.getMarkingVector();
-        int[] newVertex;
-        graph.addVertex(m0); //dodaj wezel poczatkowy o znakowaniu M0
-        newVertex = m0; //oznacz go jako nowy
-        boolean newVertexExists = true;
+            for (int i = 0; i < transitionNumber; i++) {
+                if (matrix.isTransitionActive(i, marking.getValue())) {
+                    Marking newMarking = new Marking(marking.getValue(), row(incidenceMatrix, i));
 
-        if(net.getActiveTransitions(newVertex).isEmpty()) {
-            return graph;
-        }
-
-        //int[] newVertex = net.getMarkingVector();
-        int[] marking1 = new int[placesNumber];
-
-        while(newVertexExists) { //dopoki istnieje wezel oznaczony jako nowy
-            if (net.getActiveTransitions(newVertex).isEmpty()) { //jezeli dla znakowania M nie istnieje aktywne przejscie sialalala
-                newVertexExists = false;
-            }
-            else { //w przeciwnym wypadku
-                for (int i = 0; i < transitionNumber; i++) {
-                    if (net.isTransitionActive(i, newVertex)) { //dla kazdego przejscia aktywnego wykonaj
-                        marking1 = net.add(true, newVertex, net.col(incidenceMatrix, i)); //oblicz znakowanie M' gdzie M-t-M'
-                        while(graphItr.hasNext()) { //jezeli w grafie istnieje znakowanie
-                            int[] marking11 = (int[]) graphItr.next(); //M''
-                            for(int j = 0; i < transitionNumber; i++) {
-                                boolean condition1 = net.add(true, marking11, net.col(incidenceMatrix, i)) == marking1; //takie ze M' jest osiagalne z M''
-                                boolean condition2 = true; //oraz dla kazdego p M''(p) <= M'(p)
-                                boolean condition3 = false; //oraz istnieje p' takie ze M''(p') < M'(p')
-                                for(int k = 0; k < placesNumber; k++) {
-                                    if (marking11[k] > marking1[k]) {
-                                        condition2 = false;
-                                        break;
+                    if (!graph.addVertex(newMarking)) {
+                        final Marking duplicatedMarking = newMarking;
+                        newMarking = FluentIterable.from(graph.getVertices())
+                                .firstMatch(new Predicate<Marking>() {
+                                    @Override
+                                    public boolean apply(Marking marking) {
+                                        return duplicatedMarking.equals(marking);
                                     }
-                                    if(marking11[k] < marking1[k])
-                                        condition3 = true;
-                                }
-                                if(condition1 && condition2 && condition3) {
-                                    int[] inf = net.multiply(net.add(false, marking1,marking11),-1); //to M' = M' + ((M'-M'')*nieskonczonosc)
-                                    marking1 = net.add(true,marking1,inf);
-                                    break;
-                                }
-                            }
-                        }
-                        if(!graph.containsVertex(marking1)) { //jezeli wezel M' nie nalezy do grafu
-                            graph.addVertex(marking1); //to dodaj go
-                            graph.addEdge(net.getTransitionsNames()[i], newVertex, marking1); //dodaj luk z wezla M do wezla M'
-                            newVertex = marking1; //oznacz wezel M' jako nowy
-                        }
+                                }).get();
+                    }
+                    markingQueue.add(newMarking);
+
+                    if (graph.findEdge(marking, newMarking) == null) {
+                        Transition transition = new Transition(matrix.getTransitionsNames()[i]);
+                        graph.addEdge(transition, marking, newMarking);
                     }
 
+                    UnweightedShortestPath<Marking, Transition> shortestPath = new UnweightedShortestPath<>(graph);
+                    for (Marking srcMarking : graph.getVertices()) {
+                        if (srcMarking != newMarking
+                                && shortestPath.getDistance(srcMarking, newMarking) != null
+                                && Marking.leq(srcMarking, newMarking)
+                                && Marking.existLesser(srcMarking, newMarking)) {
+
+                            newMarking.updateMarking(srcMarking);
+                            break;
+                        }
+                    }
                 }
             }
         }
+
         return graph;
     }
-//wyswietlanie nieskonczonosci - to jest na razie problem, ale poki co jest wartosc ujemna
+
+    public DirectedSparseGraph<Marking, Transition> getReachabilityGraph(PetriNetMatrix matrix, int nodesLimit) {
+        DirectedSparseGraph<Marking, Transition> graph = new DirectedSparseGraph<>();
+        LinkedList<Marking> markingQueue = Lists.newLinkedList();
+        Marking m0 = new Marking(matrix.getMarkingVector());
+        graph.addVertex(m0);
+        markingQueue.add(m0);
+
+        int[][] incidenceMatrix = add(false, matrix.getInMatrix(), matrix.getOutMatrix());
+        int transitionNumber = incidenceMatrix.length;
+
+        while (!markingQueue.isEmpty() && graph.getVertexCount() < nodesLimit) {
+            Marking marking = markingQueue.pop();
+
+            for (int i = 0; i < transitionNumber; i++) {
+                if (matrix.isTransitionActive(i, marking.getValue())) {
+                    Marking newMarking = new Marking(marking.getValue(), row(incidenceMatrix, i));
+
+                    if (graph.addVertex(newMarking)) {
+                        markingQueue.add(newMarking);
+                        final Marking duplicatedMarking = newMarking;
+                        newMarking = FluentIterable.from(graph.getVertices())
+                                .firstMatch(new Predicate<Marking>() {
+                                    @Override
+                                    public boolean apply(Marking marking) {
+                                        return duplicatedMarking.equals(marking);
+                                    }
+                                }).get();
+                    }
+                    if (graph.findEdge(marking, newMarking) == null) {
+                        Transition transition = new Transition(matrix.getTransitionsNames()[i]);
+                        graph.addEdge(transition, marking, newMarking);
+                    }
+                }
+            }
+        }
+
+        return graph;
+    }
 
 }
