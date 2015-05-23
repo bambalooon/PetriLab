@@ -94,6 +94,14 @@ public class Marking {
 
     @Override
     public String toString() {
-        return Arrays.toString(vector);
+        return Arrays.toString(FluentIterable.from(Arrays.asList(vector))
+                .transform(new Function<Double, String>() {
+                    @Override
+                    public String apply(Double input) {
+                        return input.isInfinite()
+                                ? "∞"
+                                : String.valueOf(input.intValue());
+                    }
+                }).toArray(String.class));
     }
 }
