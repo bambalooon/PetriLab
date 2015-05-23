@@ -79,7 +79,7 @@ public class SimulationPanel extends JPanel implements ActionListener {
         ModalGraphMouse graphMouse = new DefaultModalGraphMouse<>();
         graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
         DirectedSparseGraph<Marking, Transition> graph;
-        VisualizationViewer<Marking, Transition> viewer;
+        final VisualizationViewer<Marking, Transition> viewer;
         switch (e.getActionCommand()) {
             case GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION:
                 graph = CoverabilityGraph.getCoverabilityGraph(petriNetMatrix);
@@ -93,6 +93,8 @@ public class SimulationPanel extends JPanel implements ActionListener {
                 viewer.setGraphMouse(graphMouse);
                 JOptionPane.showMessageDialog(null, viewer);
                 break;
+            default:
+                throw new UnsupportedOperationException("Unsupported action.");
         }
     }
 }
