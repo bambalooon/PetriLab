@@ -9,8 +9,10 @@ import pl.edu.agh.eis.petrilab.gui.jung.transform.VertexIconTransformer;
 import pl.edu.agh.eis.petrilab.gui.jung.transform.VertexShapeTransformer;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
+import pl.edu.agh.eis.petrilab.model2.Transition;
+import pl.edu.agh.eis.petrilab.model2.matrix.Marking;
 
-import java.awt.Dimension;
+import java.awt.*;
 
 /**
  * Name: VisualizationViewerGenerator
@@ -21,7 +23,7 @@ import java.awt.Dimension;
 public interface VisualizationViewerGenerator<V, E> {
     int VIEWER_WIDTH = 400;
     int VIEWER_HEIGHT = 400;
-    VisualizationViewer<V, E> generateVisualizationViewer(DirectedSparseGraph<PetriNetVertex, Arc> graph);
+    VisualizationViewer<V, E> generateVisualizationViewer(DirectedSparseGraph<V, E> graph);
 
     VisualizationViewerGenerator<PetriNetVertex, Arc> PETRI_NET =
             new VisualizationViewerGenerator<PetriNetVertex, Arc>() {
@@ -50,6 +52,34 @@ public interface VisualizationViewerGenerator<V, E> {
             visualizationViewer.getRenderContext().setVertexFillPaintTransformer(new VertexFillPaintTransformer());
             visualizationViewer.getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer());
             visualizationViewer.getRenderContext().setVertexIconTransformer(new VertexIconTransformer());
+
+            return visualizationViewer;
+        }
+    };
+
+    VisualizationViewerGenerator<Marking, Transition> COVERABILITY_GRAPH =
+            new VisualizationViewerGenerator<Marking, Transition>() {
+
+        @Override
+        public VisualizationViewer<Marking, Transition> generateVisualizationViewer(DirectedSparseGraph<Marking, Transition> graph) {
+
+            //FIXME: need to remove vv size and maybe think about different way to show graphs than unresizable JOptionPane
+            VisualizationViewer<Marking, Transition> visualizationViewer = new VisualizationViewer<>
+                    (new CircleLayout<>(graph), new Dimension(1200, 600));
+
+            visualizationViewer.getRenderContext().setVertexLabelTransformer(new Transformer<Marking, String>() {
+                @Override
+                public String transform(Marking marking) {
+                    return marking.toString();
+                }
+            });
+
+            visualizationViewer.getRenderContext().setEdgeLabelTransformer(new Transformer<Transition, String>() {
+                @Override
+                public String transform(Transition transition) {
+                    return transition.toString();
+                }
+            });
 
             return visualizationViewer;
         }
