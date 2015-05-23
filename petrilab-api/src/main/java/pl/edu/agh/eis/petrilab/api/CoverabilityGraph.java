@@ -11,8 +11,8 @@ import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 
 import java.util.LinkedList;
 
-import static pl.edu.agh.eis.petrilab.model2.matrix.Matrix.add;
 import static pl.edu.agh.eis.petrilab.model2.matrix.Matrix.row;
+import static pl.edu.agh.eis.petrilab.model2.matrix.Matrix.substract;
 
 /**
  * Created by PW on 26-04-2015.
@@ -25,7 +25,7 @@ public class CoverabilityGraph {
         graph.addVertex(m0);
         markingQueue.add(m0);
 
-        int[][] incidenceMatrix = add(false, matrix.getInMatrix(), matrix.getOutMatrix());
+        int[][] incidenceMatrix = substract(matrix.getInMatrix(), matrix.getOutMatrix());
         int transitionNumber = incidenceMatrix.length;
 
         while (!markingQueue.isEmpty()) {
@@ -35,7 +35,9 @@ public class CoverabilityGraph {
                 if (matrix.isTransitionActive(i, marking.getValue())) {
                     Marking newMarking = new Marking(marking.getValue(), row(incidenceMatrix, i));
 
-                    if (!graph.addVertex(newMarking)) {
+                    if (graph.addVertex(newMarking)) {
+                        markingQueue.add(newMarking);
+                    } else {
                         final Marking duplicatedMarking = newMarking;
                         newMarking = FluentIterable.from(graph.getVertices())
                                 .firstMatch(new Predicate<Marking>() {
@@ -45,7 +47,6 @@ public class CoverabilityGraph {
                                     }
                                 }).get();
                     }
-                    markingQueue.add(newMarking);
 
                     if (graph.findEdge(marking, newMarking) == null) {
                         Transition transition = new Transition(matrix.getTransitionsNames()[i]);
@@ -66,7 +67,6 @@ public class CoverabilityGraph {
                 }
             }
         }
-
         return graph;
     }
 
@@ -77,7 +77,7 @@ public class CoverabilityGraph {
         graph.addVertex(m0);
         markingQueue.add(m0);
 
-        int[][] incidenceMatrix = add(false, matrix.getInMatrix(), matrix.getOutMatrix());
+        int[][] incidenceMatrix = substract(matrix.getInMatrix(), matrix.getOutMatrix());
         int transitionNumber = incidenceMatrix.length;
 
         while (!markingQueue.isEmpty() && graph.getVertexCount() < nodesLimit) {
