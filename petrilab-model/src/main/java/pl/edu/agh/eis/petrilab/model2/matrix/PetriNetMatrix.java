@@ -6,7 +6,6 @@ import pl.edu.agh.eis.petrilab.model2.Place;
 import pl.edu.agh.eis.petrilab.model2.Transition;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -60,24 +59,15 @@ public class PetriNetMatrix {
         return transitionsNames;
     }
 
-    public boolean isTransitionActive (int transitionIndex, Double[] marking) {
+    public boolean isTransitionActive(boolean considerCapacity, int transitionIndex, Double[] marking) {
         int n = marking.length;
         for (int i = 0; i < n; i++) {
             if (marking[i] < this.getOutMatrix()[transitionIndex][i])
                 return false;
-            if (this.getInMatrix()[transitionIndex][i] + marking[i] > this.getCapacityVector()[i])
+            if (considerCapacity && this.getInMatrix()[transitionIndex][i] + marking[i] > this.getCapacityVector()[i])
                 return false;
         }
         return true;
-    }
-
-    public List<Integer> getActiveTransitions (Double[] marking) {
-        int transitionsCount = this.getInMatrix().length;
-        List<Integer> transitionsList = new ArrayList<>();
-        for (int i = 0; i < transitionsCount; i++)
-            if (isTransitionActive(i, marking))
-                transitionsList.add(i);
-        return transitionsList;
     }
 
     private static Map<Integer, Integer> sortAndCreateReconfigurationMap(String[] array) {

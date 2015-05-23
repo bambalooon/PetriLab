@@ -32,7 +32,7 @@ public class CoverabilityGraph {
             Marking marking = markingQueue.pop();
 
             for (int i = 0; i < transitionNumber; i++) {
-                if (matrix.isTransitionActive(i, marking.getValue())) {
+                if (matrix.isTransitionActive(false, i, marking.getValue())) {
                     Marking newMarking = new Marking(marking.getValue(), row(incidenceMatrix, i));
 
                     if (graph.addVertex(newMarking)) {
@@ -84,7 +84,7 @@ public class CoverabilityGraph {
             Marking marking = markingQueue.pop();
 
             for (int i = 0; i < transitionNumber; i++) {
-                if (matrix.isTransitionActive(i, marking.getValue())) {
+                if (matrix.isTransitionActive(true, i, marking.getValue())) {
                     Marking newMarking = new Marking(marking.getValue(), row(incidenceMatrix, i));
 
                     if (graph.addVertex(newMarking)) {
