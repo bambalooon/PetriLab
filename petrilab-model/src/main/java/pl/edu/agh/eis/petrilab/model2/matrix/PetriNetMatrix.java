@@ -1,14 +1,15 @@
 package pl.edu.agh.eis.petrilab.model2.matrix;
 
+import com.google.common.collect.Maps;
 import pl.edu.agh.eis.petrilab.model2.Arc;
-import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.Place;
 import pl.edu.agh.eis.petrilab.model2.Transition;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Name: PetriNetMatrix
@@ -59,73 +60,73 @@ public class PetriNetMatrix {
         return transitionsNames;
     }
 
-    public boolean isTransitionActive (int transitionNumber, int[] marking) {
+    public boolean isTransitionActive (int transitionIndex, Double[] marking) {
         int n = marking.length;
         for (int i = 0; i < n; i++) {
-            if (marking[i] < this.getOutMatrix()[i][transitionNumber])
+            if (marking[i] < this.getOutMatrix()[transitionIndex][i])
                 return false;
-            if (this.getInMatrix()[i][transitionNumber] + marking[i] > this.getCapacityVector()[i])
+            if (this.getInMatrix()[transitionIndex][i] + marking[i] > this.getCapacityVector()[i])
                 return false;
         }
         return true;
     }
 
-    public List<Integer> getActiveTransitions (int[] marking) {
-        int n = this.getInMatrix()[0].length;
+    public List<Integer> getActiveTransitions (Double[] marking) {
+        int transitionsCount = this.getInMatrix().length;
         List<Integer> transitionsList = new ArrayList<>();
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < transitionsCount; i++)
             if (isTransitionActive(i, marking))
                 transitionsList.add(i);
         return transitionsList;
     }
 
-    public int[][] add (boolean positive, int[][] matrix1, int[][] matrix2) {
-        int rows = matrix1.length, cols = matrix1[0].length;
-        int[][] result = new int[rows][cols];
-        for(int i = 0; i < rows; i++)
-            for(int j = 0; j < cols; j++) {
-                if (positive)
-                    result[i][j] = matrix1[i][j] + matrix2[i][j];
-                else
-                    result[i][j] = matrix1[i][j] - matrix2[i][j];
+    private static Map<Integer, Integer> sortAndCreateReconfigurationMap(String[] array) {
+        String[] unorderedArray = array.clone();
+        Arrays.sort(array);
+        Map<Integer, Integer> reconfigurationMap = Maps.newHashMap();
+        for (int oldIndex = 0; oldIndex < unorderedArray.length; oldIndex++) {
+            for (int newIndex = 0; newIndex < array.length; newIndex++) {
+                if (unorderedArray[oldIndex].equals(array[newIndex])) {
+                    reconfigurationMap.put(newIndex, oldIndex);
+                    break;
+                }
             }
-        return result;
+        }
+        return reconfigurationMap;
     }
 
-    public int[] add (boolean positive, int[] vector1, int[] vector2) {
-        int length = vector1.length;
-        int[] result = new int[length];
-            for(int i = 0; i < length; i++) {
-                if (positive)
-                    result[i] = vector1[i] + vector2[i];
-                else
-                    result[i] = vector1[i] - vector2[i];
+    private static void reconfigureVector(int[] vector, Map<Integer, Integer> reconfigurationMap) {
+        int[] baseVector = vector.clone();
+        for (Map.Entry<Integer, Integer> reconfigurationEntry : reconfigurationMap.entrySet()) {
+            vector[reconfigurationEntry.getKey()] = baseVector[reconfigurationEntry.getValue()];
+        }
+    }
+
+    private static void reconfigureMatrix(int[][] matrix,
+                                          Map<Integer, Integer> rowReconfiguration,
+                                          Map<Integer, Integer> columnReconfiguration) {
+
+        int[][] baseMatrix = matrix.clone();
+        for (Map.Entry<Integer, Integer> rowReconfigurationEntry : rowReconfiguration.entrySet()) {
+            matrix[rowReconfigurationEntry.getKey()] = baseMatrix[rowReconfigurationEntry.getValue()];
+        }
+
+        baseMatrix = clone(matrix);
+        for (Map.Entry<Integer, Integer> colReconfigurationEntry : columnReconfiguration.entrySet()) {
+            int indexFrom = colReconfigurationEntry.getKey();
+            int indexTo = colReconfigurationEntry.getValue();
+            for (int i = 0; i < matrix.length; i++) {
+                matrix[i][indexFrom] = baseMatrix[i][indexTo];
             }
-        return result;
+        }
     }
 
-    public int[] multiply (int[] vector, int scalar) {
-        int length = vector.length;
-        int[] result = new int[length];
-        for(int i = 0; i < length; i++)
-                result[i] = vector[i] * scalar;
-        return result;
-    }
-
-    public int[] col (int[][] matrix, int index) {
-        int rows = matrix.length;
-        int[] result = new int[rows];
-        for(int i = 0; i < rows; i++)
-                    result[i] = matrix[i][index];
-        return result;
-    }
-
-    public int[] row (int[][] matrix, int index) {
-        int cols = matrix[0].length;
-        int[] result = new int[cols];
-        for(int i = 0; i < cols; i++)
-            result[i] = matrix[index][i];
-        return result;
+    private static int[][] clone(int[][] matrix) {
+        int[][] clonedMatrix = new int[matrix.length][];
+        for (int i = 0; i < matrix.length; i++) {
+            clonedMatrix[i] = matrix[i].clone();
+        }
+        return clonedMatrix;
     }
 
     public static PetriNetMatrix generateMatrix(PetriNetGraph petriNetGraph) {
@@ -167,6 +168,13 @@ public class PetriNetMatrix {
             transitionsNames[i] = transition.getName();
             i++;
         }
+
+        Map<Integer, Integer> placesReconfiguration = sortAndCreateReconfigurationMap(placesNames);
+        reconfigureVector(markingVector, placesReconfiguration);
+        reconfigureVector(capacityVector, placesReconfiguration);
+        Map<Integer, Integer> transitionsReconfiguration = sortAndCreateReconfigurationMap(transitionsNames);
+        reconfigureMatrix(inMatrix, transitionsReconfiguration, placesReconfiguration);
+        reconfigureMatrix(outMatrix, transitionsReconfiguration, placesReconfiguration);
 
         return new PetriNetMatrix(inMatrix, outMatrix, markingVector, capacityVector, placesNames, transitionsNames);
     }
