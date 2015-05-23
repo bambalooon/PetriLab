@@ -1,5 +1,6 @@
 package pl.edu.agh.eis.petrilab.model2.jung;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
@@ -13,6 +14,7 @@ import pl.edu.agh.eis.petrilab.model2.Transition;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -127,6 +129,24 @@ public class PetriNetGraph extends DirectedSparseGraph<PetriNetVertex, Arc> {
                         return isTransitionActive(transition);
                     }
                 }).toList();
+    }
+
+    public Integer[] getMarking() {
+        final List<Place> sortedPlaces = FluentIterable
+                .from(getPlaces())
+                .toSortedList(new Comparator<Place>() {
+                    @Override
+                    public int compare(Place o1, Place o2) {
+                        return o1.getName().compareTo(o2.getName());
+                    }
+                });
+        return FluentIterable.from(sortedPlaces)
+                .transform(new Function<Place, Integer>() {
+                    @Override
+                    public Integer apply(Place place) {
+                        return place.getMarking();
+                    }
+                }).toArray(Integer.class);
     }
 
     public static PetriNetGraph fromMatrix(PetriNetMatrix matrix) {
