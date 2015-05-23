@@ -18,7 +18,7 @@ import static pl.edu.agh.eis.petrilab.model2.matrix.Matrix.substract;
  * Created by PW on 26-04-2015.
  */
 public class CoverabilityGraph {
-    public DirectedSparseGraph<Marking, Transition> getCoverabilityGraph(PetriNetMatrix matrix) {
+    public static DirectedSparseGraph<Marking, Transition> getCoverabilityGraph(PetriNetMatrix matrix) {
         DirectedSparseGraph<Marking, Transition> graph = new DirectedSparseGraph<>();
         LinkedList<Marking> markingQueue = Lists.newLinkedList();
         Marking m0 = new Marking(matrix.getMarkingVector());
@@ -70,7 +70,7 @@ public class CoverabilityGraph {
         return graph;
     }
 
-    public DirectedSparseGraph<Marking, Transition> getReachabilityGraph(PetriNetMatrix matrix, int nodesLimit) {
+    public static DirectedSparseGraph<Marking, Transition> getReachabilityGraph(PetriNetMatrix matrix, int nodesLimit) {
         DirectedSparseGraph<Marking, Transition> graph = new DirectedSparseGraph<>();
         LinkedList<Marking> markingQueue = Lists.newLinkedList();
         Marking m0 = new Marking(matrix.getMarkingVector());
