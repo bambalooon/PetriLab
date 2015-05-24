@@ -3,15 +3,19 @@ package pl.edu.agh.eis.petrilab.model2.jung;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Maps;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import org.apache.commons.collections15.Transformer;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.Place;
+import pl.edu.agh.eis.petrilab.model2.Transition;
 
 import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.Map;
+
+import static com.google.common.base.MoreObjects.firstNonNull;
 
 /**
  * Name: PetriNetGraphInitializer
@@ -32,10 +36,27 @@ public class PetriNetGraphInitializer implements Transformer<PetriNetVertex, Poi
 
     @Override
     public Point2D transform(PetriNetVertex petriNetVertex) {
-        Point2D vertexCoordinates = coordinates.get(petriNetVertex);
-        return vertexCoordinates == null
-                ? new Point2D.Double(0, 0)
-                : vertexCoordinates;
+        return firstNonNull(coordinates.get(petriNetVertex), new Point2D.Double(0, 0));
+    }
+
+    public Map<String, Point2D> getPlacesCoordinates() {
+        Map<String, Point2D> placesInitializationMap = Maps.newHashMap();
+        for (Map.Entry<PetriNetVertex, Point2D> vertexCoordinate : coordinates.entrySet()) {
+            if (vertexCoordinate.getKey() instanceof Place) {
+                placesInitializationMap.put(vertexCoordinate.getKey().getName(), vertexCoordinate.getValue());
+            }
+        }
+        return placesInitializationMap;
+    }
+
+    public Map<String, Point2D> getTransitionsCoordinates() {
+        Map<String, Point2D> transitionsInitializationMap = Maps.newHashMap();
+        for (Map.Entry<PetriNetVertex, Point2D> vertexCoordinate : coordinates.entrySet()) {
+            if (vertexCoordinate.getKey() instanceof Transition) {
+                transitionsInitializationMap.put(vertexCoordinate.getKey().getName(), vertexCoordinate.getValue());
+            }
+        }
+        return transitionsInitializationMap;
     }
 
     public static PetriNetGraphInitializer loadInitializer(final Map<String, Point2D> placesCoordinates,
