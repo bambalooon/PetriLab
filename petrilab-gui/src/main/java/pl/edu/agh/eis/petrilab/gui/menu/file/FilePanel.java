@@ -3,7 +3,8 @@ package pl.edu.agh.eis.petrilab.gui.menu.file;
 import pl.edu.agh.eis.petrilab.gui.PetriLabApplication;
 import pl.edu.agh.eis.petrilab.gui.util.FileUtilities;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
-import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
+import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraphInitializer;
+import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrixWithCoordinates;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -15,7 +16,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Name: FilePanel
@@ -73,10 +73,21 @@ public class FilePanel extends JPanel implements ActionListener {
                 if (fileChooserReturnValue == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
                     try {
-                        PetriNetGraph loadedGraph = PetriNetGraph
-                                .fromMatrix(FileUtilities.openFile(file, PetriNetMatrix.class));
-                        PetriLabApplication.getInstance().loadPetriNetGraph(loadedGraph);
-                    } catch (IOException ex) {
+                        PetriNetMatrixWithCoordinates petriNetMatrix = FileUtilities
+                                .openFile(file, PetriNetMatrixWithCoordinates.class);
+                        PetriNetGraph loadedGraph = PetriNetGraph.fromMatrix(petriNetMatrix);
+                        if (petriNetMatrix.getPlacesCoordinates() != null
+                                && petriNetMatrix.getTransitionsCoordinates() != null) {
+                            PetriLabApplication.getInstance().loadPetriNetGraph(
+                                    loadedGraph,
+                                    PetriNetGraphInitializer.loadInitializer(
+                                            petriNetMatrix.getPlacesCoordinates(),
+                                            petriNetMatrix.getTransitionsCoordinates(),
+                                            loadedGraph));
+                        } else {
+                            PetriLabApplication.getInstance().loadPetriNetGraph(loadedGraph);
+                        }
+                    } catch (Exception ex) {
                         JOptionPane.showMessageDialog(this, "Błąd w trakcie odczytu pliku.");
                         ex.printStackTrace();
                     }
@@ -86,15 +97,15 @@ public class FilePanel extends JPanel implements ActionListener {
                 fileChooserReturnValue = fileChooser.showSaveDialog(this);
                 if (fileChooserReturnValue == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
-                    PetriNetMatrix petriNetMatrix = PetriNetMatrix
-                            .generateMatrix(PetriLabApplication.getInstance().getPetriNetGraph());
+                    PetriNetMatrixWithCoordinates petriNetMatrixWithCoordinates = PetriLabApplication.getInstance()
+                            .generatePetriNetMatrixWithCoordinates();
                     try {
                         String fileExtension = FileUtilities.getExtension(file);
                         if (!PETRI_LAB_FILE_EXTENSION.equals(fileExtension)) {
                             file = new File(file.getPath() + "." + PETRI_LAB_FILE_EXTENSION);
                         }
-                        FileUtilities.saveFile(file, petriNetMatrix);
-                    } catch (IOException ex) {
+                        FileUtilities.saveFile(file, petriNetMatrixWithCoordinates);
+                    } catch (Exception ex) {
                         JOptionPane.showMessageDialog(this, "Błąd w trakcie zapisu pliku.");
                         ex.printStackTrace();
                     }
