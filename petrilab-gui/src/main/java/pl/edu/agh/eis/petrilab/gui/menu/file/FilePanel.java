@@ -6,7 +6,8 @@ import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraphInitializer;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrixWithCoordinates;
 
-import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -24,12 +25,14 @@ import java.io.File;
  * Created by BamBalooon
  */
 public class FilePanel extends JPanel implements ActionListener {
-    private static final String NEW_FILE_BUTTON_LABEL = "Nowy plik...";
+    private static final String NEW_FILE_ICON_RES = "/org/freedesktop/tango/16x16/actions/document-new.png";
     private static final String NEW_FILE_BUTTON_ACTION = "NEW_FILE_BUTTON_ACTION";
-    private static final String OPEN_FILE_BUTTON_LABEL = "Otwórz plik...";
+    private static final String OPEN_FILE_ICON_RES = "/org/freedesktop/tango/16x16/actions/document-open.png";
     private static final String OPEN_FILE_BUTTON_ACTION = "OPEN_FILE_BUTTON_ACTION";
-    private static final String SAVE_FILE_BUTTON_LABEL = "Zapisz plik...";
+    private static final String SAVE_FILE_ICON_RES = "/org/freedesktop/tango/16x16/actions/document-save.png";
     private static final String SAVE_FILE_BUTTON_ACTION = "SAVE_FILE_BUTTON_ACTION";
+    private static final String SAVE_AS_FILE_ICON_RES = "/org/freedesktop/tango/16x16/actions/document-save-as.png";
+    private static final String SAVE_AS_FILE_BUTTON_ACTION = "SAVE_AS_FILE_BUTTON_ACTION";
     private static final String PETRI_LAB_FILE_EXTENSION = "plj";
     private static final String PETRI_LAB_FILE_DESCRIPTION = "PetriLab file";
     private final JFileChooser fileChooser;
@@ -40,25 +43,16 @@ public class FilePanel extends JPanel implements ActionListener {
         fileChooser.setFileFilter(new PetriLabFileFilter());
         fileChooser.setAcceptAllFileFilterUsed(false);
 
-        JButton newFileButton = new JButton(NEW_FILE_BUTTON_LABEL);
-        newFileButton.setActionCommand(NEW_FILE_BUTTON_ACTION);
-        newFileButton.addActionListener(this);
-        
-        JButton openFileButton = new JButton(OPEN_FILE_BUTTON_LABEL);
-        openFileButton.setActionCommand(OPEN_FILE_BUTTON_ACTION);
-        openFileButton.addActionListener(this);
+        JButton newFileButton = createButton(NEW_FILE_BUTTON_ACTION, NEW_FILE_ICON_RES);
+        JButton openFileButton = createButton(OPEN_FILE_BUTTON_ACTION, OPEN_FILE_ICON_RES);
+        JButton saveFileButton = createButton(SAVE_FILE_BUTTON_ACTION, SAVE_FILE_ICON_RES);
+        JButton saveAsFileButton = createButton(SAVE_AS_FILE_BUTTON_ACTION, SAVE_AS_FILE_ICON_RES);
 
-        JButton saveFileButton = new JButton(SAVE_FILE_BUTTON_LABEL);
-        saveFileButton.setActionCommand(SAVE_FILE_BUTTON_ACTION);
-        saveFileButton.addActionListener(this);
-
-        JPanel containerPanel = new JPanel();
-        containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.PAGE_AXIS));
-        containerPanel.add(newFileButton);
-        containerPanel.add(openFileButton);
-        containerPanel.add(saveFileButton);
-
-        add(containerPanel);
+        add(newFileButton);
+        add(openFileButton);
+        add(saveFileButton);
+        add(saveAsFileButton);
+        setMaximumSize(getPreferredSize());
     }
 
     @Override
@@ -66,11 +60,13 @@ public class FilePanel extends JPanel implements ActionListener {
         int fileChooserReturnValue;
         switch (e.getActionCommand()) {
             case NEW_FILE_BUTTON_ACTION:
+                PetriLabApplication.getInstance().getModeManager().setNormalMode();
                 PetriLabApplication.getInstance().loadPetriNetGraph(new PetriNetGraph());
                 break;
             case OPEN_FILE_BUTTON_ACTION:
                 fileChooserReturnValue = fileChooser.showOpenDialog(this);
                 if (fileChooserReturnValue == JFileChooser.APPROVE_OPTION) {
+                    PetriLabApplication.getInstance().getModeManager().setNormalMode();
                     File file = fileChooser.getSelectedFile();
                     try {
                         PetriNetMatrixWithCoordinates petriNetMatrix = FileUtilities
@@ -112,6 +108,15 @@ public class FilePanel extends JPanel implements ActionListener {
                 }
                 break;
         }
+    }
+
+    private JButton createButton(String action, String resource) {
+        JButton button = new JButton(new ImageIcon(getClass().getResource(resource)));
+        button.setActionCommand(action);
+        button.addActionListener(this);
+        button.setBorder(BorderFactory.createEmptyBorder());
+        button.setContentAreaFilled(false);
+        return button;
     }
 
     private class PetriLabFileFilter extends FileFilter {
