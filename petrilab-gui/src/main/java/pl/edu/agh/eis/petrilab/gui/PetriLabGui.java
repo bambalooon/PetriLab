@@ -43,7 +43,7 @@ public class PetriLabGui extends JFrame {
     private static final int MIN_HEIGHT = 600;
 
     private Component menuPanel;
-    private final JSplitPane mainPanel;
+    private JSplitPane mainPanel;
 
     public PetriLabGui() {
         super(PetriLabApplication.TITLE);
@@ -52,7 +52,7 @@ public class PetriLabGui extends JFrame {
         EditingModalGraphMouse<PetriNetVertex, Arc> graphMouse = PetriLabApplication.getInstance().getGraphMouse();
 
         setUpMenu(graphViewer, graphMouse);
-        mainPanel = setUpMainPanel(graphViewer);
+        setUpMainPanel(graphViewer);
         setUpFrame();
     }
 
@@ -86,12 +86,11 @@ public class PetriLabGui extends JFrame {
         arcPickedState.addItemListener(pickListener);
     }
 
-    private JSplitPane setUpMainPanel(Component graphViewer) {
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphViewer, menuPanel);
-        splitPane.setResizeWeight(1);
-        splitPane.setOneTouchExpandable(true);
-        splitPane.setContinuousLayout(true);
-        return splitPane;
+    private void setUpMainPanel(Component graphViewer) {
+        mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphViewer, menuPanel);
+        mainPanel.setResizeWeight(1);
+        mainPanel.setOneTouchExpandable(true);
+        mainPanel.setContinuousLayout(true);
     }
 
     private void setUpFrame() {
