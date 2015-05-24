@@ -1,6 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
@@ -11,10 +12,11 @@ import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
+import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraphInitializer;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 import pl.edu.agh.eis.petrilab.model2.util.NameGenerator;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 /**
  * Name: PetriLabApplication
@@ -33,6 +35,7 @@ public class PetriLabApplication {
     }
     private PetriLabGui petriLabGui;
     private PetriNetGraph petriNetGraph = new PetriNetGraph();
+    private PetriNetGraphInitializer petriNetGraphInitializer;
     private PetriNetGraph simulationGraph;
     private VisualizationViewer<PetriNetVertex, Arc> graphViewer;
     private EditingModalGraphMouse<PetriNetVertex, Arc> graphMouse;
@@ -82,19 +85,32 @@ public class PetriLabApplication {
     }
 
     public void loadPetriNetGraph() {
-        graphViewer.setGraphLayout(new CircleLayout<>(petriNetGraph));
+        if (petriNetGraphInitializer != null) {
+            graphViewer.setGraphLayout(new StaticLayout<>(petriNetGraph, petriNetGraphInitializer));
+        } else {
+            graphViewer.setGraphLayout(new CircleLayout<>(petriNetGraph));
+        }
         graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
     }
 
     public void loadPetriNetGraph(PetriNetGraph graph) {
+        loadPetriNetGraph(graph, null);
+    }
+
+    public void loadPetriNetGraph(PetriNetGraph graph, PetriNetGraphInitializer initializer) {
         petriNetGraph = graph;
+        petriNetGraphInitializer = initializer;
         configuration.setProperty(Configuration.NAME_GENERATOR, new NameGenerator(petriNetGraph));
         loadPetriNetGraph();
     }
 
     public void loadSimulationGraph() {
         simulationGraph = PetriNetGraph.fromMatrix(PetriNetMatrix.generateMatrix(petriNetGraph));
-        graphViewer.setGraphLayout(new CircleLayout<>(simulationGraph));
+        petriNetGraphInitializer = PetriNetGraphInitializer
+                .loadInitializer(graphViewer.getGraphLayout(), petriNetGraph);
+        PetriNetGraphInitializer initializer = PetriNetGraphInitializer
+                .loadInitializer(graphViewer.getGraphLayout(), petriNetGraph, simulationGraph);
+        graphViewer.setGraphLayout(new StaticLayout<>(simulationGraph, initializer));
         graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
     }
 
