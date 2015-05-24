@@ -17,6 +17,7 @@ public class Configuration {
     public static final String SIMULATION_ACTIVE_TRANSITIONS_PRE_RENDER_PAINTABLE = "SIMULATION_ACTIVE_TRANSITIONS_PRE_RENDER_PAINTABLE";
     public static final String SIMULATION_MODE_ACTIVE = "SIMULATION_MODE_ACTIVE";
     public static final String NAME_GENERATOR = "NAME_GENERATOR";
+    public static final String GRAPH_FILE = "GRAPH_FILE";
     private final Map<String, Object> properties = Maps.newHashMap(ImmutableMap.<String, Object>builder()
             .put(VERTEX_FACTORY_TYPE, Place.class)
             .put(SIMULATION_MODE_ACTIVE, false)

@@ -18,6 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import static pl.edu.agh.eis.petrilab.gui.Configuration.GRAPH_FILE;
+
 /**
  * Name: FilePanel
  * Description: FilePanel
@@ -62,6 +64,7 @@ public class FilePanel extends JPanel implements ActionListener {
             case NEW_FILE_BUTTON_ACTION:
                 PetriLabApplication.getInstance().getModeManager().setNormalMode();
                 PetriLabApplication.getInstance().loadPetriNetGraph(new PetriNetGraph());
+                PetriLabApplication.getInstance().getConfiguration().removeProperty(GRAPH_FILE);
                 break;
             case OPEN_FILE_BUTTON_ACTION:
                 fileChooserReturnValue = fileChooser.showOpenDialog(this);
@@ -83,6 +86,7 @@ public class FilePanel extends JPanel implements ActionListener {
                         } else {
                             PetriLabApplication.getInstance().loadPetriNetGraph(loadedGraph);
                         }
+                        PetriLabApplication.getInstance().getConfiguration().setProperty(GRAPH_FILE, file);
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(this, "Błąd w trakcie odczytu pliku.");
                         ex.printStackTrace();
@@ -90,6 +94,21 @@ public class FilePanel extends JPanel implements ActionListener {
                 }
                 break;
             case SAVE_FILE_BUTTON_ACTION:
+                File graphFile = PetriLabApplication.getInstance().getConfiguration().getProperty(GRAPH_FILE);
+                if (graphFile != null) {
+                    PetriNetMatrixWithCoordinates petriNetMatrixWithCoordinates = PetriLabApplication.getInstance()
+                            .generatePetriNetMatrixWithCoordinates();
+                    try {
+                        FileUtilities.saveFile(graphFile, petriNetMatrixWithCoordinates);
+                        PetriLabApplication.getInstance().getConfiguration().setProperty(GRAPH_FILE, graphFile);
+                        JOptionPane.showMessageDialog(this, "Zapisano");
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Błąd w trakcie zapisu pliku.");
+                        ex.printStackTrace();
+                    }
+                    break;
+                }
+            case SAVE_AS_FILE_BUTTON_ACTION:
                 fileChooserReturnValue = fileChooser.showSaveDialog(this);
                 if (fileChooserReturnValue == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
@@ -101,6 +120,8 @@ public class FilePanel extends JPanel implements ActionListener {
                             file = new File(file.getPath() + "." + PETRI_LAB_FILE_EXTENSION);
                         }
                         FileUtilities.saveFile(file, petriNetMatrixWithCoordinates);
+                        PetriLabApplication.getInstance().getConfiguration().setProperty(GRAPH_FILE, file);
+                        JOptionPane.showMessageDialog(this, "Zapisano");
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(this, "Błąd w trakcie zapisu pliku.");
                         ex.printStackTrace();
