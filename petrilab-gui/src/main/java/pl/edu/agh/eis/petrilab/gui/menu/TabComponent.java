@@ -1,5 +1,6 @@
 package pl.edu.agh.eis.petrilab.gui.menu;
 
+import pl.edu.agh.eis.petrilab.gui.ApplicationMode;
 import pl.edu.agh.eis.petrilab.gui.menu.action.Action;
 
 import javax.swing.Icon;
@@ -12,6 +13,7 @@ import java.awt.Component;
  * Created by BamBalooon
  */
 public class TabComponent<C extends Component> {
+    private final ApplicationMode mode;
     private final String name;
     private final Icon icon;
     private final C component;
@@ -19,23 +21,28 @@ public class TabComponent<C extends Component> {
     private final Action tabComponentSelectedAction;
     private final Action tabComponentDeselectedAction;
 
-    public TabComponent(String name, C component) {
-        this(name, null, component, null, Action.NO_ACTION, Action.NO_ACTION);
+    public TabComponent(ApplicationMode mode, String name, C component) {
+        this(mode, name, null, component, null, Action.NO_ACTION, Action.NO_ACTION);
     }
 
-    public TabComponent(String name, C component,
+    public TabComponent(ApplicationMode mode, String name, C component,
                         Action tabComponentSelectedAction, Action tabComponentDeselectedAction) {
-        this(name, null, component, null, tabComponentSelectedAction, tabComponentDeselectedAction);
+        this(mode, name, null, component, null, tabComponentSelectedAction, tabComponentDeselectedAction);
     }
 
-    public TabComponent(String name, Icon icon, C component, String tip,
+    public TabComponent(ApplicationMode mode, String name, Icon icon, C component, String tip,
                         Action tabComponentSelectedAction, Action tabComponentDeselectedAction) {
+        this.mode = mode;
         this.name = name;
         this.icon = icon;
         this.component = component;
         this.tip = tip;
         this.tabComponentSelectedAction = tabComponentSelectedAction;
         this.tabComponentDeselectedAction = tabComponentDeselectedAction;
+    }
+
+    public ApplicationMode getMode() {
+        return mode;
     }
 
     public String getName() {
