@@ -34,6 +34,7 @@ public class PetriLabApplication {
         }
         return INSTANCE;
     }
+    private ApplicationModeManager modeManager = new ApplicationModeManager(this);
     private PetriLabGui petriLabGui;
     private PetriNetGraph petriNetGraph = new PetriNetGraph();
     private PetriNetGraphInitializer petriNetGraphInitializer;
@@ -67,6 +68,10 @@ public class PetriLabApplication {
 
         graphMouse.addItemListener(
                 new ModeChangeListener(graphViewer.getPickedVertexState(), graphViewer.getPickedEdgeState()));
+    }
+
+    public ApplicationModeManager getModeManager() {
+        return modeManager;
     }
 
     public PetriNetGraph getPetriNetGraph() {
