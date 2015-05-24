@@ -40,10 +40,10 @@ public class SimulationPickListener implements ItemListener {
             if (vertexPickedState.isPicked(transition)) {
                 simulationGraph.fireTransition(transition);
                 simulationPanel.getMarkingLabel().setText(Arrays.toString(simulationGraph.getMarking()));
-                vertexPickedState.pick(transition, false);
                 graphViewer.repaint();
             }
-        } else {
+        }
+        if (e.getItem() instanceof PetriNetVertex){
             vertexPickedState.pick((PetriNetVertex) e.getItem(), false);
         }
     }
