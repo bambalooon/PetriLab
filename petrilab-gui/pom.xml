@@ -11,6 +11,10 @@
 
     <artifactId>petrilab-gui</artifactId>
 
+    <properties>
+        <tango-icons.version>0.8.90</tango-icons.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>pl.edu.agh.eis</groupId>
@@ -26,6 +30,11 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freedesktop.tango</groupId>
+            <artifactId>tango-icon-theme</artifactId>
+            <version>${tango-icons.version}</version>
         </dependency>
     </dependencies>
 
