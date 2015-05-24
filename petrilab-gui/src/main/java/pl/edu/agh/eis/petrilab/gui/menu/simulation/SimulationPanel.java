@@ -46,7 +46,7 @@ public class SimulationPanel extends JPanel implements ActionListener, Observer 
 
         JCheckBox autoSimulationCheckBox = new JCheckBox("Auto");
         add(autoSimulationCheckBox, gbc);
-        this.simulationPlayer = new SimulationPlayer(autoSimulationCheckBox);
+        this.simulationPlayer = new SimulationPlayer(this, autoSimulationCheckBox);
 
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.NORTHWEST;
@@ -62,18 +62,14 @@ public class SimulationPanel extends JPanel implements ActionListener, Observer 
         add(pauseButton, gbc);
     }
 
-    public void initMarking() {
+    public void updateMarking() {
         Integer[] marking = PetriLabApplication.getInstance().getSimulationGraph().getMarking();
         markingLabel.setText(Arrays.toString(marking));
     }
 
-    public JLabel getMarkingLabel() {
-        return markingLabel;
-    }
-
     @Override
     public void update(Observable o, Object arg) {
-        initMarking();
+        updateMarking();
     }
 
     @Override
