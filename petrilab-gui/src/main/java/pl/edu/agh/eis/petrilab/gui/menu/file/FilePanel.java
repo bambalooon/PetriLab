@@ -62,14 +62,13 @@ public class FilePanel extends JPanel implements ActionListener {
         int fileChooserReturnValue;
         switch (e.getActionCommand()) {
             case NEW_FILE_BUTTON_ACTION:
-                PetriLabApplication.getInstance().getModeManager().setNormalMode();
                 PetriLabApplication.getInstance().loadPetriNetGraph(new PetriNetGraph());
                 PetriLabApplication.getInstance().getConfiguration().removeProperty(GRAPH_FILE);
+                PetriLabApplication.getInstance().getModeManager().setNormalMode();
                 break;
             case OPEN_FILE_BUTTON_ACTION:
                 fileChooserReturnValue = fileChooser.showOpenDialog(this);
                 if (fileChooserReturnValue == JFileChooser.APPROVE_OPTION) {
-                    PetriLabApplication.getInstance().getModeManager().setNormalMode();
                     File file = fileChooser.getSelectedFile();
                     try {
                         PetriNetMatrixWithCoordinates petriNetMatrix = FileUtilities
@@ -87,6 +86,7 @@ public class FilePanel extends JPanel implements ActionListener {
                             PetriLabApplication.getInstance().loadPetriNetGraph(loadedGraph);
                         }
                         PetriLabApplication.getInstance().getConfiguration().setProperty(GRAPH_FILE, file);
+                        PetriLabApplication.getInstance().getModeManager().setNormalMode();
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(this, "Błąd w trakcie odczytu pliku.");
                         ex.printStackTrace();
