@@ -22,6 +22,8 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Name: SimulationPanel
@@ -29,7 +31,7 @@ import java.util.Arrays;
  * Date: 2015-05-19
  * Created by BamBalooon
  */
-public class SimulationPanel extends JPanel implements ActionListener {
+public class SimulationPanel extends JPanel implements ActionListener, Observer {
     private static final String GENERATE_COVERABILITY_GRAPH_BUTTON_LABEL = "Generuj graf pokrycia";
     private static final String GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION = "GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION";
     private static final String GENERATE_REACHABILITY_GRAPH_BUTTON_LABEL = "Generuj graf osiągalności";
@@ -43,6 +45,8 @@ public class SimulationPanel extends JPanel implements ActionListener {
     private final JSpinner nodesLimit;
 
     public SimulationPanel() {
+        PetriLabApplication.getInstance().getModeManager().addObserver(this);
+
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -109,5 +113,10 @@ public class SimulationPanel extends JPanel implements ActionListener {
             default:
                 throw new UnsupportedOperationException("Unsupported action.");
         }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        initMarking();
     }
 }
