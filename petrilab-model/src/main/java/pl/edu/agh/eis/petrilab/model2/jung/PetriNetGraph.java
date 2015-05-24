@@ -149,6 +149,21 @@ public class PetriNetGraph extends DirectedSparseGraph<PetriNetVertex, Arc> {
                 }).toArray(Integer.class);
     }
 
+    public void setMarking(Integer[] marking) {
+        List<Place> sortedPlaces = FluentIterable
+                .from(getPlaces())
+                .toSortedList(new Comparator<Place>() {
+                    @Override
+                    public int compare(Place o1, Place o2) {
+                        return o1.getName().compareTo(o2.getName());
+                    }
+                });
+        int i = 0;
+        for (Place place : sortedPlaces) {
+            place.setMarking(marking[i++]);
+        }
+    }
+
     public static PetriNetGraph fromMatrix(PetriNetMatrix matrix) {
         PetriNetGraph graph = new PetriNetGraph();
 
