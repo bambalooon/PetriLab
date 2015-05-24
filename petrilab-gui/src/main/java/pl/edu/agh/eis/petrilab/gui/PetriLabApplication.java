@@ -11,6 +11,7 @@ import pl.edu.agh.eis.petrilab.gui.jung.factory.VertexFactory;
 import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
+import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrixWithCoordinates;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraphInitializer;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
@@ -82,6 +83,14 @@ public class PetriLabApplication {
 
     public EditingModalGraphMouse<PetriNetVertex, Arc> getGraphMouse() {
         return graphMouse;
+    }
+
+    public PetriNetMatrixWithCoordinates generatePetriNetMatrixWithCoordinates() {
+        petriNetGraphInitializer = PetriNetGraphInitializer
+                .loadInitializer(graphViewer.getGraphLayout(), petriNetGraph);
+        return PetriNetMatrixWithCoordinates.fromMatrix(
+                PetriNetMatrix.generateMatrix(petriNetGraph),
+                petriNetGraphInitializer);
     }
 
     public void loadPetriNetGraph() {
