@@ -2,7 +2,9 @@ package pl.edu.agh.eis.petrilab.gui.util;
 
 import com.google.common.io.Files;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -14,7 +16,9 @@ import java.nio.charset.Charset;
  * Created by BamBalooon
  */
 public class FileUtilities {
-    private static final Gson GSON = new Gson();
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(Point2D.class, new Point2DSerialization())
+            .create();
 
     public static String getExtension(File file) {
         String fileExtension = null;
