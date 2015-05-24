@@ -34,12 +34,11 @@ public class SimulationPickListener implements ItemListener {
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        PetriNetGraph simulationGraph = PetriLabApplication.getInstance().getSimulationGraph();
         if (e.getItem() instanceof Transition) {
             Transition transition = (Transition) e.getItem();
             if (vertexPickedState.isPicked(transition)) {
-                simulationGraph.fireTransition(transition);
-                simulationPanel.getMarkingLabel().setText(Arrays.toString(simulationGraph.getMarking()));
+                PetriLabApplication.getInstance().getSimulationGraph().fireTransition(transition);
+                simulationPanel.updateMarking();
                 graphViewer.repaint();
             }
         }
