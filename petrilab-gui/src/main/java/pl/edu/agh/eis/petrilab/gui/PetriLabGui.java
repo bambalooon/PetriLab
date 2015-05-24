@@ -26,7 +26,9 @@ import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -43,7 +45,7 @@ public class PetriLabGui extends JFrame {
     private static final int MIN_HEIGHT = 600;
 
     private Component menuPanel;
-    private JSplitPane mainPanel;
+    private JPanel mainPanel;
 
     public PetriLabGui() {
         super(PetriLabApplication.TITLE);
@@ -63,15 +65,13 @@ public class PetriLabGui extends JFrame {
 
         SimulationPanel simulationPanel = new SimulationPanel();
         menuPanel = new MenuPanel(ImmutableList.<TabComponent>builder()
-                .add(new TabComponent<>("File", new FilePanel(),
+                .add(new TabComponent<>(ApplicationMode.NORMAL, "Edit", mainPanel,
                         new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
-                .add(new TabComponent<>("Edit", mainPanel,
-                        new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
-                .add(new TabComponent<>("Simulation", simulationPanel,
+                .add(new TabComponent<>(ApplicationMode.SIMULATION, "Simulation", simulationPanel,
                         new ActionGroup(
                                 new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING),
-                                new StartSimulationModeAction(graphViewer, simulationPanel)
-                        ), new StopSimulationModeAction(graphViewer)))
+                                new StartSimulationModeAction()
+                        ), new StopSimulationModeAction()))
                 .build());
 
         PickedState<PetriNetVertex> vertexPickedState = graphViewer.getPickedVertexState();
@@ -87,10 +87,17 @@ public class PetriLabGui extends JFrame {
     }
 
     private void setUpMainPanel(Component graphViewer) {
-        mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphViewer, menuPanel);
-        mainPanel.setResizeWeight(1);
-        mainPanel.setOneTouchExpandable(true);
-        mainPanel.setContinuousLayout(true);
+        JToolBar toolBar = new JToolBar();
+        toolBar.add(new FilePanel());
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphViewer, menuPanel);
+        splitPane.setResizeWeight(1);
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setContinuousLayout(true);
+
+        mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(toolBar, BorderLayout.PAGE_START);
+        mainPanel.add(splitPane, BorderLayout.CENTER);
     }
 
     private void setUpFrame() {
