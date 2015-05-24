@@ -11,13 +11,14 @@ import pl.edu.agh.eis.petrilab.model2.Transition;
 import pl.edu.agh.eis.petrilab.model2.matrix.Marking;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -42,25 +43,37 @@ public class SimulationPanel extends JPanel implements ActionListener {
     private final JSpinner nodesLimit;
 
     public SimulationPanel() {
-        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        JLabel label = new JLabel("Aktualne znakowanie:");
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+
+        JLabel markingDesc = new JLabel("Aktualne znakowanie:");
+        add(markingDesc, gbc);
+        gbc.fill = GridBagConstraints.NONE;
+        add(markingLabel, gbc);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
         JButton generateCoverabilityGraphButton = new JButton(GENERATE_COVERABILITY_GRAPH_BUTTON_LABEL);
         generateCoverabilityGraphButton.setActionCommand(GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION);
         generateCoverabilityGraphButton.addActionListener(this);
-        JButton generateReachabilityGraphButton = new JButton(GENERATE_REACHABILITY_GRAPH_BUTTON_LABEL);
+        add(generateCoverabilityGraphButton, gbc);
+
+        JLabel nodesLimitDesc = new JLabel("Limit węzłów:");
         nodesLimit = new JSpinner(new SpinnerNumberModel(
                 REACHABILITY_GRAPH_NODES_LIMIT_DEFAULT,
                 REACHABILITY_GRAPH_NODES_LIMIT_MIN,
                 REACHABILITY_GRAPH_NODES_LIMIT_MAX,
                 REACHABILITY_GRAPH_NODES_LIMIT_STEP));
-        nodesLimit.setMaximumSize(nodesLimit.getPreferredSize());
+        add(nodesLimitDesc, gbc);
+        add(nodesLimit, gbc);
+
+        JButton generateReachabilityGraphButton = new JButton(GENERATE_REACHABILITY_GRAPH_BUTTON_LABEL);
         generateReachabilityGraphButton.setActionCommand(GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION);
         generateReachabilityGraphButton.addActionListener(this);
-        add(label);
-        add(markingLabel);
-        add(nodesLimit);
-        add(generateCoverabilityGraphButton);
-        add(generateReachabilityGraphButton);
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        add(generateReachabilityGraphButton, gbc);
     }
 
     public void initMarking() {
