@@ -16,6 +16,7 @@ import pl.edu.agh.eis.petrilab.gui.menu.action.ActionGroup;
 import pl.edu.agh.eis.petrilab.gui.menu.action.ModeChangeAction;
 import pl.edu.agh.eis.petrilab.gui.menu.action.StartSimulationModeAction;
 import pl.edu.agh.eis.petrilab.gui.menu.action.StopSimulationModeAction;
+import pl.edu.agh.eis.petrilab.gui.menu.analysis.AnalysisPanel;
 import pl.edu.agh.eis.petrilab.gui.menu.edition.EditionPanel;
 import pl.edu.agh.eis.petrilab.gui.menu.edition.MainPanel;
 import pl.edu.agh.eis.petrilab.gui.menu.edition.ModePanel;
@@ -65,9 +66,11 @@ public class PetriLabGui extends JFrame {
 
         SimulationPanel simulationPanel = new SimulationPanel();
         menuPanel = new MenuPanel(ImmutableList.<TabComponent>builder()
-                .add(new TabComponent<>(ApplicationMode.NORMAL, "Edit", mainPanel,
+                .add(new TabComponent<>(ApplicationMode.NORMAL, "Edycja", mainPanel,
                         new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
-                .add(new TabComponent<>(ApplicationMode.SIMULATION, "Simulation", simulationPanel,
+                .add(new TabComponent<>(ApplicationMode.NORMAL, "Analiza", new AnalysisPanel(),
+                        new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
+                .add(new TabComponent<>(ApplicationMode.SIMULATION, "Symulacja", simulationPanel,
                         new ActionGroup(
                                 new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING),
                                 new StartSimulationModeAction()
