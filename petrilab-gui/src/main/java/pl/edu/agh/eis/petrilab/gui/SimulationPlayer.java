@@ -1,6 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import pl.edu.agh.eis.petrilab.gui.menu.simulation.SimulationPanel;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.Transition;
@@ -20,12 +21,15 @@ import java.util.Random;
  */
 public class SimulationPlayer implements Observer {
     private static final Random RANDOM_GENERATOR = new Random();
+
+    private final SimulationPanel simulationPanel;
     private final JCheckBox autoSimulationCheckBox;
     private Simulation simulation;
     private Integer[] initialMarking;
 
-    public SimulationPlayer(JCheckBox checkBox) {
+    public SimulationPlayer(SimulationPanel simulationPanel, JCheckBox checkBox) {
         PetriLabApplication.getInstance().getModeManager().addObserver(this);
+        this.simulationPanel = simulationPanel;
         this.autoSimulationCheckBox = checkBox;
     }
 
@@ -46,6 +50,7 @@ public class SimulationPlayer implements Observer {
             PetriLabApplication.getInstance().getGraphViewer().repaint();
         }
         PetriLabApplication.getInstance().getSimulationGraph().setMarking(initialMarking);
+        simulationPanel.updateMarking();
     }
 
     public void pause() {
@@ -89,6 +94,7 @@ public class SimulationPlayer implements Observer {
                 List<Transition> activeTransitions = simulationGraph.getActiveTransitions();
                 if (activeTransitions.size() == 1) {
                     simulationGraph.fireTransition(activeTransitions.get(0));
+                    simulationPanel.updateMarking();
                     graphViewer.repaint();
                     try {
                         Thread.sleep(interval);
@@ -96,6 +102,7 @@ public class SimulationPlayer implements Observer {
                 } else if (autoSimulationCheckBox.isSelected()){
                     simulationGraph.fireTransition(
                             activeTransitions.get(RANDOM_GENERATOR.nextInt(activeTransitions.size())));
+                    simulationPanel.updateMarking();
                     graphViewer.repaint();
                     try {
                         Thread.sleep(interval);
