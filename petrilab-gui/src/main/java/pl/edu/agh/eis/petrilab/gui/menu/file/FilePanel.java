@@ -6,7 +6,6 @@ import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraphInitializer;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrixWithCoordinates;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -14,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 import java.awt.FlowLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -27,13 +27,13 @@ import static pl.edu.agh.eis.petrilab.gui.Configuration.GRAPH_FILE;
  * Created by BamBalooon
  */
 public class FilePanel extends JPanel implements ActionListener {
-    private static final String NEW_FILE_ICON_RES = "/org/freedesktop/tango/16x16/actions/document-new.png";
+    private static final String NEW_FILE_ICON_RES = "/icons/16x16/page.png";
     private static final String NEW_FILE_BUTTON_ACTION = "NEW_FILE_BUTTON_ACTION";
-    private static final String OPEN_FILE_ICON_RES = "/org/freedesktop/tango/16x16/actions/document-open.png";
+    private static final String OPEN_FILE_ICON_RES = "/icons/16x16/folder.png";
     private static final String OPEN_FILE_BUTTON_ACTION = "OPEN_FILE_BUTTON_ACTION";
-    private static final String SAVE_FILE_ICON_RES = "/org/freedesktop/tango/16x16/actions/document-save.png";
+    private static final String SAVE_FILE_ICON_RES = "/icons/16x16/disk.png";
     private static final String SAVE_FILE_BUTTON_ACTION = "SAVE_FILE_BUTTON_ACTION";
-    private static final String SAVE_AS_FILE_ICON_RES = "/org/freedesktop/tango/16x16/actions/document-save-as.png";
+    private static final String SAVE_AS_FILE_ICON_RES = "/icons/16x16/save_as.png";
     private static final String SAVE_AS_FILE_BUTTON_ACTION = "SAVE_AS_FILE_BUTTON_ACTION";
     private static final String PETRI_LAB_FILE_EXTENSION = "plj";
     private static final String PETRI_LAB_FILE_DESCRIPTION = "PetriLab file";
@@ -135,7 +135,7 @@ public class FilePanel extends JPanel implements ActionListener {
         JButton button = new JButton(new ImageIcon(getClass().getResource(resource)));
         button.setActionCommand(action);
         button.addActionListener(this);
-        button.setBorder(BorderFactory.createEmptyBorder());
+        button.setMargin(new Insets(0, 0, 0, 0));
         button.setContentAreaFilled(false);
         return button;
     }
