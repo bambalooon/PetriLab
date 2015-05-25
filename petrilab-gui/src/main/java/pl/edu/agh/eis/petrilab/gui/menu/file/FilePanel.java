@@ -37,6 +37,7 @@ public class FilePanel extends JPanel implements ActionListener {
     private static final String SAVE_AS_FILE_BUTTON_ACTION = "SAVE_AS_FILE_BUTTON_ACTION";
     private static final String PETRI_LAB_FILE_EXTENSION = "plj";
     private static final String PETRI_LAB_FILE_DESCRIPTION = "PetriLab file";
+    public static final Insets FILE_BUTTONS_PADDING = new Insets(0, 0, 0, 0);
     private final JFileChooser fileChooser;
 
     public FilePanel() {
@@ -135,7 +136,7 @@ public class FilePanel extends JPanel implements ActionListener {
         JButton button = new JButton(new ImageIcon(getClass().getResource(resource)));
         button.setActionCommand(action);
         button.addActionListener(this);
-        button.setMargin(new Insets(0, 0, 0, 0));
+        button.setMargin(FILE_BUTTONS_PADDING);
         button.setContentAreaFilled(false);
         return button;
     }
