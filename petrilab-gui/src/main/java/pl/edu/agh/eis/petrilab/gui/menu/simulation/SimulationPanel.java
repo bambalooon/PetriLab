@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -24,11 +25,13 @@ import java.util.Observer;
  */
 public class SimulationPanel extends JPanel implements ActionListener, Observer {
     private static final String STOP_BUTTON_ACTION = "STOP_BUTTON_ACTION";
-    private static final String STOP_BUTTON_RES = "/org/freedesktop/tango/32x32/actions/media-playback-stop.png";
+    private static final String STOP_BUTTON_RES = "/icons/32x32/control_stop.png";
     private static final String PLAY_BUTTON_ACTION = "PLAY_BUTTON_ACTION";
-    private static final String PLAY_BUTTON_RES = "/org/freedesktop/tango/32x32/actions/media-playback-start.png";
+    private static final String PLAY_BUTTON_RES = "/icons/32x32/control_play.png";
     private static final String PAUSE_BUTTON_ACTION = "PAUSE_BUTTON_ACTION";
-    private static final String PAUSE_BUTTON_RES = "/org/freedesktop/tango/32x32/actions/media-playback-pause.png";
+    private static final String PAUSE_BUTTON_RES = "/icons/32x32/control_pause.png";
+    public static final Insets SIMULATION_COMPONENTS_MARGIN = new Insets(1, 1, 1, 1);
+    public static final Insets SIMULATION_BUTTONS_PADDING = new Insets(5, 5, 5, 5);
     private final JLabel markingLabel = new JLabel();
     private final SimulationPlayer simulationPlayer;
 
@@ -39,6 +42,7 @@ public class SimulationPanel extends JPanel implements ActionListener, Observer 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.NONE;
         gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.insets = SIMULATION_COMPONENTS_MARGIN;
 
         JLabel markingDesc = new JLabel("Aktualne znakowanie:");
         add(markingDesc, gbc);
@@ -91,7 +95,7 @@ public class SimulationPanel extends JPanel implements ActionListener, Observer 
         JButton button = new JButton(new ImageIcon(getClass().getResource(resource)));
         button.setActionCommand(action);
         button.addActionListener(this);
-//        button.setBorder(BorderFactory.createEmptyBorder());
+        button.setMargin(SIMULATION_BUTTONS_PADDING);
         button.setContentAreaFilled(false);
         return button;
     }
