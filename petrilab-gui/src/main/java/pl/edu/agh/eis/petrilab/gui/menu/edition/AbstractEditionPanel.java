@@ -27,6 +27,7 @@ public abstract class AbstractEditionPanel<T> extends JPanel implements ActionLi
     private static final String ACCEPT_BUTTON_RES = "/icons/16x16/tick.png";
     private static final String REMOVE_BUTTON_CMD = "REMOVE_BUTTON_CMD";
     private static final String REMOVE_BUTTON_RES = "/icons/16x16/cross.png";
+    public static final Insets EDITION_BUTTONS_MARGIN = new Insets(0, 0, 0, 0);
 
     protected JButton acceptButton;
     protected JButton removeButton;
@@ -78,7 +79,7 @@ public abstract class AbstractEditionPanel<T> extends JPanel implements ActionLi
         JButton button = new JButton(new ImageIcon(getClass().getResource(resource)));
         button.setActionCommand(action);
         button.addActionListener(this);
-        button.setMargin(new Insets(0, 0, 0, 0));
+        button.setMargin(EDITION_BUTTONS_MARGIN);
         button.setContentAreaFilled(false);
         return button;
     }
