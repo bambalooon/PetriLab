@@ -4,8 +4,11 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -16,16 +19,14 @@ import java.awt.event.ActionListener;
  * Created by BamBalooon
  */
 public abstract class AbstractEditionPanel<T> extends JPanel implements ActionListener {
-    protected static final int BUTTON_WIDTH = 80;
-    protected static final int BUTTON_HEIGHT = 20;
     protected static final int TEXT_FIELD_WIDTH = 50;
     protected static final int TEXT_FIELD_HEIGHT = 20;
     protected static final int SPINNER_WIDTH = 40;
     protected static final int SPINNER_HEIGHT = 20;
     private static final String ACCEPT_BUTTON_CMD = "ACCEPT_BUTTON_CMD";
-    private static final String ACCEPT_BUTTON_LABEL = "ok";
+    private static final String ACCEPT_BUTTON_RES = "/icons/16x16/tick.png";
     private static final String REMOVE_BUTTON_CMD = "REMOVE_BUTTON_CMD";
-    private static final String REMOVE_BUTTON_LABEL = "rm";
+    private static final String REMOVE_BUTTON_RES = "/icons/16x16/cross.png";
 
     protected JButton acceptButton;
     protected JButton removeButton;
@@ -36,14 +37,8 @@ public abstract class AbstractEditionPanel<T> extends JPanel implements ActionLi
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setVisible(false);
         this.graphViewer = graphViewer;
-        acceptButton = new JButton(ACCEPT_BUTTON_LABEL);
-        acceptButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-        acceptButton.setActionCommand(ACCEPT_BUTTON_CMD);
-        acceptButton.addActionListener(this);
-        removeButton = new JButton(REMOVE_BUTTON_LABEL);
-        removeButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-        removeButton.setActionCommand(REMOVE_BUTTON_CMD);
-        removeButton.addActionListener(this);
+        acceptButton = createButton(ACCEPT_BUTTON_CMD, ACCEPT_BUTTON_RES);
+        removeButton = createButton(REMOVE_BUTTON_CMD, REMOVE_BUTTON_RES);
     }
 
     public void edit(T item) {
@@ -78,4 +73,13 @@ public abstract class AbstractEditionPanel<T> extends JPanel implements ActionLi
     protected abstract void modify(T item);
 
     protected abstract void remove(T item);
+
+    protected JButton createButton(String action, String resource) {
+        JButton button = new JButton(new ImageIcon(getClass().getResource(resource)));
+        button.setActionCommand(action);
+        button.addActionListener(this);
+        button.setMargin(new Insets(0, 0, 0, 0));
+        button.setContentAreaFilled(false);
+        return button;
+    }
 }
