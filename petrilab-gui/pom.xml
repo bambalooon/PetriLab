@@ -31,11 +31,6 @@
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.freedesktop.tango</groupId>
-            <artifactId>tango-icon-theme</artifactId>
-            <version>${tango-icons.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
