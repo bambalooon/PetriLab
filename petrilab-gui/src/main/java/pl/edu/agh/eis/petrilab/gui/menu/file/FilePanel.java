@@ -6,19 +6,18 @@ import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraphInitializer;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrixWithCoordinates;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 import java.awt.FlowLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
 import static pl.edu.agh.eis.petrilab.gui.Configuration.GRAPH_FILE;
+import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.createButton;
 
 /**
  * Name: FilePanel
@@ -37,7 +36,6 @@ public class FilePanel extends JPanel implements ActionListener {
     private static final String SAVE_AS_FILE_BUTTON_ACTION = "SAVE_AS_FILE_BUTTON_ACTION";
     private static final String PETRI_LAB_FILE_EXTENSION = "plj";
     private static final String PETRI_LAB_FILE_DESCRIPTION = "PetriLab file";
-    public static final Insets FILE_BUTTONS_PADDING = new Insets(0, 0, 0, 0);
     private final JFileChooser fileChooser;
 
     public FilePanel() {
@@ -46,10 +44,10 @@ public class FilePanel extends JPanel implements ActionListener {
         fileChooser.setFileFilter(new PetriLabFileFilter());
         fileChooser.setAcceptAllFileFilterUsed(false);
 
-        JButton newFileButton = createButton(NEW_FILE_BUTTON_ACTION, NEW_FILE_ICON_RES);
-        JButton openFileButton = createButton(OPEN_FILE_BUTTON_ACTION, OPEN_FILE_ICON_RES);
-        JButton saveFileButton = createButton(SAVE_FILE_BUTTON_ACTION, SAVE_FILE_ICON_RES);
-        JButton saveAsFileButton = createButton(SAVE_AS_FILE_BUTTON_ACTION, SAVE_AS_FILE_ICON_RES);
+        JButton newFileButton = createButton(this, NEW_FILE_BUTTON_ACTION, NEW_FILE_ICON_RES);
+        JButton openFileButton = createButton(this, OPEN_FILE_BUTTON_ACTION, OPEN_FILE_ICON_RES);
+        JButton saveFileButton = createButton(this, SAVE_FILE_BUTTON_ACTION, SAVE_FILE_ICON_RES);
+        JButton saveAsFileButton = createButton(this, SAVE_AS_FILE_BUTTON_ACTION, SAVE_AS_FILE_ICON_RES);
 
         add(newFileButton);
         add(openFileButton);
@@ -130,15 +128,6 @@ public class FilePanel extends JPanel implements ActionListener {
                 }
                 break;
         }
-    }
-
-    private JButton createButton(String action, String resource) {
-        JButton button = new JButton(new ImageIcon(getClass().getResource(resource)));
-        button.setActionCommand(action);
-        button.addActionListener(this);
-        button.setMargin(FILE_BUTTONS_PADDING);
-        button.setContentAreaFilled(false);
-        return button;
     }
 
     private class PetriLabFileFilter extends FileFilter {

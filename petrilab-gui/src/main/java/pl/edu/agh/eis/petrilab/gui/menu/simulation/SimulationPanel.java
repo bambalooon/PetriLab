@@ -3,19 +3,19 @@ package pl.edu.agh.eis.petrilab.gui.menu.simulation;
 import pl.edu.agh.eis.petrilab.gui.PetriLabApplication;
 import pl.edu.agh.eis.petrilab.gui.SimulationPlayer;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
+
+import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.*;
 
 /**
  * Name: SimulationPanel
@@ -30,8 +30,6 @@ public class SimulationPanel extends JPanel implements ActionListener, Observer 
     private static final String PLAY_BUTTON_RES = "/icons/32x32/control_play.png";
     private static final String PAUSE_BUTTON_ACTION = "PAUSE_BUTTON_ACTION";
     private static final String PAUSE_BUTTON_RES = "/icons/32x32/control_pause.png";
-    public static final Insets SIMULATION_COMPONENTS_MARGIN = new Insets(1, 1, 1, 1);
-    public static final Insets SIMULATION_BUTTONS_PADDING = new Insets(5, 5, 5, 5);
     private final JLabel markingLabel = new JLabel();
     private final SimulationPlayer simulationPlayer;
 
@@ -42,7 +40,7 @@ public class SimulationPanel extends JPanel implements ActionListener, Observer 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.NONE;
         gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.insets = SIMULATION_COMPONENTS_MARGIN;
+        gbc.insets = MARGIN_SMALL;
 
         JLabel markingDesc = new JLabel("Aktualne znakowanie:");
         add(markingDesc, gbc);
@@ -55,14 +53,14 @@ public class SimulationPanel extends JPanel implements ActionListener, Observer 
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.NORTHWEST;
         gbc.weighty = 1;
-        JButton stopButton = createButton(STOP_BUTTON_ACTION, STOP_BUTTON_RES);
+        JButton stopButton = createButton(this, STOP_BUTTON_ACTION, STOP_BUTTON_RES, BUTTON_PADDING_MEDIUM);
         add(stopButton, gbc);
 
-        JButton playButton = createButton(PLAY_BUTTON_ACTION, PLAY_BUTTON_RES);
+        JButton playButton = createButton(this, PLAY_BUTTON_ACTION, PLAY_BUTTON_RES, BUTTON_PADDING_MEDIUM);
         add(playButton, gbc);
 
         gbc.gridwidth = GridBagConstraints.REMAINDER;
-        JButton pauseButton = createButton(PAUSE_BUTTON_ACTION, PAUSE_BUTTON_RES);
+        JButton pauseButton = createButton(this, PAUSE_BUTTON_ACTION, PAUSE_BUTTON_RES, BUTTON_PADDING_MEDIUM);
         add(pauseButton, gbc);
     }
 
@@ -89,14 +87,5 @@ public class SimulationPanel extends JPanel implements ActionListener, Observer 
                 simulationPlayer.stop();
                 break;
         }
-    }
-
-    private JButton createButton(String action, String resource) {
-        JButton button = new JButton(new ImageIcon(getClass().getResource(resource)));
-        button.setActionCommand(action);
-        button.addActionListener(this);
-        button.setMargin(SIMULATION_BUTTONS_PADDING);
-        button.setContentAreaFilled(false);
-        return button;
     }
 }
