@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import java.awt.event.ActionEvent;
 
 /**
  * Name: PlaceEditionPanel
@@ -22,6 +23,7 @@ import java.awt.GridBagConstraints;
  * Created by BamBalooon
  */
 public class PlaceEditionPanel extends AbstractEditionPanel<Place> {
+    private static final String CAPACITY_CHECKBOX_ACTION = "CAPACITY_CHECKBOX_ACTION";
     private final JTextField nameField;
     private final JSpinner markingSpinner;
     private final JCheckBox capacityCheckbox;
@@ -52,11 +54,13 @@ public class PlaceEditionPanel extends AbstractEditionPanel<Place> {
         add(markingSpinner, gbc);
 
         capacityCheckbox = new JCheckBox("Pojemność:");
+        capacityCheckbox.setActionCommand(CAPACITY_CHECKBOX_ACTION);
+        capacityCheckbox.addActionListener(this);
         gbc.gridwidth = 1;
         add(capacityCheckbox, gbc);
 
         SpinnerNumberModel capacityModel = new SpinnerNumberModel(
-                Place.CAPACITY_DEFAULT, Place.CAPACITY_MIN, Place.CAPACITY_MAX, 1);
+                Place.CAPACITY_MIN, Place.CAPACITY_MIN, Place.CAPACITY_MAX, 1);
         capacitySpinner = new JSpinner(capacityModel);
         capacitySpinner.setPreferredSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
         gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -76,7 +80,16 @@ public class PlaceEditionPanel extends AbstractEditionPanel<Place> {
     protected void loadItemState(Place place) {
         nameField.setText(place.getName());
         markingSpinner.setValue(place.getMarking());
-        capacitySpinner.setValue(place.getCapacity());
+        int capacity = place.getCapacity();
+        if (capacity == Place.CAPACITY_INFINITE) {
+            capacityCheckbox.setSelected(false);
+            capacitySpinner.setEnabled(false);
+            capacitySpinner.setValue(Place.CAPACITY_MIN);
+        } else {
+            capacityCheckbox.setSelected(true);
+            capacitySpinner.setEnabled(true);
+            capacitySpinner.setValue(capacity);
+        }
     }
 
     @Override
@@ -93,11 +106,27 @@ public class PlaceEditionPanel extends AbstractEditionPanel<Place> {
             }
         }
         place.setMarking((Integer) markingSpinner.getValue());
-        place.setCapacity((Integer) capacitySpinner.getValue());
+        if (capacityCheckbox.isSelected()) {
+            place.setCapacity((Integer) capacitySpinner.getValue());
+        } else {
+            place.setCapacity(Place.CAPACITY_INFINITE);
+        }
     }
 
     @Override
     protected void remove(Place place) {
         graphViewer.getGraphLayout().getGraph().removeVertex(place);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        switch (e.getActionCommand()) {
+            case CAPACITY_CHECKBOX_ACTION:
+                capacitySpinner.setEnabled(capacityCheckbox.isSelected());
+                break;
+            default:
+                super.actionPerformed(e);
+                break;
+        }
     }
 }
