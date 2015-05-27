@@ -18,7 +18,7 @@ public class GuiHelper {
     public static final Insets BUTTON_PADDING_NONE = new Insets(0, 0, 0, 0);
 
     public static JButton createButton(ActionListener actionListener, String action, String resource) {
-        return createButton(actionListener, action, resource, BUTTON_PADDING_SMALL);
+        return createButton(actionListener, action, resource, BUTTON_PADDING_NONE);
     }
 
     public static JButton createButton(ActionListener actionListener, String action, String resource, Insets padding) {
