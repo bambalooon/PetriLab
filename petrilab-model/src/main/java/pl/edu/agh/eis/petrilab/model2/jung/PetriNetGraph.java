@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
+import static pl.edu.agh.eis.petrilab.model2.Place.CAPACITY_INFINITE;
+
 /**
  * Name: PetriNetGraph
  * Description: PetriNetGraph
@@ -99,7 +101,8 @@ public class PetriNetGraph extends DirectedSparseGraph<PetriNetVertex, Arc> {
         }
         for (Arc outArc : outArcs) {
             Place outPlace = (Place) getOpposite(transition, outArc);
-            if ((outPlace.getMarking() + outArc.getWeight()) > outPlace.getCapacity()) {
+            int capacity = outPlace.getCapacity();
+            if (capacity != CAPACITY_INFINITE && (outPlace.getMarking() + outArc.getWeight()) > capacity) {
                 return false;
             }
         }

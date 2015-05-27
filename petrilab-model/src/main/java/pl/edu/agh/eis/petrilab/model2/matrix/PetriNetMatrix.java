@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static pl.edu.agh.eis.petrilab.model2.Place.CAPACITY_INFINITE;
+
 /**
  * Name: PetriNetMatrix
  * Description: PetriNetMatrix
@@ -62,10 +64,16 @@ public class PetriNetMatrix {
     public boolean isTransitionActive(boolean considerCapacity, int transitionIndex, Double[] marking) {
         int n = marking.length;
         for (int i = 0; i < n; i++) {
-            if (marking[i] < this.getOutMatrix()[transitionIndex][i])
+            Double placeMarking = marking[i];
+            int placeCapacity = getCapacityVector()[i];
+            if (placeMarking < getOutMatrix()[transitionIndex][i]) {
                 return false;
-            if (considerCapacity && this.getInMatrix()[transitionIndex][i] + marking[i] > this.getCapacityVector()[i])
+            }
+            if (considerCapacity
+                    && placeCapacity != CAPACITY_INFINITE
+                    && (getInMatrix()[transitionIndex][i] + placeMarking) > placeCapacity) {
                 return false;
+            }
         }
         return true;
     }
