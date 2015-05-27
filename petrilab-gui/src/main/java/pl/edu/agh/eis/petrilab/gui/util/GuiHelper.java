@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
  */
 public class GuiHelper {
     public static final Insets MARGIN_SMALL = new Insets(1, 1, 1, 1);
+    public static final Insets MARGIN_NONE = new Insets(0, 0, 0, 0);
     public static final Insets BUTTON_PADDING_MEDIUM = new Insets(5, 5, 5, 5);
     public static final Insets BUTTON_PADDING_SMALL = new Insets(1, 1, 1, 1);
     public static final Insets BUTTON_PADDING_NONE = new Insets(0, 0, 0, 0);
