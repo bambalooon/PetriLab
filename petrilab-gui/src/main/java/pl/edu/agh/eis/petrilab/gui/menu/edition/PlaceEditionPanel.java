@@ -16,6 +16,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 
+import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.MARGIN_SMALL;
+
 /**
  * Name: PlaceEditionPanel
  * Description: PlaceEditionPanel
@@ -33,6 +35,7 @@ public class PlaceEditionPanel extends AbstractEditionPanel<Place> {
         super(graphViewer);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = MARGIN_SMALL;
 
         JLabel nameLabel = new JLabel("Nazwa:");
         gbc.gridwidth = 1;
