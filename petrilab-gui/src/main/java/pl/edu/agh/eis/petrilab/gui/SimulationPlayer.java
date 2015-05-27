@@ -7,7 +7,7 @@ import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.Transition;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 
-import javax.swing.JCheckBox;
+import javax.swing.*;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -92,27 +92,37 @@ public class SimulationPlayer implements Observer {
         public void run() {
             while (isPlaying) {
                 List<Transition> activeTransitions = simulationGraph.getActiveTransitions();
-                if (activeTransitions.size() == 1) {
-                    simulationGraph.fireTransition(activeTransitions.get(0));
-                    simulationPanel.updateMarking();
-                    graphViewer.repaint();
-                    try {
-                        Thread.sleep(interval);
-                    } catch (InterruptedException e) {}
-                } else if (autoSimulationCheckBox.isSelected()){
-                    simulationGraph.fireTransition(
-                            activeTransitions.get(RANDOM_GENERATOR.nextInt(activeTransitions.size())));
-                    simulationPanel.updateMarking();
-                    graphViewer.repaint();
-                    try {
-                        Thread.sleep(interval);
-                    } catch (InterruptedException e) {}
+                int activeTransitionsCount = activeTransitions.size();
+                switch (activeTransitionsCount) {
+                    case 0:
+                        stop();
+                        break;
+                    case 1:
+                        simulationGraph.fireTransition(activeTransitions.get(0));
+                        simulationPanel.updateMarking();
+                        graphViewer.repaint();
+                        delay();
+                        break;
+                    default:
+                        if (autoSimulationCheckBox.isSelected()) {
+                            simulationGraph.fireTransition(
+                                    activeTransitions.get(RANDOM_GENERATOR.nextInt(activeTransitionsCount)));
+                            simulationPanel.updateMarking();
+                            graphViewer.repaint();
+                        }
+                        delay();
                 }
             }
         }
 
         public void stop() {
             isPlaying = false;
+        }
+
+        private void delay() {
+            try {
+                Thread.sleep(interval);
+            } catch (InterruptedException e) {}
         }
     }
 }
