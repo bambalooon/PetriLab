@@ -6,9 +6,14 @@ import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.Transition;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+
+import static java.awt.GridBagConstraints.*;
+import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.MARGIN_SMALL;
 
 /**
  * Name: TransitionEditionPanel
@@ -21,11 +26,27 @@ public class TransitionEditionPanel extends AbstractEditionPanel<Transition> {
 
     public TransitionEditionPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
         super(graphViewer);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = HORIZONTAL;
+        gbc.insets = MARGIN_SMALL;
+
+        JLabel nameLabel = new JLabel("Nazwa:");
+        gbc.gridwidth = 1;
+        add(nameLabel, gbc);
+
         nameField = new JTextField();
-        nameField.setPreferredSize(new Dimension(TEXT_FIELD_WIDTH, TEXT_FIELD_HEIGHT));
-        add(nameField);
-        add(acceptButton);
-        add(removeButton);
+        nameField.setPreferredSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
+        gbc.gridwidth = REMAINDER;
+        add(nameField, gbc);
+
+        gbc.fill = NONE;
+        gbc.anchor = EAST;
+        gbc.gridwidth = 1;
+        add(acceptButton, gbc);
+
+        gbc.anchor = WEST;
+        gbc.gridwidth = REMAINDER;
+        add(removeButton, gbc);
     }
 
     @Override
