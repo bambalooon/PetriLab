@@ -65,6 +65,7 @@ public class PetriLabGui extends JFrame {
         graphMouse.addItemListener(mainPanel);
 
         SimulationPanel simulationPanel = new SimulationPanel();
+
         menuPanel = new MenuPanel(ImmutableList.<TabComponent>builder()
                 .add(new TabComponent<>(ApplicationMode.NORMAL, "Edycja", mainPanel,
                         new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
