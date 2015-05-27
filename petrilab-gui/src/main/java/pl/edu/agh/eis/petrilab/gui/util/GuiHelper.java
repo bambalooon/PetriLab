@@ -2,6 +2,7 @@ package pl.edu.agh.eis.petrilab.gui.util;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 
@@ -12,6 +13,10 @@ import java.awt.event.ActionListener;
  * Created by BamBalooon
  */
 public class GuiHelper {
+    public static final int COMPONENT_DEFAULT_WIDTH = 100;
+    public static final int COMPONENT_DEFAULT_HEIGHT = 20;
+    public static final Dimension COMPONENT_DEFAULT_SIZE =
+            new Dimension(COMPONENT_DEFAULT_WIDTH, COMPONENT_DEFAULT_HEIGHT);
     public static final Insets MARGIN_SMALL = new Insets(1, 1, 1, 1);
     public static final Insets MARGIN_NONE = new Insets(0, 0, 0, 0);
     public static final Insets BUTTON_PADDING_MEDIUM = new Insets(5, 5, 5, 5);
