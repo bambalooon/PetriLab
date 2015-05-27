@@ -1,7 +1,5 @@
 package pl.edu.agh.eis.petrilab.model2;
 
-import pl.edu.agh.eis.petrilab.model.*;
-
 /**
  * Name: Place
  * Description: Place
@@ -12,9 +10,10 @@ public class Place implements PetriNetVertex {
     public static final int MARKING_MIN = 0;
     public static final int MARKING_MAX = Integer.MAX_VALUE;
     public static final int MARKING_DEFAULT = MARKING_MIN;
+    public static final int CAPACITY_INFINITE = 0;
     public static final int CAPACITY_MIN = 1;
     public static final int CAPACITY_MAX = Integer.MAX_VALUE;
-    public static final int CAPACITY_DEFAULT = CAPACITY_MAX;
+    public static final int CAPACITY_DEFAULT = CAPACITY_INFINITE;
     private String name;
     private int marking;
     private int capacity;
@@ -45,6 +44,10 @@ public class Place implements PetriNetVertex {
         this.marking = marking;
     }
 
+    /**
+     * Capacity equal to 0 means that place doesn't have set capacity.
+     * @return
+     */
     public int getCapacity() {
         return capacity;
     }
