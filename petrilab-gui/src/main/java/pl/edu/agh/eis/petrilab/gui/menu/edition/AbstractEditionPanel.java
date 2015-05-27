@@ -4,9 +4,9 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -34,7 +34,7 @@ public abstract class AbstractEditionPanel<T> extends JPanel implements ActionLi
     private T item;
 
     protected AbstractEditionPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
-        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        setLayout(new GridBagLayout());
         setVisible(false);
         this.graphViewer = graphViewer;
         acceptButton = createButton(this, ACCEPT_BUTTON_CMD, ACCEPT_BUTTON_RES);
