@@ -36,7 +36,7 @@ public class AnalysisPanel extends JPanel implements ActionListener {
     private static final String GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION = "GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION";
     private static final String GENERATE_REACHABILITY_GRAPH_BUTTON_LABEL = "Generuj graf osiągalności";
     private static final String GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION = "GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION";
-    private static final String GENERATE_MATRIX_BUTTON_LABEL = "Generuj reprezentację macierzową";
+    private static final String GENERATE_MATRIX_BUTTON_LABEL = "Generuj macierz";
     private static final String GENERATE_MATRIX_BUTTON_ACTION = "GENERATE_MATRIX_BUTTON_ACTION";
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_DEFAULT = 10;
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_MIN = 1;
@@ -67,9 +67,13 @@ public class AnalysisPanel extends JPanel implements ActionListener {
 
         JButton generateReachabilityGraphButton = createTextButton(
                 this, GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION, GENERATE_REACHABILITY_GRAPH_BUTTON_LABEL);
+        add(generateReachabilityGraphButton, gbc);
+
+        JButton generatePetriNetMatrix = createTextButton(
+                this, GENERATE_MATRIX_BUTTON_ACTION, GENERATE_MATRIX_BUTTON_LABEL);
         gbc.weighty = 1;
         gbc.anchor = GridBagConstraints.NORTH;
-        add(generateReachabilityGraphButton, gbc);
+        add(generatePetriNetMatrix, gbc);
     }
 
     @Override
@@ -92,6 +96,9 @@ public class AnalysisPanel extends JPanel implements ActionListener {
                 viewer = VisualizationViewerGenerator.COVERABILITY_GRAPH.generateVisualizationViewer(graph);
                 viewer.setGraphMouse(graphMouse);
                 JOptionPane.showMessageDialog(null, viewer);
+                break;
+            case GENERATE_MATRIX_BUTTON_ACTION:
+                JOptionPane.showMessageDialog(null, new MatrixPanel(petriNetMatrix));
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported action.");
