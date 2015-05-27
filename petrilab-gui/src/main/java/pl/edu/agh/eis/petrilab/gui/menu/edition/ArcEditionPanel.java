@@ -4,9 +4,14 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
+import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+
+import static java.awt.GridBagConstraints.*;
+import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.COMPONENT_DEFAULT_SIZE;
+import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.MARGIN_SMALL;
 
 /**
  * Name: GeneralTransitionEditionPanel
@@ -19,16 +24,29 @@ public class ArcEditionPanel extends AbstractEditionPanel<Arc> {
 
     public ArcEditionPanel(VisualizationViewer<PetriNetVertex, Arc> graphViewer) {
         super(graphViewer);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = HORIZONTAL;
+        gbc.insets = MARGIN_SMALL;
+
+        JLabel weightLabel = new JLabel("Waga:");
+        gbc.gridwidth = 1;
+        add(weightLabel, gbc);
+
         SpinnerNumberModel weightModel = new SpinnerNumberModel(
-                Arc.WEIGHT_DEFAULT,
-                Arc.WEIGHT_MIN,
-                Arc.WEIGHT_MAX,
-                1);
+                Arc.WEIGHT_DEFAULT, Arc.WEIGHT_MIN, Arc.WEIGHT_MAX, 1);
         weightSpinner = new JSpinner(weightModel);
-        weightSpinner.setPreferredSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
-        add(weightSpinner);
-        add(acceptButton);
-        add(removeButton);
+        weightSpinner.setPreferredSize(COMPONENT_DEFAULT_SIZE);
+        gbc.gridwidth = REMAINDER;
+        add(weightSpinner, gbc);
+
+        gbc.fill = NONE;
+        gbc.anchor = EAST;
+        gbc.gridwidth = 1;
+        add(acceptButton, gbc);
+
+        gbc.anchor = WEST;
+        gbc.gridwidth = REMAINDER;
+        add(removeButton, gbc);
     }
 
     @Override
