@@ -1,18 +1,16 @@
 package pl.edu.agh.eis.petrilab.gui.menu.analysis;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.Arrays;
 
 import static java.awt.GridBagConstraints.REMAINDER;
-import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.LINE_BORDER;
 import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.MARGIN_SMALL;
 
 /**
@@ -22,10 +20,11 @@ import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.MARGIN_SMALL;
  * Created by BamBalooon
  */
 public class MatrixPanel extends JPanel {
-    private final PetriNetMatrix matrix;
+    private static final Dimension MATRIX_TABLE_SIZE = new Dimension(400, 200);
+    private final PetriNetMatrix petriNetMatrix;
 
-    public MatrixPanel(PetriNetMatrix matrix) {
-        this.matrix = matrix;
+    public MatrixPanel(PetriNetMatrix petriNetMatrix) {
+        this.petriNetMatrix = petriNetMatrix;
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = REMAINDER;
@@ -34,38 +33,52 @@ public class MatrixPanel extends JPanel {
         JLabel inMatrixLabel = new JLabel("Macierz wejściowa:");
         add(inMatrixLabel, gbc);
 
-        JLabel inMatrixContent = new JLabel(TEXT_TO_HTML_TRANSFORM
-                .apply(MATRIX_TO_STRING_TRANSFORM.apply(matrix.getInMatrix())));
-        inMatrixContent.setBorder(LINE_BORDER);
-        add(inMatrixContent, gbc);
+        JTable inMatrixTable = new MatrixTable(
+                transformMatrixToTableData(petriNetMatrix.getInMatrix()),
+                transformPlaceNamesToColumnNames(petriNetMatrix.getPlacesNames()));
+        JScrollPane inMatrixPanel = new JScrollPane(inMatrixTable);
+        inMatrixPanel.setPreferredSize(MATRIX_TABLE_SIZE);
+        add(inMatrixPanel, gbc);
 
         JLabel outMatrixLabel = new JLabel("Macierz wyjściowa:");
         add(outMatrixLabel, gbc);
 
-        JLabel outMatrixContent = new JLabel(TEXT_TO_HTML_TRANSFORM
-                .apply(MATRIX_TO_STRING_TRANSFORM.apply(matrix.getOutMatrix())));
-        outMatrixContent.setBorder(LINE_BORDER);
-        add(outMatrixContent, gbc);
+        JTable outMatrixTable = new MatrixTable(
+                transformMatrixToTableData(petriNetMatrix.getOutMatrix()),
+                transformPlaceNamesToColumnNames(petriNetMatrix.getPlacesNames()));
+        JScrollPane outMatrixPanel = new JScrollPane(outMatrixTable);
+        outMatrixPanel.setPreferredSize(MATRIX_TABLE_SIZE);
+        add(outMatrixPanel, gbc);
     }
 
-    private static final Function<int[][], String> MATRIX_TO_STRING_TRANSFORM = new Function<int[][], String>() {
-        @Override
-        public String apply(final int[][] matrix) {
-            return FluentIterable.from(Arrays.asList(matrix))
-                    .transform(new Function<int[], String>() {
-                        @Override
-                        public String apply(int[] matrixRow) {
-                            String matrixRowString = Arrays.toString(matrixRow);
-                            return matrixRowString.substring(1, matrixRowString.length() - 1);
-                        }
-                    }).join(Joiner.on('\n'));
+    public String[] transformPlaceNamesToColumnNames(String[] placeNames) {
+        String[] columnNames = new String[1 + placeNames.length];
+        columnNames[0] = "";
+        for (int i = 0; i < placeNames.length; i++) {
+            columnNames[1 + i] = placeNames[i];
         }
-    };
+        return columnNames;
+    }
 
-    private static final Function<String, String> TEXT_TO_HTML_TRANSFORM = new Function<String, String>() {
-        @Override
-        public String apply(String text) {
-            return "<html>" + text.replace("\n", "<br/>") + "</html>";
+    public Object[][] transformMatrixToTableData(int[][] matrix) {
+        Object[][] cells = new Object[matrix.length][1 + matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            cells[i][0] = petriNetMatrix.getTransitionsNames()[i];
+            for (int j = 0; j < matrix[i].length; j++) {
+                cells[i][1 + j] = matrix[i][j];
+            }
         }
-    };
+        return cells;
+    }
+
+    private class MatrixTable extends JTable {
+        public MatrixTable(Object[][] rowData, Object[] columnNames) {
+            super(rowData, columnNames);
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    }
 }
