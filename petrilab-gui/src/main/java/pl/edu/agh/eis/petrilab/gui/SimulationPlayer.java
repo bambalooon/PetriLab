@@ -7,7 +7,7 @@ import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.Transition;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 
-import javax.swing.*;
+import javax.swing.JCheckBox;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
