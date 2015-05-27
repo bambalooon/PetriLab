@@ -3,7 +3,8 @@ package pl.edu.agh.eis.petrilab.gui.menu.edition;
 import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -25,7 +26,6 @@ public class ModePanel extends JPanel implements ActionListener {
 
     public ModePanel(AbstractModalGraphMouse petriNetModalGraphMouse) {
         this.petriNetModalGraphMouse = petriNetModalGraphMouse;
-        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setVisible(true);
         setUpButtons();
     }
