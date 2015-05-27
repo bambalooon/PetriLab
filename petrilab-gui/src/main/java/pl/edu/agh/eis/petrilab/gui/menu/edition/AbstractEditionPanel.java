@@ -55,10 +55,14 @@ public abstract class AbstractEditionPanel<T> extends JPanel implements ActionLi
         switch (e.getActionCommand()) {
             case ACCEPT_BUTTON_CMD:
                 modify(item);
+                graphViewer.getPickedVertexState().clear();
+                graphViewer.getPickedEdgeState().clear();
                 graphViewer.repaint();
                 break;
             case REMOVE_BUTTON_CMD:
                 remove(item);
+                graphViewer.getPickedVertexState().clear();
+                graphViewer.getPickedEdgeState().clear();
                 graphViewer.repaint();
                 break;
         }
