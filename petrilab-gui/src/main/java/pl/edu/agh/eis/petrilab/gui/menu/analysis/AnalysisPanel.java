@@ -22,6 +22,9 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.COMPONENT_DEFAULT_SIZE;
+import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.createTextButton;
+
 /**
  * Name: AnalyzePanel
  * Description: AnalyzePanel
@@ -33,6 +36,8 @@ public class AnalysisPanel extends JPanel implements ActionListener {
     private static final String GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION = "GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION";
     private static final String GENERATE_REACHABILITY_GRAPH_BUTTON_LABEL = "Generuj graf osiągalności";
     private static final String GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION = "GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION";
+    private static final String GENERATE_MATRIX_BUTTON_LABEL = "Generuj reprezentację macierzową";
+    private static final String GENERATE_MATRIX_BUTTON_ACTION = "GENERATE_MATRIX_BUTTON_ACTION";
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_DEFAULT = 10;
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_MIN = 1;
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_MAX = Integer.MAX_VALUE;
@@ -43,26 +48,25 @@ public class AnalysisPanel extends JPanel implements ActionListener {
     public AnalysisPanel() {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridwidth = GridBagConstraints.REMAINDER;
 
-        JButton generateCoverabilityGraphButton = new JButton(GENERATE_COVERABILITY_GRAPH_BUTTON_LABEL);
-        generateCoverabilityGraphButton.setActionCommand(GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION);
-        generateCoverabilityGraphButton.addActionListener(this);
+        JButton generateCoverabilityGraphButton = createTextButton(
+                this, GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION, GENERATE_COVERABILITY_GRAPH_BUTTON_LABEL);
         add(generateCoverabilityGraphButton, gbc);
 
         JLabel nodesLimitDesc = new JLabel("Limit węzłów:");
+        add(nodesLimitDesc, gbc);
+
         nodesLimit = new JSpinner(new SpinnerNumberModel(
                 REACHABILITY_GRAPH_NODES_LIMIT_DEFAULT,
                 REACHABILITY_GRAPH_NODES_LIMIT_MIN,
                 REACHABILITY_GRAPH_NODES_LIMIT_MAX,
                 REACHABILITY_GRAPH_NODES_LIMIT_STEP));
-        add(nodesLimitDesc, gbc);
+        nodesLimit.setPreferredSize(COMPONENT_DEFAULT_SIZE);
         add(nodesLimit, gbc);
 
-        JButton generateReachabilityGraphButton = new JButton(GENERATE_REACHABILITY_GRAPH_BUTTON_LABEL);
-        generateReachabilityGraphButton.setActionCommand(GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION);
-        generateReachabilityGraphButton.addActionListener(this);
+        JButton generateReachabilityGraphButton = createTextButton(
+                this, GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION, GENERATE_REACHABILITY_GRAPH_BUTTON_LABEL);
         gbc.weighty = 1;
         gbc.anchor = GridBagConstraints.NORTH;
         add(generateReachabilityGraphButton, gbc);
