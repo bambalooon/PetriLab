@@ -5,12 +5,12 @@ import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.createButton;
 
 /**
  * Name: AbstractEditionPanel
@@ -21,13 +21,12 @@ import java.awt.event.ActionListener;
 public abstract class AbstractEditionPanel<T> extends JPanel implements ActionListener {
     protected static final int TEXT_FIELD_WIDTH = 50;
     protected static final int TEXT_FIELD_HEIGHT = 20;
-    protected static final int SPINNER_WIDTH = 40;
+    protected static final int SPINNER_WIDTH = 100;
     protected static final int SPINNER_HEIGHT = 20;
     private static final String ACCEPT_BUTTON_CMD = "ACCEPT_BUTTON_CMD";
     private static final String ACCEPT_BUTTON_RES = "/icons/16x16/tick.png";
     private static final String REMOVE_BUTTON_CMD = "REMOVE_BUTTON_CMD";
     private static final String REMOVE_BUTTON_RES = "/icons/16x16/cross.png";
-    public static final Insets EDITION_BUTTONS_MARGIN = new Insets(0, 0, 0, 0);
 
     protected JButton acceptButton;
     protected JButton removeButton;
@@ -38,8 +37,8 @@ public abstract class AbstractEditionPanel<T> extends JPanel implements ActionLi
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setVisible(false);
         this.graphViewer = graphViewer;
-        acceptButton = createButton(ACCEPT_BUTTON_CMD, ACCEPT_BUTTON_RES);
-        removeButton = createButton(REMOVE_BUTTON_CMD, REMOVE_BUTTON_RES);
+        acceptButton = createButton(this, ACCEPT_BUTTON_CMD, ACCEPT_BUTTON_RES);
+        removeButton = createButton(this, REMOVE_BUTTON_CMD, REMOVE_BUTTON_RES);
     }
 
     public void edit(T item) {
@@ -74,13 +73,4 @@ public abstract class AbstractEditionPanel<T> extends JPanel implements ActionLi
     protected abstract void modify(T item);
 
     protected abstract void remove(T item);
-
-    protected JButton createButton(String action, String resource) {
-        JButton button = new JButton(new ImageIcon(getClass().getResource(resource)));
-        button.setActionCommand(action);
-        button.addActionListener(this);
-        button.setMargin(EDITION_BUTTONS_MARGIN);
-        button.setContentAreaFilled(false);
-        return button;
-    }
 }
