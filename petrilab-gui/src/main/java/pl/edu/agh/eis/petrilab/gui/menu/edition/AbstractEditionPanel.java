@@ -10,7 +10,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.createButton;
+import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.createIconButton;
 
 /**
  * Name: AbstractEditionPanel
@@ -33,8 +33,8 @@ public abstract class AbstractEditionPanel<T> extends JPanel implements ActionLi
         setLayout(new GridBagLayout());
         setVisible(false);
         this.graphViewer = graphViewer;
-        acceptButton = createButton(this, ACCEPT_BUTTON_CMD, ACCEPT_BUTTON_RES);
-        removeButton = createButton(this, REMOVE_BUTTON_CMD, REMOVE_BUTTON_RES);
+        acceptButton = createIconButton(this, ACCEPT_BUTTON_CMD, ACCEPT_BUTTON_RES);
+        removeButton = createIconButton(this, REMOVE_BUTTON_CMD, REMOVE_BUTTON_RES);
     }
 
     public void edit(T item) {

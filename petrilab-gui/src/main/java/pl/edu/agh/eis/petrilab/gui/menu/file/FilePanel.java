@@ -17,7 +17,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import static pl.edu.agh.eis.petrilab.gui.Configuration.GRAPH_FILE;
-import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.createButton;
+import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.createIconButton;
 
 /**
  * Name: FilePanel
@@ -44,10 +44,10 @@ public class FilePanel extends JPanel implements ActionListener {
         fileChooser.setFileFilter(new PetriLabFileFilter());
         fileChooser.setAcceptAllFileFilterUsed(false);
 
-        JButton newFileButton = createButton(this, NEW_FILE_BUTTON_ACTION, NEW_FILE_ICON_RES);
-        JButton openFileButton = createButton(this, OPEN_FILE_BUTTON_ACTION, OPEN_FILE_ICON_RES);
-        JButton saveFileButton = createButton(this, SAVE_FILE_BUTTON_ACTION, SAVE_FILE_ICON_RES);
-        JButton saveAsFileButton = createButton(this, SAVE_AS_FILE_BUTTON_ACTION, SAVE_AS_FILE_ICON_RES);
+        JButton newFileButton = createIconButton(this, NEW_FILE_BUTTON_ACTION, NEW_FILE_ICON_RES);
+        JButton openFileButton = createIconButton(this, OPEN_FILE_BUTTON_ACTION, OPEN_FILE_ICON_RES);
+        JButton saveFileButton = createIconButton(this, SAVE_FILE_BUTTON_ACTION, SAVE_FILE_ICON_RES);
+        JButton saveAsFileButton = createIconButton(this, SAVE_AS_FILE_BUTTON_ACTION, SAVE_AS_FILE_ICON_RES);
 
         add(newFileButton);
         add(openFileButton);

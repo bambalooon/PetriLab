@@ -23,16 +23,28 @@ public class GuiHelper {
     public static final Insets BUTTON_PADDING_SMALL = new Insets(1, 1, 1, 1);
     public static final Insets BUTTON_PADDING_NONE = new Insets(0, 0, 0, 0);
 
-    public static JButton createButton(ActionListener actionListener, String action, String resource) {
-        return createButton(actionListener, action, resource, BUTTON_PADDING_NONE);
+    public static JButton createIconButton(ActionListener actionListener, String action, String resource) {
+        return createIconButton(actionListener, action, resource, BUTTON_PADDING_NONE);
     }
 
-    public static JButton createButton(ActionListener actionListener, String action, String resource, Insets padding) {
+    public static JButton createIconButton(ActionListener actionListener, String action, String resource, Insets padding) {
         JButton button = new JButton(new ImageIcon(GuiHelper.class.getResource(resource)));
         button.setActionCommand(action);
         button.addActionListener(actionListener);
         button.setMargin(padding);
         button.setContentAreaFilled(false);
+        return button;
+    }
+
+    public static JButton createTextButton(ActionListener actionListener, String action, String text) {
+        return createTextButton(actionListener, action, text, BUTTON_PADDING_NONE);
+    }
+
+    public static JButton createTextButton(ActionListener actionListener, String action, String text, Insets padding) {
+        JButton button = new JButton(text);
+        button.setActionCommand(action);
+        button.addActionListener(actionListener);
+        button.setMargin(padding);
         return button;
     }
 }

@@ -53,14 +53,14 @@ public class SimulationPanel extends JPanel implements ActionListener, Observer 
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.NORTHWEST;
         gbc.weighty = 1;
-        JButton stopButton = createButton(this, STOP_BUTTON_ACTION, STOP_BUTTON_RES, BUTTON_PADDING_MEDIUM);
+        JButton stopButton = createIconButton(this, STOP_BUTTON_ACTION, STOP_BUTTON_RES, BUTTON_PADDING_MEDIUM);
         add(stopButton, gbc);
 
-        JButton playButton = createButton(this, PLAY_BUTTON_ACTION, PLAY_BUTTON_RES, BUTTON_PADDING_MEDIUM);
+        JButton playButton = createIconButton(this, PLAY_BUTTON_ACTION, PLAY_BUTTON_RES, BUTTON_PADDING_MEDIUM);
         add(playButton, gbc);
 
         gbc.gridwidth = GridBagConstraints.REMAINDER;
-        JButton pauseButton = createButton(this, PAUSE_BUTTON_ACTION, PAUSE_BUTTON_RES, BUTTON_PADDING_MEDIUM);
+        JButton pauseButton = createIconButton(this, PAUSE_BUTTON_ACTION, PAUSE_BUTTON_RES, BUTTON_PADDING_MEDIUM);
         add(pauseButton, gbc);
     }
 
