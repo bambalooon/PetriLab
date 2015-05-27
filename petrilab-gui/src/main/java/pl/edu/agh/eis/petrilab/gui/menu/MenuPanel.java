@@ -23,6 +23,7 @@ import java.util.Observer;
 public class MenuPanel extends JTabbedPane implements ChangeListener, Observer {
     private final List<TabComponent> tabComponents;
     private TabComponent currentComponent;
+
     public MenuPanel(List<TabComponent> tabComponents) {
         setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
         Preconditions.checkArgument(!tabComponents.isEmpty(), "List of tab components cannot be empty.");
