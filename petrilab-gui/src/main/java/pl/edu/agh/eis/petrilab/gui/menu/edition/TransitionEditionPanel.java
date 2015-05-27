@@ -9,10 +9,10 @@ import pl.edu.agh.eis.petrilab.model2.Transition;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 
 import static java.awt.GridBagConstraints.*;
+import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.COMPONENT_DEFAULT_SIZE;
 import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.MARGIN_SMALL;
 
 /**
@@ -35,7 +35,7 @@ public class TransitionEditionPanel extends AbstractEditionPanel<Transition> {
         add(nameLabel, gbc);
 
         nameField = new JTextField();
-        nameField.setPreferredSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
+        nameField.setPreferredSize(COMPONENT_DEFAULT_SIZE);
         gbc.gridwidth = REMAINDER;
         add(nameField, gbc);
 

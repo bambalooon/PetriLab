@@ -12,10 +12,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 
+import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.COMPONENT_DEFAULT_SIZE;
 import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.MARGIN_SMALL;
 
 /**
@@ -52,7 +52,7 @@ public class PlaceEditionPanel extends AbstractEditionPanel<Place> {
         SpinnerNumberModel markingModel = new SpinnerNumberModel(
                 Place.MARKING_DEFAULT, Place.MARKING_MIN, Place.MARKING_MAX, 1);
         markingSpinner = new JSpinner(markingModel);
-        markingSpinner.setPreferredSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
+        markingSpinner.setPreferredSize(COMPONENT_DEFAULT_SIZE);
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         add(markingSpinner, gbc);
 
@@ -65,7 +65,7 @@ public class PlaceEditionPanel extends AbstractEditionPanel<Place> {
         SpinnerNumberModel capacityModel = new SpinnerNumberModel(
                 Place.CAPACITY_MIN, Place.CAPACITY_MIN, Place.CAPACITY_MAX, 1);
         capacitySpinner = new JSpinner(capacityModel);
-        capacitySpinner.setPreferredSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
+        capacitySpinner.setPreferredSize(COMPONENT_DEFAULT_SIZE);
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         add(capacitySpinner, gbc);
 
