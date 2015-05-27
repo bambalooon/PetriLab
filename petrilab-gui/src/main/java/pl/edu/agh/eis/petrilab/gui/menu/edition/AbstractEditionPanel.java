@@ -19,10 +19,6 @@ import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.createButton;
  * Created by BamBalooon
  */
 public abstract class AbstractEditionPanel<T> extends JPanel implements ActionListener {
-    protected static final int TEXT_FIELD_WIDTH = 50;
-    protected static final int TEXT_FIELD_HEIGHT = 20;
-    protected static final int SPINNER_WIDTH = 100;
-    protected static final int SPINNER_HEIGHT = 20;
     private static final String ACCEPT_BUTTON_CMD = "ACCEPT_BUTTON_CMD";
     private static final String ACCEPT_BUTTON_RES = "/icons/16x16/tick.png";
     private static final String REMOVE_BUTTON_CMD = "REMOVE_BUTTON_CMD";
