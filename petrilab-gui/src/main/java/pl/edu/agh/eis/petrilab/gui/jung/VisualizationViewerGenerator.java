@@ -12,7 +12,7 @@ import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
 import pl.edu.agh.eis.petrilab.model2.Transition;
 import pl.edu.agh.eis.petrilab.model2.matrix.Marking;
 
-import java.awt.*;
+import java.awt.Dimension;
 
 /**
  * Name: VisualizationViewerGenerator
@@ -57,15 +57,14 @@ public interface VisualizationViewerGenerator<V, E> {
         }
     };
 
-    VisualizationViewerGenerator<Marking, Transition> COVERABILITY_GRAPH =
+    VisualizationViewerGenerator<Marking, Transition> GRAPH =
             new VisualizationViewerGenerator<Marking, Transition>() {
 
         @Override
         public VisualizationViewer<Marking, Transition> generateVisualizationViewer(DirectedSparseGraph<Marking, Transition> graph) {
 
-            //FIXME: need to remove vv size and maybe think about different way to show graphs than unresizable JOptionPane
             VisualizationViewer<Marking, Transition> visualizationViewer = new VisualizationViewer<>
-                    (new CircleLayout<>(graph), new Dimension(1200, 600));
+                    (new CircleLayout<>(graph), new Dimension(VIEWER_WIDTH, VIEWER_HEIGHT));
 
             visualizationViewer.getRenderContext().setVertexLabelTransformer(new Transformer<Marking, String>() {
                 @Override
