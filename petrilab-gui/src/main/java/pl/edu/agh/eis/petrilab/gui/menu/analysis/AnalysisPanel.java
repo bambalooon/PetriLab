@@ -32,11 +32,11 @@ import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.createTextButton;
  * Created by BamBalooon
  */
 public class AnalysisPanel extends JPanel implements ActionListener {
-    private static final String GENERATE_COVERABILITY_GRAPH_BUTTON_LABEL = "Generuj graf pokrycia";
+    private static final String GENERATE_COVERABILITY_GRAPH_BUTTON_LABEL = "Graf pokrycia";
     private static final String GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION = "GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION";
-    private static final String GENERATE_REACHABILITY_GRAPH_BUTTON_LABEL = "Generuj graf osiągalności";
+    private static final String GENERATE_REACHABILITY_GRAPH_BUTTON_LABEL = "Graf osiągalności";
     private static final String GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION = "GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION";
-    private static final String GENERATE_MATRIX_BUTTON_LABEL = "Generuj macierz";
+    private static final String GENERATE_MATRIX_BUTTON_LABEL = "Macierz";
     private static final String GENERATE_MATRIX_BUTTON_ACTION = "GENERATE_MATRIX_BUTTON_ACTION";
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_DEFAULT = 10;
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_MIN = 1;
