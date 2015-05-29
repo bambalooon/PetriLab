@@ -6,13 +6,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 
-import static java.awt.GridBagConstraints.REMAINDER;
 import static java.lang.System.arraycopy;
-import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.MARGIN_SMALL;
 
 /**
  * Name: MatrixPanel
@@ -26,30 +23,34 @@ public class MatrixPanel extends JPanel {
 
     public MatrixPanel(PetriNetMatrix petriNetMatrix) {
         this.petriNetMatrix = petriNetMatrix;
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = REMAINDER;
-        gbc.insets = MARGIN_SMALL;
 
-        JLabel inMatrixLabel = new JLabel("Macierz wejściowa:");
-        add(inMatrixLabel, gbc);
+        JPanel inMatrixPanel = new JPanel(new BorderLayout());
 
-        JTable inMatrixTable = new MatrixTable(
-                transformMatrixToTableData(petriNetMatrix.getInMatrix()),
-                transformPlaceNamesToColumnNames(petriNetMatrix.getPlacesNames()));
-        JScrollPane inMatrixPanel = new JScrollPane(inMatrixTable);
-        inMatrixPanel.setPreferredSize(MATRIX_TABLE_SIZE);
-        add(inMatrixPanel, gbc);
+            JLabel inMatrixLabel = new JLabel("Macierz wejściowa:");
+            inMatrixPanel.add(inMatrixLabel, BorderLayout.PAGE_START);
 
-        JLabel outMatrixLabel = new JLabel("Macierz wyjściowa:");
-        add(outMatrixLabel, gbc);
+            JTable inMatrixTable = new MatrixTable(
+                    transformMatrixToTableData(petriNetMatrix.getInMatrix()),
+                    transformPlaceNamesToColumnNames(petriNetMatrix.getPlacesNames()));
+            JScrollPane inMatrixTablePanel = new JScrollPane(inMatrixTable);
+            inMatrixTablePanel.setPreferredSize(MATRIX_TABLE_SIZE);
+            inMatrixPanel.add(inMatrixTablePanel, BorderLayout.CENTER);
 
-        JTable outMatrixTable = new MatrixTable(
-                transformMatrixToTableData(petriNetMatrix.getOutMatrix()),
-                transformPlaceNamesToColumnNames(petriNetMatrix.getPlacesNames()));
-        JScrollPane outMatrixPanel = new JScrollPane(outMatrixTable);
-        outMatrixPanel.setPreferredSize(MATRIX_TABLE_SIZE);
-        add(outMatrixPanel, gbc);
+        add(inMatrixPanel);
+
+        JPanel outMatrixPanel = new JPanel(new BorderLayout());
+
+            JLabel outMatrixLabel = new JLabel("Macierz wyjściowa:");
+            outMatrixPanel.add(outMatrixLabel, BorderLayout.PAGE_START);
+
+            JTable outMatrixTable = new MatrixTable(
+                    transformMatrixToTableData(petriNetMatrix.getOutMatrix()),
+                    transformPlaceNamesToColumnNames(petriNetMatrix.getPlacesNames()));
+            JScrollPane outMatrixTablePanel = new JScrollPane(outMatrixTable);
+            outMatrixTablePanel.setPreferredSize(MATRIX_TABLE_SIZE);
+            outMatrixPanel.add(outMatrixTablePanel, BorderLayout.CENTER);
+
+        add(outMatrixPanel);
     }
 
     public String[] transformPlaceNamesToColumnNames(String[] placeNames) {
