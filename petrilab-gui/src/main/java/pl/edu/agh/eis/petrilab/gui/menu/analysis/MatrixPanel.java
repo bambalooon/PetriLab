@@ -11,6 +11,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import static java.awt.GridBagConstraints.REMAINDER;
+import static java.lang.System.arraycopy;
 import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.MARGIN_SMALL;
 
 /**
@@ -54,9 +55,7 @@ public class MatrixPanel extends JPanel {
     public String[] transformPlaceNamesToColumnNames(String[] placeNames) {
         String[] columnNames = new String[1 + placeNames.length];
         columnNames[0] = "";
-        for (int i = 0; i < placeNames.length; i++) {
-            columnNames[1 + i] = placeNames[i];
-        }
+        arraycopy(placeNames, 0, columnNames, 1, placeNames.length);
         return columnNames;
     }
 
