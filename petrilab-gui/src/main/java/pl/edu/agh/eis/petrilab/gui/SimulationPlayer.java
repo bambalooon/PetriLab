@@ -47,9 +47,9 @@ public class SimulationPlayer implements Observer {
         if (simulation != null) {
             simulation.stop();
             simulation = null;
-            PetriLabApplication.getInstance().getGraphViewer().repaint();
         }
         PetriLabApplication.getInstance().getSimulationGraph().setMarking(initialMarking);
+        PetriLabApplication.getInstance().getGraphViewer().repaint();
         simulationPanel.updateMarking();
     }
 
