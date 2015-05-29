@@ -20,7 +20,7 @@ import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.MARGIN_SMALL;
  * Created by BamBalooon
  */
 public class MatrixPanel extends JPanel {
-    private static final Dimension MATRIX_TABLE_SIZE = new Dimension(400, 200);
+    private static final Dimension MATRIX_TABLE_SIZE = new Dimension(400, 280);
     private final PetriNetMatrix petriNetMatrix;
 
     public MatrixPanel(PetriNetMatrix petriNetMatrix) {
