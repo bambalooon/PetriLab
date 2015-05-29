@@ -16,8 +16,8 @@ import java.util.List;
  * Created by BamBalooon
  */
 public class NameGenerator {
-    private static final String PLACE_NAME_FORMAT = "P%d";
-    private static final String TRANSITION_NAME_FORMAT = "T%d";
+    private static final String PLACE_NAME_FORMAT = "P%02d";
+    private static final String TRANSITION_NAME_FORMAT = "T%02d";
     private final PetriNetGraph graph;
 
 
