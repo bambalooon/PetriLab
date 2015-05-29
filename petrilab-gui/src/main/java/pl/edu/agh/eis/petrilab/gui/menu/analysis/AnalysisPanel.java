@@ -13,7 +13,6 @@ import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -22,6 +21,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static pl.edu.agh.eis.petrilab.gui.menu.analysis.SingleComponentFrame.*;
 import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.COMPONENT_DEFAULT_SIZE;
 import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.createTextButton;
 
@@ -87,18 +87,18 @@ public class AnalysisPanel extends JPanel implements ActionListener {
         switch (e.getActionCommand()) {
             case GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION:
                 graph = CoverabilityGraph.getCoverabilityGraph(petriNetMatrix);
-                viewer = VisualizationViewerGenerator.COVERABILITY_GRAPH.generateVisualizationViewer(graph);
+                viewer = VisualizationViewerGenerator.GRAPH.generateVisualizationViewer(graph);
                 viewer.setGraphMouse(graphMouse);
-                JOptionPane.showMessageDialog(null, viewer);
+                new SingleComponentFrame(COVERABILITY_GRAPH_TITLE, viewer);
                 break;
             case GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION:
                 graph = CoverabilityGraph.getReachabilityGraph(petriNetMatrix, (Integer) nodesLimit.getValue());
-                viewer = VisualizationViewerGenerator.COVERABILITY_GRAPH.generateVisualizationViewer(graph);
+                viewer = VisualizationViewerGenerator.GRAPH.generateVisualizationViewer(graph);
                 viewer.setGraphMouse(graphMouse);
-                JOptionPane.showMessageDialog(null, viewer);
+                new SingleComponentFrame(REACHABILITY_GRAPH_TITLE, viewer);
                 break;
             case GENERATE_MATRIX_BUTTON_ACTION:
-                JOptionPane.showMessageDialog(null, new MatrixPanel(petriNetMatrix));
+                new SingleComponentFrame(MATRIX_TITLE, new MatrixPanel(petriNetMatrix));
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported action.");
