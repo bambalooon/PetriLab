@@ -42,12 +42,14 @@ public abstract class AbstractEditionPanel<T> extends JPanel implements ActionLi
         this.item = item;
         loadItemState(item);
         revalidate();
+        getRootPane().setDefaultButton(acceptButton);
     }
 
     public void cancel() {
         item = null;
         setVisible(false);
         revalidate();
+        getRootPane().setDefaultButton(null);
     }
 
     @Override
