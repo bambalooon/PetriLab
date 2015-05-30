@@ -8,6 +8,7 @@ import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
 import pl.edu.agh.eis.petrilab.gui.jung.factory.ArcFactory;
 import pl.edu.agh.eis.petrilab.gui.jung.factory.VertexFactory;
+import pl.edu.agh.eis.petrilab.gui.jung.keyboard.ModeKeyAdapter;
 import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
@@ -60,6 +61,8 @@ public class PetriLabApplication {
 
         graphMouse = new EditingModalGraphMouse<>(graphViewer.getRenderContext(),
                 new VertexFactory(), new ArcFactory());
+
+        graphMouse.setModeKeyListener(new ModeKeyAdapter(graphMouse));
 
         graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
 
