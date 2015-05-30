@@ -132,4 +132,10 @@ public class PlaceEditionPanel extends AbstractEditionPanel<Place> {
                 break;
         }
     }
+
+    @Override
+    public void requestFocus() {
+        super.requestFocus();
+        nameField.requestFocus();
+    }
 }

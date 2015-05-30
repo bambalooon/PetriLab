@@ -63,4 +63,10 @@ public class ArcEditionPanel extends AbstractEditionPanel<Arc> {
     protected void remove(Arc arc) {
         graphViewer.getGraphLayout().getGraph().removeEdge(arc);
     }
+
+    @Override
+    public void requestFocus() {
+        super.requestFocus();
+        weightSpinner.requestFocus();
+    }
 }

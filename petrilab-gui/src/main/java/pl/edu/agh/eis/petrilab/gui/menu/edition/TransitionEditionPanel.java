@@ -73,4 +73,10 @@ public class TransitionEditionPanel extends AbstractEditionPanel<Transition> {
     protected void remove(Transition transition) {
         graphViewer.getGraphLayout().getGraph().removeVertex(transition);
     }
+
+    @Override
+    public void requestFocus() {
+        super.requestFocus();
+        nameField.requestFocus();
+    }
 }

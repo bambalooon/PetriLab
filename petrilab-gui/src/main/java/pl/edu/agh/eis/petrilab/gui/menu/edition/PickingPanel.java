@@ -51,4 +51,16 @@ public class PickingPanel extends JPanel {
     public void cancelArc() {
         arcEditionPanel.cancel();
     }
+
+    @Override
+    public void requestFocus() {
+        super.requestFocus();
+        if (placeEditionPanel.isVisible()) {
+            placeEditionPanel.requestFocus();
+        } else if (transitionEditionPanel.isVisible()) {
+            transitionEditionPanel.requestFocus();
+        } else if (arcEditionPanel.isVisible()) {
+            arcEditionPanel.requestFocus();
+        }
+    }
 }
