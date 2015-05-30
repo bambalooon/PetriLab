@@ -12,13 +12,13 @@ import pl.edu.agh.eis.petrilab.gui.jung.keyboard.ModeKeyAdapter;
 import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
-import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrixWithCoordinates;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraphInitializer;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
+import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrixWithCoordinates;
 import pl.edu.agh.eis.petrilab.model2.util.NameGenerator;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 /**
  * Name: PetriLabApplication
@@ -62,12 +62,10 @@ public class PetriLabApplication {
         graphMouse = new EditingModalGraphMouse<>(graphViewer.getRenderContext(),
                 new VertexFactory(), new ArcFactory());
 
-        graphMouse.setModeKeyListener(new ModeKeyAdapter(graphMouse));
-
         graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
 
         graphViewer.setGraphMouse(graphMouse);
-        graphViewer.addKeyListener(graphMouse.getModeKeyListener());
+        graphViewer.addKeyListener(new ModeKeyAdapter(graphMouse));
 
         graphMouse.addItemListener(
                 new ModeChangeListener(graphViewer.getPickedVertexState(), graphViewer.getPickedEdgeState()));
