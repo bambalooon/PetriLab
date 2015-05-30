@@ -3,12 +3,12 @@ package pl.edu.agh.eis.petrilab.gui;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
 import pl.edu.agh.eis.petrilab.gui.jung.factory.ArcFactory;
 import pl.edu.agh.eis.petrilab.gui.jung.factory.VertexFactory;
 import pl.edu.agh.eis.petrilab.gui.jung.keyboard.ModeKeyAdapter;
+import pl.edu.agh.eis.petrilab.gui.jung.mouse.CustomEditingModalGraphMouse;
 import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
@@ -41,7 +41,7 @@ public class PetriLabApplication {
     private PetriNetGraphInitializer petriNetGraphInitializer;
     private PetriNetGraph simulationGraph;
     private VisualizationViewer<PetriNetVertex, Arc> graphViewer;
-    private EditingModalGraphMouse<PetriNetVertex, Arc> graphMouse;
+    private CustomEditingModalGraphMouse<PetriNetVertex, Arc> graphMouse;
     private Configuration configuration = new Configuration();
 
     private void startGui() {
@@ -59,7 +59,7 @@ public class PetriLabApplication {
 
         graphViewer = VisualizationViewerGenerator.PETRI_NET.generateVisualizationViewer(petriNetGraph);
 
-        graphMouse = new EditingModalGraphMouse<>(graphViewer.getRenderContext(),
+        graphMouse = new CustomEditingModalGraphMouse<>(graphViewer.getRenderContext(),
                 new VertexFactory(), new ArcFactory());
 
         graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
@@ -87,7 +87,7 @@ public class PetriLabApplication {
         return graphViewer;
     }
 
-    public EditingModalGraphMouse<PetriNetVertex, Arc> getGraphMouse() {
+    public CustomEditingModalGraphMouse<PetriNetVertex, Arc> getGraphMouse() {
         return graphMouse;
     }
 

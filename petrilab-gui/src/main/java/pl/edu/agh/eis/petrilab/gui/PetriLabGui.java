@@ -2,10 +2,9 @@ package pl.edu.agh.eis.petrilab.gui;
 
 import com.google.common.collect.ImmutableList;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
-import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.picking.PickedState;
+import pl.edu.agh.eis.petrilab.gui.jung.mouse.CustomEditingModalGraphMouse;
 import pl.edu.agh.eis.petrilab.gui.listener.EditionPickListener;
 import pl.edu.agh.eis.petrilab.gui.listener.ModalPickListener;
 import pl.edu.agh.eis.petrilab.gui.listener.SimulationPickListener;
@@ -52,17 +51,19 @@ public class PetriLabGui extends JFrame {
         super(PetriLabApplication.TITLE);
 
         VisualizationViewer<PetriNetVertex, Arc> graphViewer = PetriLabApplication.getInstance().getGraphViewer();
-        EditingModalGraphMouse<PetriNetVertex, Arc> graphMouse = PetriLabApplication.getInstance().getGraphMouse();
+        CustomEditingModalGraphMouse<PetriNetVertex, Arc> graphMouse = PetriLabApplication.getInstance().getGraphMouse();
 
         setUpMenu(graphViewer, graphMouse);
         setUpMainPanel(graphViewer);
         setUpFrame();
     }
 
-    private void setUpMenu(VisualizationViewer<PetriNetVertex, Arc> graphViewer, AbstractModalGraphMouse graphMouse) {
+    private void setUpMenu(VisualizationViewer<PetriNetVertex, Arc> graphViewer,
+                           CustomEditingModalGraphMouse graphMouse) {
         PickingPanel pickingPanel = new PickingPanel(graphViewer);
         MainPanel mainPanel = new MainPanel(new ModePanel(graphMouse), new EditionPanel(), pickingPanel);
         graphMouse.addItemListener(mainPanel);
+        graphMouse.setEditionPanel(pickingPanel);
 
         SimulationPanel simulationPanel = new SimulationPanel();
 
