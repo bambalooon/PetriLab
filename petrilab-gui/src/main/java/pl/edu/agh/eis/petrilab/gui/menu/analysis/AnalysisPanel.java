@@ -1,9 +1,11 @@
 package pl.edu.agh.eis.petrilab.gui.menu.analysis;
 
+import com.google.common.collect.Lists;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
+import org.apache.commons.collections15.Transformer;
 import pl.edu.agh.eis.petrilab.api.CoverabilityGraph;
 import pl.edu.agh.eis.petrilab.gui.PetriLabApplication;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
@@ -13,6 +15,7 @@ import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -20,6 +23,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.List;
 
 import static pl.edu.agh.eis.petrilab.gui.menu.analysis.SingleComponentFrame.*;
 import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.COMPONENT_DEFAULT_SIZE;
@@ -88,6 +94,8 @@ public class AnalysisPanel extends JPanel implements ActionListener {
             case GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION:
                 graph = CoverabilityGraph.getCoverabilityGraph(petriNetMatrix);
                 viewer = VisualizationViewerGenerator.GRAPH.generateVisualizationViewer(graph);
+                setCustomVertexLabelTransformer(viewer, petriNetMatrix);
+                setVertexPickListener(viewer, petriNetMatrix);
                 viewer.setGraphMouse(graphMouse);
                 new SingleComponentFrame(COVERABILITY_GRAPH_TITLE, viewer);
                 break;
@@ -103,5 +111,60 @@ public class AnalysisPanel extends JPanel implements ActionListener {
             default:
                 throw new UnsupportedOperationException("Unsupported action.");
         }
+    }
+
+    private void setCustomVertexLabelTransformer(VisualizationViewer<Marking, Transition> viewer,
+                                                 PetriNetMatrix matrix) {
+
+        final int[] capacityVector = matrix.getCapacityVector();
+        viewer.getRenderContext().setVertexLabelTransformer(new Transformer<Marking, String>() {
+            @Override
+            public String transform(Marking marking) {
+                boolean hasInfiniteMarkingExceedingCapacity =
+                        getIndexesOfInfiniteMarkingsExceedingCapacity(marking.getValue(), capacityVector).size() > 0;
+
+                return hasInfiniteMarkingExceedingCapacity
+                        ? marking.toString() + "(!)"
+                        : marking.toString();
+            }
+        });
+    }
+
+    private void setVertexPickListener(VisualizationViewer<Marking, Transition> viewer, final PetriNetMatrix matrix) {
+        viewer.getPickedVertexState().addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED && e.getItem() instanceof Marking) {
+                    Marking marking = (Marking) e.getItem();
+                    List<Integer> indexes = getIndexesOfInfiniteMarkingsExceedingCapacity(
+                            marking.getValue(), matrix.getCapacityVector());
+                    if (indexes.size() > 0) {
+                        StringBuilder strBuilder = new StringBuilder();
+                        strBuilder.append("Poniższe miejsca ograniczone są pojemnością:\n");
+                        for (Integer index : indexes) {
+                            strBuilder
+                                    .append(matrix.getPlacesNames()[index])
+                                    .append(" - pojemność: ")
+                                    .append(matrix.getCapacityVector()[index])
+                                    .append("\n");
+                        }
+                        JOptionPane
+                                .showMessageDialog(null, strBuilder.toString(), "Uwaga!", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            }
+        });
+    }
+
+    private List<Integer> getIndexesOfInfiniteMarkingsExceedingCapacity(Double[] markingVector, int[] capacityVector) {
+        List<Integer> indexes = Lists.newArrayList();
+        int i = 0;
+        for (Double marking : markingVector) {
+            if (marking.isInfinite() && capacityVector[i] != 0) {
+                indexes.add(i);
+            }
+            i++;
+        }
+        return indexes;
     }
 }
