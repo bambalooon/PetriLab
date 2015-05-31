@@ -9,6 +9,7 @@ import pl.edu.agh.eis.petrilab.gui.jung.transform.VertexIconTransformer;
 import pl.edu.agh.eis.petrilab.gui.jung.transform.VertexShapeTransformer;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
+import pl.edu.agh.eis.petrilab.model2.Place;
 import pl.edu.agh.eis.petrilab.model2.Transition;
 import pl.edu.agh.eis.petrilab.model2.matrix.Marking;
 
@@ -38,6 +39,10 @@ public interface VisualizationViewerGenerator<V, E> {
             visualizationViewer.getRenderContext().setVertexLabelTransformer(new Transformer<PetriNetVertex, String>() {
                 @Override
                 public String transform(PetriNetVertex vertex) {
+                    if (vertex instanceof Place && ((Place) vertex).getCapacity() != 0) {
+                        Place place = (Place) vertex;
+                        return place.getName() + "(" + place.getCapacity() + ")";
+                    }
                     return vertex.getName();
                 }
             });
