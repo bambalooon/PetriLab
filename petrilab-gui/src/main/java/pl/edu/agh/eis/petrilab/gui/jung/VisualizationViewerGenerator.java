@@ -66,7 +66,8 @@ public interface VisualizationViewerGenerator<V, E> {
             new VisualizationViewerGenerator<Marking, Transition>() {
 
         @Override
-        public VisualizationViewer<Marking, Transition> generateVisualizationViewer(DirectedSparseGraph<Marking, Transition> graph) {
+        public VisualizationViewer<Marking, Transition> generateVisualizationViewer
+                (DirectedSparseGraph<Marking, Transition> graph) {
 
             VisualizationViewer<Marking, Transition> visualizationViewer = new VisualizationViewer<>
                     (new CircleLayout<>(graph), new Dimension(VIEWER_WIDTH, VIEWER_HEIGHT));
