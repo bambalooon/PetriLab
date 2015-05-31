@@ -34,7 +34,7 @@ public class Properties {
         return true;
     }
 
-    public static boolean isPotentiallyAlive (Transition transition, DirectedSparseGraph<Marking, Transition> coverabilityGraph) {
+    public static boolean isTransitionPotentiallyAlive (Transition transition, DirectedSparseGraph<Marking, Transition> coverabilityGraph) {
         return coverabilityGraph.containsEdge(transition);
     }
 
@@ -43,7 +43,7 @@ public class Properties {
         Transition currentTransition;
         for(int i = 0; i < transitionNumber; i++) {
             currentTransition = new Transition(matrix.getTransitionsNames()[i]);
-            if(!isPotentiallyAlive(currentTransition, coverabilityGraph))
+            if(!isTransitionPotentiallyAlive(currentTransition, coverabilityGraph))
                 return false;
         }
         return true;
@@ -60,7 +60,7 @@ public class Properties {
         return true;
     }
 
-    public static Double isKBounded (Place place, DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
+    public static Double isPlaceKBounded (Place place, DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
         int placeIndex = Arrays.asList(matrix.getPlacesNames()).indexOf(place.getName());
         Collection<Marking> markings = coverabilityGraph.getVertices();
         Iterator<Marking> itr = markings.iterator();
@@ -80,15 +80,15 @@ public class Properties {
         Double kBound = 0.0;
         for(int i = 0; i < placesNumber; i++) {
             currentPlace = new Place(matrix.getPlacesNames()[i]);
-            if(isKBounded(currentPlace, coverabilityGraph, matrix) == -1.0)
+            if(isPlaceKBounded(currentPlace, coverabilityGraph, matrix) == -1.0)
                 return -1.0;
-            if(isKBounded(currentPlace, coverabilityGraph, matrix) > kBound)
-                kBound = isKBounded(currentPlace, coverabilityGraph, matrix);
+            if(isPlaceKBounded(currentPlace, coverabilityGraph, matrix) > kBound)
+                kBound = isPlaceKBounded(currentPlace, coverabilityGraph, matrix);
         }
         return kBound;
     }
 
-    public static boolean isSafe(Place place, DirectedSparseGraph<Marking, Transition> reachabilityGraph, PetriNetMatrix matrix) {
+    public static boolean isPlaceSafe(Place place, DirectedSparseGraph<Marking, Transition> reachabilityGraph, PetriNetMatrix matrix) {
         int placeIndex = Arrays.asList(matrix.getPlacesNames()).indexOf(place.getName());
         Collection<Marking> markings = reachabilityGraph.getVertices();
         for (Marking marking : markings) {
@@ -103,13 +103,13 @@ public class Properties {
         Place currentPlace;
         for(int i = 0; i < placesNumber; i++) {
             currentPlace = new Place(matrix.getPlacesNames()[i]);
-            if(!isSafe(currentPlace, reachabilityGraph, matrix))
+            if(!isPlaceSafe(currentPlace, reachabilityGraph, matrix))
             return false;
         }
         return true;
     }
 
-    public static boolean isReversible(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
+    public static boolean isNetReversible(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
         Marking initialMarking = new Marking(matrix.getMarkingVector());
         Collection<Marking> markings = coverabilityGraph.getVertices();
         Iterator<Marking> itr = markings.iterator();
