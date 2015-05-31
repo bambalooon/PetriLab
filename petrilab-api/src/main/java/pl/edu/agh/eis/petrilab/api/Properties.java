@@ -15,13 +15,12 @@ import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.sum;
 
 /**
  * Created by PW on 31-05-2015.
+ * cool
  */
 public class Properties {
 
     public static boolean isPotentiallyAlive (Transition transition, DirectedSparseGraph<Marking, Transition> coverabilityGraph) {
-        if(coverabilityGraph.containsEdge(transition))
-            return true;
-        else return false;
+        return coverabilityGraph.containsEdge(transition);
     }
 
     public static boolean isNetPotentiallyAlive (DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
@@ -38,7 +37,7 @@ public class Properties {
     public static boolean isNetConservative (DirectedSparseGraph<Marking, Transition> reachabilityGraph) {
         Collection<Marking> markings = reachabilityGraph.getVertices();
         Iterator<Marking> itr = markings.iterator();
-        double markingSum = sum(itr.next());
+        Double markingSum = sum(itr.next());
         while(itr.hasNext()) {
             if(sum(itr.next()) != markingSum)
                 return false;
@@ -46,28 +45,50 @@ public class Properties {
         return true;
     }
 
-    public static double isKBounded (Place place, DirectedSparseGraph<Marking, Transition> coverabilityGraph) {
-        //zostaje zrobienie ograniczonosci miejsca i sieci + ten wektor wag
-        return 1.0;
+    public static Double isKBounded (Place place, DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
+        int placeIndex = Arrays.asList(matrix.getPlacesNames()).indexOf(place.getName());
+        Collection<Marking> markings = coverabilityGraph.getVertices();
+        Iterator<Marking> itr = markings.iterator();
+        Double kBound = itr.next().getValue()[placeIndex];
+        while(itr.hasNext()) {
+            if(itr.next().getValue()[placeIndex] > kBound)
+                kBound = itr.next().getValue()[placeIndex];
+        }
+        if(kBound == Double.POSITIVE_INFINITY)
+            return -1.0;
+        return kBound;
+    }
+
+    public static Double isNetKBounded (DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
+        int placesNumber = matrix.getInMatrix()[0].length;
+        Place currentPlace;
+        Double kBound = 0.0;
+        for(int i = 0; i < placesNumber; i++) {
+            currentPlace = new Place(matrix.getPlacesNames()[i]);
+            if(isKBounded(currentPlace, coverabilityGraph, matrix) == -1.0)
+                return -1.0;
+            if(isKBounded(currentPlace, coverabilityGraph, matrix) > kBound)
+                kBound = isKBounded(currentPlace, coverabilityGraph, matrix);
+        }
+        return kBound;
     }
 
     public static boolean isSafe(Place place, DirectedSparseGraph<Marking, Transition> reachabilityGraph, PetriNetMatrix matrix) {
         int placeIndex = Arrays.asList(matrix.getPlacesNames()).indexOf(place.getName());
         Collection<Marking> markings = reachabilityGraph.getVertices();
-        Iterator<Marking> itr = markings.iterator();
-        while(itr.hasNext()) {
-            if(itr.next().getValue()[placeIndex] > 1.0)
+        for (Marking marking : markings) {
+            if (marking.getValue()[placeIndex] > 1.0)
                 return false;
         }
         return true;
     }
 
-    public static boolean isNetSafe(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
+    public static boolean isNetSafe(DirectedSparseGraph<Marking, Transition> reachabilityGraph, PetriNetMatrix matrix) {
         int placesNumber = matrix.getInMatrix()[0].length;
         Place currentPlace;
         for(int i = 0; i < placesNumber; i++) {
             currentPlace = new Place(matrix.getPlacesNames()[i]);
-            if(!isSafe(currentPlace, coverabilityGraph, matrix))
+            if(!isSafe(currentPlace, reachabilityGraph, matrix))
             return false;
         }
         return true;
