@@ -12,12 +12,27 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.sum;
+import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.toDoubleArray;
 
 /**
  * Created by PW on 31-05-2015.
  * cool
  */
 public class Properties {
+
+    public static boolean isTransitionAlive (Transition transition, PetriNetMatrix matrix) {
+        int transitionIndex = Arrays.asList(matrix.getTransitionsNames()).indexOf(transition.getName());
+        return matrix.isTransitionActive(true, transitionIndex, toDoubleArray(matrix.getMarkingVector()));
+    }
+
+    public static boolean isNetAlive (PetriNetMatrix matrix) {
+        int transitionNumber = matrix.getInMatrix().length;
+        for(int i = 0; i < transitionNumber; i++) {
+            if(!matrix.isTransitionActive(true, i, toDoubleArray(matrix.getMarkingVector())))
+                return false;
+        }
+        return true;
+    }
 
     public static boolean isPotentiallyAlive (Transition transition, DirectedSparseGraph<Marking, Transition> coverabilityGraph) {
         return coverabilityGraph.containsEdge(transition);
