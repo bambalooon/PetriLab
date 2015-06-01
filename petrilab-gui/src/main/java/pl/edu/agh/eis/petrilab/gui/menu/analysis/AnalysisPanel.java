@@ -1,5 +1,7 @@
 package pl.edu.agh.eis.petrilab.gui.menu.analysis;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
@@ -7,9 +9,12 @@ import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import org.apache.commons.collections15.Transformer;
 import pl.edu.agh.eis.petrilab.api.CoverabilityGraph;
+import pl.edu.agh.eis.petrilab.api.Properties;
 import pl.edu.agh.eis.petrilab.gui.PetriLabApplication;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
+import pl.edu.agh.eis.petrilab.model2.Place;
 import pl.edu.agh.eis.petrilab.model2.Transition;
+import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 import pl.edu.agh.eis.petrilab.model2.matrix.Marking;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 
@@ -44,6 +49,8 @@ public class AnalysisPanel extends JPanel implements ActionListener {
     private static final String GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION = "GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION";
     private static final String GENERATE_MATRIX_BUTTON_LABEL = "Macierz";
     private static final String GENERATE_MATRIX_BUTTON_ACTION = "GENERATE_MATRIX_BUTTON_ACTION";
+    private static final String GENERATE_PROPERTIES_BUTTON_LABEL = "Własności";
+    private static final String GENERATE_PROPERTIES_BUTTON_ACTION = "GENERATE_PROPERTIES_BUTTON_ACTION";
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_DEFAULT = 10;
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_MIN = 1;
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_MAX = Integer.MAX_VALUE;
@@ -77,15 +84,20 @@ public class AnalysisPanel extends JPanel implements ActionListener {
 
         JButton generatePetriNetMatrix = createTextButton(
                 this, GENERATE_MATRIX_BUTTON_ACTION, GENERATE_MATRIX_BUTTON_LABEL);
+        add(generatePetriNetMatrix, gbc);
+
+        JButton generatePetriNetProperties = createTextButton(
+                this, GENERATE_PROPERTIES_BUTTON_ACTION, GENERATE_PROPERTIES_BUTTON_LABEL);
         gbc.weighty = 1;
         gbc.anchor = GridBagConstraints.NORTH;
-        add(generatePetriNetMatrix, gbc);
+        add(generatePetriNetProperties, gbc);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        PetriNetGraph petriNetGraph = PetriLabApplication.getInstance().getPetriNetGraph();
         final PetriNetMatrix petriNetMatrix = PetriNetMatrix
-                .generateMatrix(PetriLabApplication.getInstance().getPetriNetGraph());
+                .generateMatrix(petriNetGraph);
         ModalGraphMouse graphMouse = new DefaultModalGraphMouse<>();
         graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
         DirectedSparseGraph<Marking, Transition> graph;
@@ -107,6 +119,15 @@ public class AnalysisPanel extends JPanel implements ActionListener {
                 break;
             case GENERATE_MATRIX_BUTTON_ACTION:
                 new SingleComponentFrame(MATRIX_TITLE, new MatrixPanel(petriNetMatrix));
+                break;
+            case GENERATE_PROPERTIES_BUTTON_ACTION:
+                JOptionPane.showMessageDialog(null,
+                        generatePropertiesRaport(
+                                petriNetGraph,
+                                petriNetMatrix,
+                                CoverabilityGraph.getCoverabilityGraph(petriNetMatrix),
+                                CoverabilityGraph.getReachabilityGraph(petriNetMatrix, 1000)),
+                        "Własności sieci petriego", JOptionPane.INFORMATION_MESSAGE);
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported action.");
@@ -166,5 +187,85 @@ public class AnalysisPanel extends JPanel implements ActionListener {
             i++;
         }
         return indexes;
+    }
+
+    private String generatePropertiesRaport(PetriNetGraph petriNetGraph,
+                                            PetriNetMatrix petriNetMatrix,
+                                            DirectedSparseGraph<Marking, Transition> coverabilityGraph,
+                                            DirectedSparseGraph<Marking, Transition> reachabilityGraph) {
+
+        StringBuilder raportBuilder = new StringBuilder();
+
+        raportBuilder.append(Properties.isNetAlive(petriNetMatrix) ?
+                "Sieć jest żywa."
+                : Properties.isNetPotentiallyAlive(coverabilityGraph, petriNetMatrix)
+                        ? "Sieć jest potencjalnie żywa."
+                        : "Sieć jest martwa.");
+        raportBuilder.append('\n');
+
+        raportBuilder.append(Properties.isNetConservative(reachabilityGraph)
+                ? "Sieć jest zachowawcza." : "Sieć nie jest zachowawcza.");
+        raportBuilder.append('\n');
+
+        raportBuilder.append(Properties.isNetSafe(reachabilityGraph, petriNetMatrix)
+                ? "Sieć jest bezpieczna." : "Sieć nie jest bezpieczna.");
+        raportBuilder.append('\n');
+
+        raportBuilder.append(Properties.isNetReversible(coverabilityGraph, petriNetMatrix)
+                ? "Sieć jest odwracalna." : "Sieć nie jest odwracalna.");
+        raportBuilder.append('\n');
+
+        List<Place> safePlaces = Lists.newArrayList();
+        List<Place> unsafePlaces = Lists.newArrayList();
+        for (Place place : petriNetGraph.getPlaces()) {
+            if (Properties.isPlaceSafe(place, reachabilityGraph, petriNetMatrix)) {
+                safePlaces.add(place);
+            } else {
+                unsafePlaces.add(place);
+            }
+        }
+        raportBuilder.append("Miejsca bezpieczne: ");
+        raportBuilder.append(safePlaces.isEmpty()
+                ? "brak"
+                : FluentIterable.from(safePlaces).join(Joiner.on(", ")));
+        raportBuilder.append('\n');
+
+        raportBuilder.append("Miejsca niebezpieczne: ");
+        raportBuilder.append(unsafePlaces.isEmpty()
+                ? "brak"
+                : FluentIterable.from(unsafePlaces).join(Joiner.on(", ")));
+        raportBuilder.append('\n');
+
+        List<Transition> aliveTransitions = Lists.newArrayList();
+        List<Transition> potentiallyAliveTransitions = Lists.newArrayList();
+        List<Transition> deadTransitions = Lists.newArrayList();
+        for (Transition transition : petriNetGraph.getTransitions()) {
+            if (Properties.isTransitionAlive(transition, petriNetMatrix)) {
+                aliveTransitions.add(transition);
+            } else if (Properties.isTransitionPotentiallyAlive(transition, coverabilityGraph)) {
+                potentiallyAliveTransitions.add(transition);
+            } else {
+                deadTransitions.add(transition);
+            }
+        }
+        raportBuilder.append("Przejścia żywe: ");
+        raportBuilder.append(aliveTransitions.isEmpty()
+                ? "brak"
+                : FluentIterable.from(aliveTransitions).join(Joiner.on(", ")));
+        raportBuilder.append('\n');
+
+        raportBuilder.append("Przejścia potencjalnie żywe: ");
+        raportBuilder.append(potentiallyAliveTransitions.isEmpty()
+                ? "brak"
+                : FluentIterable.from(potentiallyAliveTransitions).join(Joiner.on(", ")));
+        raportBuilder.append('\n');
+
+        raportBuilder.append("Przejścia martwe: ");
+        raportBuilder.append(deadTransitions.isEmpty()
+                ? "brak"
+                : FluentIterable.from(deadTransitions).join(Joiner.on(", ")));
+        raportBuilder.append('\n');
+
+        return raportBuilder.toString();
     }
 }
