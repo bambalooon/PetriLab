@@ -20,6 +20,8 @@ import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.toDoubleArray;
  * Created by PW on 31-05-2015.
  * cool
  */
+
+//zamienic reachability na coverability
 public class Properties {
 
     public static boolean isTransitionAlive (Transition transition, PetriNetMatrix matrix) {
@@ -57,12 +59,12 @@ public class Properties {
         return true;
     }
 
-    public static boolean isNetConservative (DirectedSparseGraph<Marking, Transition> reachabilityGraph) {
-        Collection<Marking> markings = reachabilityGraph.getVertices();
+    public static boolean isNetConservative (DirectedSparseGraph<Marking, Transition> coverabilityGraph) {
+        Collection<Marking> markings = coverabilityGraph.getVertices();
         Iterator<Marking> itr = markings.iterator();
         Double markingSum = sum(itr.next());
         while(itr.hasNext()) {
-            if(sum(itr.next()) != markingSum)
+            if(sum(itr.next()) != markingSum || sum(itr.next()) == Double.POSITIVE_INFINITY)
                 return false;
         }
         return true;
@@ -96,9 +98,9 @@ public class Properties {
         return kBound;
     }
 
-    public static boolean isPlaceSafe(Place place, DirectedSparseGraph<Marking, Transition> reachabilityGraph, PetriNetMatrix matrix) {
+    public static boolean isPlaceSafe(Place place, DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
         int placeIndex = Arrays.asList(matrix.getPlacesNames()).indexOf(place.getName());
-        Collection<Marking> markings = reachabilityGraph.getVertices();
+        Collection<Marking> markings = coverabilityGraph.getVertices();
         for (Marking marking : markings) {
             if (marking.getValue()[placeIndex] > 1.0)
                 return false;
@@ -106,12 +108,12 @@ public class Properties {
         return true;
     }
 
-    public static boolean isNetSafe(DirectedSparseGraph<Marking, Transition> reachabilityGraph, PetriNetMatrix matrix) {
+    public static boolean isNetSafe(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
         int placesNumber = matrix.getInMatrix()[0].length;
         Place currentPlace;
         for(int i = 0; i < placesNumber; i++) {
             currentPlace = new Place(matrix.getPlacesNames()[i]);
-            if(!isPlaceSafe(currentPlace, reachabilityGraph, matrix))
+            if(!isPlaceSafe(currentPlace, coverabilityGraph, matrix))
             return false;
         }
         return true;
@@ -123,7 +125,7 @@ public class Properties {
         Iterator<Marking> itr = markings.iterator();
         UnweightedShortestPath<Marking, Transition> shortestPath = new UnweightedShortestPath<>(coverabilityGraph);
         while(itr.hasNext()) {
-            if(itr.next() != initialMarking && shortestPath.getDistance(itr.next(),initialMarking) != null)
+            if(itr.next().equals(initialMarking) || shortestPath.getDistance(itr.next(),initialMarking) == null)
                 return false;
         }
         return true;
