@@ -1,5 +1,7 @@
 package pl.edu.agh.eis.petrilab.api;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import pl.edu.agh.eis.petrilab.model2.Place;
@@ -34,8 +36,14 @@ public class Properties {
         return true;
     }
 
-    public static boolean isTransitionPotentiallyAlive (Transition transition, DirectedSparseGraph<Marking, Transition> coverabilityGraph) {
-        return coverabilityGraph.containsEdge(transition);
+    public static boolean isTransitionPotentiallyAlive (final Transition transition, DirectedSparseGraph<Marking, Transition> coverabilityGraph) {
+        return FluentIterable.from(coverabilityGraph.getEdges())
+                .anyMatch(new Predicate<Transition>() {
+                    @Override
+                    public boolean apply(Transition graphTransition) {
+                        return graphTransition.getName().equals(transition.getName());
+                    }
+                });
     }
 
     public static boolean isNetPotentiallyAlive (DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
