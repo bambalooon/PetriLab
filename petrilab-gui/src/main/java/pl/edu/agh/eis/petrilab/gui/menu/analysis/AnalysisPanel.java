@@ -125,8 +125,7 @@ public class AnalysisPanel extends JPanel implements ActionListener {
                         generatePropertiesRaport(
                                 petriNetGraph,
                                 petriNetMatrix,
-                                CoverabilityGraph.getCoverabilityGraph(petriNetMatrix),
-                                CoverabilityGraph.getReachabilityGraph(petriNetMatrix, 1000)),
+                                CoverabilityGraph.getCoverabilityGraph(petriNetMatrix)),
                         "Własności sieci petriego", JOptionPane.INFORMATION_MESSAGE);
                 break;
             default:
@@ -191,8 +190,7 @@ public class AnalysisPanel extends JPanel implements ActionListener {
 
     private String generatePropertiesRaport(PetriNetGraph petriNetGraph,
                                             PetriNetMatrix petriNetMatrix,
-                                            DirectedSparseGraph<Marking, Transition> coverabilityGraph,
-                                            DirectedSparseGraph<Marking, Transition> reachabilityGraph) {
+                                            DirectedSparseGraph<Marking, Transition> coverabilityGraph) {
 
         StringBuilder raportBuilder = new StringBuilder();
 
@@ -203,11 +201,11 @@ public class AnalysisPanel extends JPanel implements ActionListener {
                         : "Sieć jest martwa.");
         raportBuilder.append('\n');
 
-        raportBuilder.append(Properties.isNetConservative(reachabilityGraph)
+        raportBuilder.append(Properties.isNetConservative(coverabilityGraph)
                 ? "Sieć jest zachowawcza." : "Sieć nie jest zachowawcza.");
         raportBuilder.append('\n');
 
-        raportBuilder.append(Properties.isNetSafe(reachabilityGraph, petriNetMatrix)
+        raportBuilder.append(Properties.isNetSafe(coverabilityGraph, petriNetMatrix)
                 ? "Sieć jest bezpieczna." : "Sieć nie jest bezpieczna.");
         raportBuilder.append('\n');
 
@@ -218,7 +216,7 @@ public class AnalysisPanel extends JPanel implements ActionListener {
         List<Place> safePlaces = Lists.newArrayList();
         List<Place> unsafePlaces = Lists.newArrayList();
         for (Place place : petriNetGraph.getPlaces()) {
-            if (Properties.isPlaceSafe(place, reachabilityGraph, petriNetMatrix)) {
+            if (Properties.isPlaceSafe(place, coverabilityGraph, petriNetMatrix)) {
                 safePlaces.add(place);
             } else {
                 unsafePlaces.add(place);

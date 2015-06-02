@@ -20,8 +20,6 @@ import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.toDoubleArray;
  * Created by PW on 31-05-2015.
  * cool
  */
-
-//zamienic reachability na coverability
 public class Properties {
 
     public static boolean isTransitionAlive (Transition transition, PetriNetMatrix matrix) {
