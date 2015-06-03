@@ -80,15 +80,6 @@ public class Marking {
         return sumVector;
     }
 
-    public static double sum(Marking marking) {
-        Double[] vector = marking.getValue();
-        Double vectorSum = 0.0;
-        for (int i = 0; i < vector.length; i++) {
-            vectorSum = vectorSum + vector[i];
-        }
-        return vectorSum;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

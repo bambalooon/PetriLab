@@ -203,7 +203,7 @@ public class AnalysisPanel extends JPanel implements ActionListener {
                         : "Sieć jest martwa.");
         raportBuilder.append('\n');
 
-        raportBuilder.append(Properties.isNetConservative(coverabilityGraph)
+        raportBuilder.append(Properties.isNetConservative(coverabilityGraph, petriNetMatrix)
                 ? "Sieć jest zachowawcza." : "Sieć nie jest zachowawcza.");
         raportBuilder.append('\n');
 

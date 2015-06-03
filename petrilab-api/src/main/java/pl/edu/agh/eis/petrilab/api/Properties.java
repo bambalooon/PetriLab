@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
-import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.sum;
 import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.toDoubleArray;
 
 /**
@@ -100,6 +99,34 @@ public class Properties {
         return netBoundary <= 1;
     }
 
+    public static boolean isNetConservative(DirectedSparseGraph<Marking, Transition> coverabilityGraph,
+                                            PetriNetMatrix matrix) {
+
+        int[] capacityVector = matrix.getCapacityVector();
+        Double markingSum = getMarkingSum(new Marking(matrix.getMarkingVector()), capacityVector);
+        for (Marking marking : coverabilityGraph.getVertices()) {
+            if (!markingSum.equals(getMarkingSum(marking, capacityVector))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static Double getMarkingSum(Marking marking, int[] capacityVector) {
+        Double[] markingVector = marking.getValue();
+        Double sum = 0.0;
+        for (int placeIndex = 0; placeIndex < markingVector.length; placeIndex++) {
+            Double placeMarking = markingVector[placeIndex];
+            int placeCapacity = capacityVector[placeIndex];
+            sum += (placeCapacity != 0) && (placeMarking > placeCapacity)
+                    ? placeCapacity
+                    : placeMarking;
+        }
+        return sum;
+    }
+
+    //---------------------------------------------------------------------------------------------------------
+
     public static Double isPlaceKBounded (Place place, DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
         int placeIndex = Arrays.asList(matrix.getPlacesNames()).indexOf(place.getName());
         Collection<Marking> markings = coverabilityGraph.getVertices();
@@ -112,17 +139,6 @@ public class Properties {
         if(kBound == Double.POSITIVE_INFINITY)
             return -1.0;
         return kBound;
-    }
-
-    public static boolean isNetConservative (DirectedSparseGraph<Marking, Transition> coverabilityGraph) {
-        Collection<Marking> markings = coverabilityGraph.getVertices();
-        Iterator<Marking> itr = markings.iterator();
-        Double markingSum = sum(itr.next());
-        while(itr.hasNext()) {
-            if(sum(itr.next()) != markingSum || sum(itr.next()) == Double.POSITIVE_INFINITY)
-                return false;
-        }
-        return true;
     }
 
     public static Double isNetKBounded (DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
@@ -138,27 +154,6 @@ public class Properties {
         }
         return kBound;
     }
-
-    public static boolean isPlaceSafe(Place place, DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
-        int placeIndex = Arrays.asList(matrix.getPlacesNames()).indexOf(place.getName());
-        Collection<Marking> markings = coverabilityGraph.getVertices();
-        for (Marking marking : markings) {
-            if (marking.getValue()[placeIndex] > 1.0)
-                return false;
-        }
-        return true;
-    }
-
-//    public static boolean isNetSafe(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
-//        int placesNumber = matrix.getInMatrix()[0].length;
-//        Place currentPlace;
-//        for(int i = 0; i < placesNumber; i++) {
-//            currentPlace = new Place(matrix.getPlacesNames()[i]);
-//            if(!isPlaceSafe(currentPlace, coverabilityGraph, matrix))
-//            return false;
-//        }
-//        return true;
-//    }
 
     public static boolean isNetReversible(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
         Marking initialMarking = new Marking(matrix.getMarkingVector());
