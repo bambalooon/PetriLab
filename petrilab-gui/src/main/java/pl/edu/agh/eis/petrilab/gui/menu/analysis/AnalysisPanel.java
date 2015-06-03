@@ -209,6 +209,12 @@ public class AnalysisPanel extends JPanel implements ActionListener {
                 ? "Sieć jest bezpieczna." : "Sieć nie jest bezpieczna.");
         raportBuilder.append('\n');
 
+        Double netBoundary = Properties.getNetBoundary(coverabilityGraph, petriNetMatrix);
+        raportBuilder.append(netBoundary.isInfinite()
+                ? "Sieć nie jest ograniczona"
+                : "Sieć jest " + netBoundary.intValue() + "-ograniczona.");
+        raportBuilder.append('\n');
+
         raportBuilder.append(Properties.isNetReversible(coverabilityGraph, petriNetMatrix)
                 ? "Sieć jest odwracalna." : "Sieć nie jest odwracalna.");
         raportBuilder.append('\n');

@@ -55,15 +55,49 @@ public class Properties {
         return true;
     }
 
-    public static boolean isNetConservative (DirectedSparseGraph<Marking, Transition> coverabilityGraph) {
-        Collection<Marking> markings = coverabilityGraph.getVertices();
-        Iterator<Marking> itr = markings.iterator();
-        Double markingSum = sum(itr.next());
-        while(itr.hasNext()) {
-            if(sum(itr.next()) != markingSum || sum(itr.next()) == Double.POSITIVE_INFINITY)
-                return false;
+    public static Double getPlaceBoundary(int placeIndex,
+                                          DirectedSparseGraph<Marking, Transition> coverabilityGraph,
+                                          PetriNetMatrix matrix) {
+
+        int placeCapacity = matrix.getCapacityVector()[placeIndex];
+        Double placeBoundary = 0.0;
+        for (Marking marking : coverabilityGraph.getVertices()) {
+            Double placeMarking = marking.getValue()[placeIndex];
+            if (placeMarking > placeBoundary) {
+                placeBoundary = placeMarking;
+                if (placeCapacity == 0) {
+                    if (placeBoundary.isInfinite()) {
+                        return placeBoundary;
+                    }
+                } else {
+                    if (placeBoundary > placeCapacity) {
+                        return (double) placeCapacity;
+                    }
+                }
+            }
         }
-        return true;
+        return placeBoundary;
+    }
+
+    public static Double getNetBoundary(DirectedSparseGraph<Marking, Transition> coverabilityGraph,
+                                        PetriNetMatrix matrix) {
+
+        Double netBoundary = 0.0;
+        for (int placeIndex = 0; placeIndex < matrix.getPlacesNames().length; placeIndex++) {
+            Double placeBoundary = getPlaceBoundary(placeIndex, coverabilityGraph, matrix);
+            if (placeBoundary > netBoundary) {
+                netBoundary = placeBoundary;
+                if (netBoundary.isInfinite()) {
+                    return netBoundary;
+                }
+            }
+        }
+        return netBoundary;
+    }
+
+    public static boolean isNetSafe(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
+        Double netBoundary = getNetBoundary(coverabilityGraph, matrix);
+        return netBoundary <= 1;
     }
 
     public static Double isPlaceKBounded (Place place, DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
@@ -78,6 +112,17 @@ public class Properties {
         if(kBound == Double.POSITIVE_INFINITY)
             return -1.0;
         return kBound;
+    }
+
+    public static boolean isNetConservative (DirectedSparseGraph<Marking, Transition> coverabilityGraph) {
+        Collection<Marking> markings = coverabilityGraph.getVertices();
+        Iterator<Marking> itr = markings.iterator();
+        Double markingSum = sum(itr.next());
+        while(itr.hasNext()) {
+            if(sum(itr.next()) != markingSum || sum(itr.next()) == Double.POSITIVE_INFINITY)
+                return false;
+        }
+        return true;
     }
 
     public static Double isNetKBounded (DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
@@ -104,16 +149,16 @@ public class Properties {
         return true;
     }
 
-    public static boolean isNetSafe(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
-        int placesNumber = matrix.getInMatrix()[0].length;
-        Place currentPlace;
-        for(int i = 0; i < placesNumber; i++) {
-            currentPlace = new Place(matrix.getPlacesNames()[i]);
-            if(!isPlaceSafe(currentPlace, coverabilityGraph, matrix))
-            return false;
-        }
-        return true;
-    }
+//    public static boolean isNetSafe(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
+//        int placesNumber = matrix.getInMatrix()[0].length;
+//        Place currentPlace;
+//        for(int i = 0; i < placesNumber; i++) {
+//            currentPlace = new Place(matrix.getPlacesNames()[i]);
+//            if(!isPlaceSafe(currentPlace, coverabilityGraph, matrix))
+//            return false;
+//        }
+//        return true;
+//    }
 
     public static boolean isNetReversible(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
         Marking initialMarking = new Marking(matrix.getMarkingVector());
