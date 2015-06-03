@@ -1,8 +1,10 @@
 package pl.edu.agh.eis.petrilab.gui.menu.analysis;
 
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
@@ -12,7 +14,6 @@ import pl.edu.agh.eis.petrilab.api.CoverabilityGraph;
 import pl.edu.agh.eis.petrilab.api.Properties;
 import pl.edu.agh.eis.petrilab.gui.PetriLabApplication;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
-import pl.edu.agh.eis.petrilab.model2.Place;
 import pl.edu.agh.eis.petrilab.model2.Transition;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 import pl.edu.agh.eis.petrilab.model2.matrix.Marking;
@@ -31,6 +32,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
+import java.util.Map;
 
 import static pl.edu.agh.eis.petrilab.gui.menu.analysis.SingleComponentFrame.*;
 import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.COMPONENT_DEFAULT_SIZE;
@@ -219,25 +221,34 @@ public class AnalysisPanel extends JPanel implements ActionListener {
                 ? "Sieć jest odwracalna." : "Sieć nie jest odwracalna.");
         raportBuilder.append('\n');
 
-        List<Place> safePlaces = Lists.newArrayList();
-        List<Place> unsafePlaces = Lists.newArrayList();
-        for (Place place : petriNetGraph.getPlaces()) {
-            if (Properties.isPlaceSafe(place, coverabilityGraph, petriNetMatrix)) {
-                safePlaces.add(place);
+        String[] placesNames = petriNetMatrix.getPlacesNames();
+        Map<String, Double> placesBoundaries = Maps.newLinkedHashMap();
+        List<String> unboundedPlaces = Lists.newArrayList();
+        for (int placeIndex = 0; placeIndex < petriNetMatrix.getPlacesNames().length; placeIndex++) {
+            Double placeBoundary = Properties.getPlaceBoundary(placeIndex, coverabilityGraph, petriNetMatrix);
+            if (placeBoundary.isInfinite()) {
+                unboundedPlaces.add(placesNames[placeIndex]);
             } else {
-                unsafePlaces.add(place);
+                placesBoundaries.put(placesNames[placeIndex], placeBoundary);
             }
         }
-        raportBuilder.append("Miejsca bezpieczne: ");
-        raportBuilder.append(safePlaces.isEmpty()
+        raportBuilder.append("Miejsca ograniczone: ");
+        raportBuilder.append(placesBoundaries.isEmpty()
                 ? "brak"
-                : FluentIterable.from(safePlaces).join(Joiner.on(", ")));
+                : FluentIterable
+                        .from(placesBoundaries.entrySet())
+                        .transform(new Function<Map.Entry<String, Double>, String>() {
+                            @Override
+                            public String apply(Map.Entry<String, Double> placeBoundary) {
+                                return placeBoundary.getKey() + "(" + placeBoundary.getValue().intValue() + ")";
+                            }
+                        }).join(Joiner.on(", ")));
         raportBuilder.append('\n');
 
-        raportBuilder.append("Miejsca niebezpieczne: ");
-        raportBuilder.append(unsafePlaces.isEmpty()
+        raportBuilder.append("Miejsca nieograniczone: ");
+        raportBuilder.append(unboundedPlaces.isEmpty()
                 ? "brak"
-                : FluentIterable.from(unsafePlaces).join(Joiner.on(", ")));
+                : FluentIterable.from(unboundedPlaces).join(Joiner.on(", ")));
         raportBuilder.append('\n');
 
         List<Transition> aliveTransitions = Lists.newArrayList();
