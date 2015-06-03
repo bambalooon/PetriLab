@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import static java.lang.System.arraycopy;
+import static pl.edu.agh.eis.petrilab.model2.matrix.Matrix.substract;
 
 /**
  * Name: MatrixPanel
@@ -51,6 +52,20 @@ public class MatrixPanel extends JPanel {
             outMatrixPanel.add(outMatrixTablePanel, BorderLayout.CENTER);
 
         add(outMatrixPanel);
+
+        JPanel incidenceMatrixPanel = new JPanel(new BorderLayout());
+
+            JLabel incidenceMatrixLabel = new JLabel("Macierz incydencji:");
+            incidenceMatrixPanel.add(incidenceMatrixLabel, BorderLayout.PAGE_START);
+
+            JTable incidenceMatrixTable = new MatrixTable(
+                    transformMatrixToTableData(substract(petriNetMatrix.getInMatrix(), petriNetMatrix.getOutMatrix())),
+                    transformPlaceNamesToColumnNames(petriNetMatrix.getPlacesNames()));
+            JScrollPane incidenceMatrixTablePanel = new JScrollPane(incidenceMatrixTable);
+            incidenceMatrixTablePanel.setPreferredSize(MATRIX_TABLE_SIZE);
+            incidenceMatrixPanel.add(incidenceMatrixTablePanel, BorderLayout.CENTER);
+
+        add(incidenceMatrixPanel);
     }
 
     public String[] transformPlaceNamesToColumnNames(String[] placeNames) {
