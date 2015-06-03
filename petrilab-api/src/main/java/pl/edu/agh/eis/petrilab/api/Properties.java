@@ -47,10 +47,8 @@ public class Properties {
     }
 
     public static boolean isNetPotentiallyAlive (DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
-        int transitionNumber = matrix.getInMatrix().length;
-        Transition currentTransition;
-        for(int i = 0; i < transitionNumber; i++) {
-            currentTransition = new Transition(matrix.getTransitionsNames()[i]);
+        for(int i = 0; i < matrix.getTransitionsNames().length; i++) {
+            Transition currentTransition = new Transition(matrix.getTransitionsNames()[i]);
             if(!isTransitionPotentiallyAlive(currentTransition, coverabilityGraph))
                 return false;
         }
