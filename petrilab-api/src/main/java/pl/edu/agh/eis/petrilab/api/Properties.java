@@ -127,6 +127,35 @@ public class Properties {
 
     //---------------------------------------------------------------------------------------------------------
 
+
+//overload
+    public static boolean isNetConservative(DirectedSparseGraph<Marking, Transition> coverabilityGraph,
+                                            PetriNetMatrix matrix, int[] weightVector) {
+
+        int[] capacityVector = matrix.getCapacityVector();
+        Double markingSum = getMarkingSum(new Marking(matrix.getMarkingVector()), capacityVector, weightVector);
+        for (Marking marking : coverabilityGraph.getVertices()) {
+            if (!markingSum.equals(getMarkingSum(marking, capacityVector))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static Double getMarkingSum(Marking marking, int[] capacityVector, int[] weightVector) {
+        Double[] markingVector = marking.getValue();
+        Double sum = 0.0;
+        for (int placeIndex = 0; placeIndex < markingVector.length; placeIndex++) {
+            Double placeMarking = markingVector[placeIndex];
+            int placeCapacity = capacityVector[placeIndex];
+            int weight = weightVector[placeIndex];
+            sum += (placeCapacity != 0) && (placeMarking > placeCapacity)
+                    ? placeCapacity*weight
+                    : placeMarking*weight;
+        }
+        return sum;
+    }
+
     public static Double isPlaceKBounded (Place place, DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
         int placeIndex = Arrays.asList(matrix.getPlacesNames()).indexOf(place.getName());
         Collection<Marking> markings = coverabilityGraph.getVertices();
