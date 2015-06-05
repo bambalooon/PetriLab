@@ -50,7 +50,9 @@ public interface VisualizationViewerGenerator<V, E> {
             visualizationViewer.getRenderContext().setEdgeLabelTransformer(new Transformer<Arc, String>() {
                 @Override
                 public String transform(Arc arc) {
-                    return String.valueOf(arc.getWeight());
+                    return arc.getWeight() == 1
+                            ? ""
+                            : String.valueOf(arc.getWeight());
                 }
             });
 
