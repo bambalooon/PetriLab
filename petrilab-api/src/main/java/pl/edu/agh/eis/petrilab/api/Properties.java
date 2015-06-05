@@ -2,8 +2,10 @@ package pl.edu.agh.eis.petrilab.api;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Iterables;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
+import pl.edu.agh.eis.petrilab.model.PetriNet;
 import pl.edu.agh.eis.petrilab.model2.Place;
 import pl.edu.agh.eis.petrilab.model2.Transition;
 import pl.edu.agh.eis.petrilab.model2.matrix.Marking;
@@ -13,6 +15,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
+import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.subtract;
+import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.sum;
 import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.toDoubleArray;
 
 /**
@@ -129,8 +133,25 @@ public class Properties {
 
 
 //overload
-    public static boolean isNetConservative(DirectedSparseGraph<Marking, Transition> coverabilityGraph,
-                                            PetriNetMatrix matrix, int[] weightVector) {
+    public static Double[] isNetRelativelyConservative(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
+        Collection<Marking> vertices = coverabilityGraph.getVertices();
+        Marking m0 = Iterables.get(vertices, 1), m1 = Iterables.get(vertices,2);
+        if(isNetPotentiallyAlive(coverabilityGraph, matrix)) {
+            Double[] weightVector = new Double[m0.getValue().length];
+            Double[] polynomial = subtract(m0.getValue(),m1.getValue());
+            Double x1 = (sum(polynomial) - polynomial[0])/polynomial[0];
+            weightVector[0] = x1;
+            for(int i=1; i< polynomial.length; i++)
+                weightVector[i] = polynomial[i];
+            if(isNetRelativelyConservative(coverabilityGraph, matrix, weightVector))
+                return polynomial;
+            else return null;
+        }
+        else return null;
+    }
+
+    public static boolean isNetRelativelyConservative(DirectedSparseGraph<Marking, Transition> coverabilityGraph,
+                                            PetriNetMatrix matrix, Double[] weightVector) {
 
         int[] capacityVector = matrix.getCapacityVector();
         Double markingSum = getMarkingSum(new Marking(matrix.getMarkingVector()), capacityVector, weightVector);
@@ -142,13 +163,13 @@ public class Properties {
         return true;
     }
 
-    private static Double getMarkingSum(Marking marking, int[] capacityVector, int[] weightVector) {
+    private static Double getMarkingSum(Marking marking, int[] capacityVector, Double[] weightVector) {
         Double[] markingVector = marking.getValue();
         Double sum = 0.0;
         for (int placeIndex = 0; placeIndex < markingVector.length; placeIndex++) {
             Double placeMarking = markingVector[placeIndex];
             int placeCapacity = capacityVector[placeIndex];
-            int weight = weightVector[placeIndex];
+            Double weight = weightVector[placeIndex];
             sum += (placeCapacity != 0) && (placeMarking > placeCapacity)
                     ? placeCapacity*weight
                     : placeMarking*weight;

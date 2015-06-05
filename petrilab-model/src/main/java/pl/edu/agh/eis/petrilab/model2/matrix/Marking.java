@@ -80,6 +80,22 @@ public class Marking {
         return sumVector;
     }
 
+
+    public static Double[] subtract(Double[] vector, Double[] vector2) {
+        Double[] sumVector = new Double[vector.length];
+        for (int i = 0; i < sumVector.length; i++) {
+            sumVector[i] = vector[i] - vector2[i];
+        }
+        return sumVector;
+    }
+
+    public static Double sum(Double[] vector) {
+        Double sum = 0.0;
+        for (int i = 0; i < vector.length; i++)
+            sum += vector[i];
+        return sum;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
