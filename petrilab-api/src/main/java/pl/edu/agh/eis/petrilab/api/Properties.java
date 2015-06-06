@@ -136,31 +136,39 @@ public class Properties {
 //overload
 public static double[] isNetRelativelyConservative(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
     Collection<Marking> vertices = coverabilityGraph.getVertices();
-    int a_rows = coverabilityGraph.getVertexCount(), a_cols = matrix.getMarkingVector().length;
-    double[][] a = new double[a_rows][a_cols];
+    int a_cols = matrix.getMarkingVector().length;
+    double[][] a = new double[coverabilityGraph.getVertexCount()][a_cols];
     double[] b = new double[a_cols];
     int[] capacityVector = matrix.getCapacityVector();
 
-    if(isNetPotentiallyAlive(coverabilityGraph, matrix)) {
-        for(int i=0; i < a_rows; i++) {
-            for (int j = 0; j < a_cols; i++) {
-                if (Iterables.get(vertices, i).getValue()[j] == Double.POSITIVE_INFINITY)
-                    a[i][j] = capacityVector[j];
-                else a[i][j] = Iterables.get(vertices, i).getValue()[j];
+    if (isNetPotentiallyAlive(coverabilityGraph, matrix)) {
+        int i = 0;
+        for (Marking vertex : vertices) {
+            Double[] vector = vertex.getValue();
+            for (int j = 0; j < a_cols; j++) {
+                Double marking = vector[j];
+                int capacity = capacityVector[j];
+                a[i][j] = marking.isInfinite()
+                        ? capacity == 0
+                                ? -1
+                                : capacity
+                        : marking;
+                if (a[i][j] == -1) return null;
             }
+            i++;
         }
-        Arrays.fill(b,0.0);
+        Arrays.fill(b, 0.0);
 
         RealMatrix coefficients = MatrixUtils.createRealMatrix(a);
         DecompositionSolver solver = new QRDecomposition(coefficients).getSolver();
         RealVector constants = MatrixUtils.createRealVector(b);
         RealVector solution = solver.solve(constants);
         double[] weightVector = solution.toArray();
-        if(isNetRelativelyConservative(coverabilityGraph, matrix, weightVector))
+        if(isNetRelativelyConservative(coverabilityGraph, matrix, weightVector)) {
             return weightVector;
-        else return null;
+        }
     }
-    else return null;
+    return null;
 }
 
     public static boolean isNetRelativelyConservative(DirectedSparseGraph<Marking, Transition> coverabilityGraph,
