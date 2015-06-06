@@ -2,11 +2,13 @@ package pl.edu.agh.eis.petrilab.api;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Iterables;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
-import org.apache.commons.math3.linear.*;
-import pl.edu.agh.eis.petrilab.model.PetriNet;
+import org.apache.commons.math3.linear.DecompositionSolver;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealVector;
+import org.apache.commons.math3.linear.SingularValueDecomposition;
 import pl.edu.agh.eis.petrilab.model2.Place;
 import pl.edu.agh.eis.petrilab.model2.Transition;
 import pl.edu.agh.eis.petrilab.model2.matrix.Marking;
@@ -16,8 +18,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
-import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.subtract;
-import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.sum;
 import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.toDoubleArray;
 
 /**
@@ -141,32 +141,30 @@ public static double[] isNetRelativelyConservative(DirectedSparseGraph<Marking, 
     double[] b = new double[a_cols];
     int[] capacityVector = matrix.getCapacityVector();
 
-    if (isNetPotentiallyAlive(coverabilityGraph, matrix)) {
-        int i = 0;
-        for (Marking vertex : vertices) {
-            Double[] vector = vertex.getValue();
-            for (int j = 0; j < a_cols; j++) {
-                Double marking = vector[j];
-                int capacity = capacityVector[j];
-                a[i][j] = marking.isInfinite()
-                        ? capacity == 0
-                                ? -1
-                                : capacity
-                        : marking;
-                if (a[i][j] == -1) return null;
-            }
-            i++;
+    int i = 0;
+    for (Marking vertex : vertices) {
+        Double[] vector = vertex.getValue();
+        for (int j = 0; j < a_cols; j++) {
+            Double marking = vector[j];
+            int capacity = capacityVector[j];
+            a[i][j] = marking.isInfinite()
+                    ? capacity == 0
+                            ? -1
+                            : capacity
+                    : marking;
+            if (a[i][j] == -1) return null;
         }
-        Arrays.fill(b, 0.0);
+        i++;
+    }
+    Arrays.fill(b, 1.0);
 
-        RealMatrix coefficients = MatrixUtils.createRealMatrix(a);
-        DecompositionSolver solver = new QRDecomposition(coefficients).getSolver();
-        RealVector constants = MatrixUtils.createRealVector(b);
-        RealVector solution = solver.solve(constants);
-        double[] weightVector = solution.toArray();
-        if(isNetRelativelyConservative(coverabilityGraph, matrix, weightVector)) {
-            return weightVector;
-        }
+    RealMatrix coefficients = MatrixUtils.createRealMatrix(a);
+    DecompositionSolver solver = new SingularValueDecomposition(coefficients).getSolver();
+    RealVector constants = MatrixUtils.createRealVector(b);
+    RealVector solution = solver.solve(constants);
+    double[] weightVector = solution.toArray();
+    if(isNetRelativelyConservative(coverabilityGraph, matrix, weightVector)) {
+        return weightVector;
     }
     return null;
 }
@@ -177,7 +175,8 @@ public static double[] isNetRelativelyConservative(DirectedSparseGraph<Marking, 
         int[] capacityVector = matrix.getCapacityVector();
         Double markingSum = getMarkingSum(new Marking(matrix.getMarkingVector()), capacityVector, weightVector);
         for (Marking marking : coverabilityGraph.getVertices()) {
-            if (!markingSum.equals(getMarkingSum(marking, capacityVector, weightVector))) {
+            Double sumDifference = Math.abs(markingSum - getMarkingSum(marking, capacityVector, weightVector));
+            if (sumDifference > 0.00000001) {
                 return false;
             }
         }
