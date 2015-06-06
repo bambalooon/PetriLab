@@ -4,6 +4,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.linear.DecompositionSolver;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
@@ -164,7 +165,16 @@ public static double[] isNetRelativelyConservative(DirectedSparseGraph<Marking, 
     RealVector constants = MatrixUtils.createRealVector(b);
     RealVector solution = solver.solve(constants);
     double[] weightVector = solution.toArray();
-    if(isNetRelativelyConservative(coverabilityGraph, matrix, weightVector)) {
+
+    boolean isAnyVectorElementCloseToZero = FluentIterable
+            .of(ArrayUtils.toObject(weightVector))
+            .anyMatch(new Predicate<Double>() {
+                @Override
+                public boolean apply(Double element) {
+                    return Math.abs(element) < 0.00000001;
+                }
+            });
+    if(!isAnyVectorElementCloseToZero && isNetRelativelyConservative(coverabilityGraph, matrix, weightVector)) {
         return weightVector;
     }
     return null;
