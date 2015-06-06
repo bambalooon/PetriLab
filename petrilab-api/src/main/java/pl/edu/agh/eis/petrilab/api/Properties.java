@@ -241,9 +241,10 @@ public static double[] isNetRelativelyConservative(DirectedSparseGraph<Marking, 
         Collection<Marking> markings = coverabilityGraph.getVertices();
         Iterator<Marking> itr = markings.iterator();
         UnweightedShortestPath<Marking, Transition> shortestPath = new UnweightedShortestPath<>(coverabilityGraph);
-        while(itr.hasNext()) {
-            if(itr.next().equals(initialMarking) || shortestPath.getDistance(itr.next(),initialMarking) == null)
+        for (Marking marking : coverabilityGraph.getVertices()) {
+            if (!marking.equals(initialMarking) && shortestPath.getDistance(marking, initialMarking) == null) {
                 return false;
+            }
         }
         return true;
     }
