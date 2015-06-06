@@ -78,6 +78,15 @@ public class PetriNetMatrix {
         return true;
     }
 
+    public Double[] fireTransition(int transitionIndex, Double[] marking) {
+        int placesNumber = marking.length;
+        Double[] resultMarking = new Double[placesNumber];
+        for (int i = 0; i < placesNumber; i++) {
+            resultMarking[i] = marking[i] - getOutMatrix()[transitionIndex][i] + getInMatrix()[transitionIndex][i];
+        }
+        return resultMarking;
+    }
+
     private static Map<Integer, Integer> sortAndCreateReconfigurationMap(String[] array) {
         String[] unorderedArray = array.clone();
         Arrays.sort(array);
