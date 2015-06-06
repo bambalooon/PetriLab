@@ -11,6 +11,7 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import org.apache.commons.collections15.Transformer;
+import org.apache.commons.lang3.ArrayUtils;
 import pl.edu.agh.eis.petrilab.api.CoverabilityGraph;
 import pl.edu.agh.eis.petrilab.api.Properties;
 import pl.edu.agh.eis.petrilab.gui.PetriLabApplication;
@@ -102,8 +103,7 @@ public class AnalysisPanel extends JPanel implements ActionListener {
         conservativityVectorTextField = new JTextField();
         conservativityVectorTextField.setText("[]");
         conservativityVectorTextField.setHorizontalAlignment(SwingConstants.CENTER);
-        conservativityVectorTextField.setPreferredSize(new Dimension(80, 20));
-        System.out.println(conservativityVectorTextField.getPreferredSize());
+        conservativityVectorTextField.setPreferredSize(new Dimension(120, 20));
         add(conservativityVectorTextField, gbc);
 
         JButton checkVectorConservativity = createTextButton(
@@ -171,7 +171,8 @@ public class AnalysisPanel extends JPanel implements ActionListener {
                 }
             }).toArray(Double.class);
             Preconditions.checkArgument(vector.length == matrix.getMarkingVector().length);
-            String message = Properties.isNetRelativelyConservative(coverabilityGraph, matrix, vector)
+            String message = Properties
+                    .isNetRelativelyConservative(coverabilityGraph, matrix, ArrayUtils.toPrimitive(vector))
                     ? "Sieć jest zachowawcza względem podanego wektora wag: " + conservativityVectorTextField.getText()
                     : "Sieć nie jest zachowawcza względem podanego wektora wag: " + conservativityVectorTextField.getText();
             JOptionPane.showMessageDialog(null, message,
