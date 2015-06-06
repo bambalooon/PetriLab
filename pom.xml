@@ -19,6 +19,7 @@
         <jung2.version>2.0.1</jung2.version>
         <guava.version>18.0</guava.version>
         <gson.version>2.3.1</gson.version>
+        <commons-math.version>3.4.1</commons-math.version>
 
         <junit.version>4.12</junit.version>
         <mockito.version>1.10.19</mockito.version>
@@ -52,6 +53,11 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>${commons-math.version}</version>
         </dependency>
 
         <!-- TEST -->
