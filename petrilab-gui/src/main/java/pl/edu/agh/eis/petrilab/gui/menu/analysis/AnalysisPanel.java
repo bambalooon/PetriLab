@@ -36,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +61,8 @@ public class AnalysisPanel extends JPanel implements ActionListener {
     private static final String GENERATE_PROPERTIES_BUTTON_ACTION = "GENERATE_PROPERTIES_BUTTON_ACTION";
     private static final String CHECK_VECTOR_CONSERVATIVITY_BUTTON_ACTION = "CHECK_VECTOR_CONSERVATIVITY_BUTTON_ACTION";
     private static final String CHECK_VECTOR_CONSERVATIVITY_BUTTON_LABEL = "Zachowawczość";
+    private static final String FIND_CONSERVATIVITY_VECTOR_BUTTON_ACTION = "FIND_CONSERVATIVITY_VECTOR_BUTTON_ACTION";
+    private static final String FIND_CONSERVATIVITY_VECTOR_BUTTON_LABEL = "Znajdź wektor zachowawczości";
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_DEFAULT = 10;
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_MIN = 1;
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_MAX = Integer.MAX_VALUE;
@@ -108,9 +111,13 @@ public class AnalysisPanel extends JPanel implements ActionListener {
 
         JButton checkVectorConservativity = createTextButton(
                 this, CHECK_VECTOR_CONSERVATIVITY_BUTTON_ACTION, CHECK_VECTOR_CONSERVATIVITY_BUTTON_LABEL);
+        add(checkVectorConservativity, gbc);
+
+        JButton findConservativityVector = createTextButton(
+                this, FIND_CONSERVATIVITY_VECTOR_BUTTON_ACTION, FIND_CONSERVATIVITY_VECTOR_BUTTON_LABEL);
         gbc.weighty = 1;
         gbc.anchor = GridBagConstraints.NORTH;
-        add(checkVectorConservativity, gbc);
+        add(findConservativityVector, gbc);
     }
 
     @Override
@@ -150,6 +157,16 @@ public class AnalysisPanel extends JPanel implements ActionListener {
                 break;
             case CHECK_VECTOR_CONSERVATIVITY_BUTTON_ACTION:
                 checkNetVectorConservativity(CoverabilityGraph.getCoverabilityGraph(petriNetMatrix), petriNetMatrix);
+                break;
+            case FIND_CONSERVATIVITY_VECTOR_BUTTON_ACTION:
+                double[] conservativityVector = Properties.isNetRelativelyConservative(
+                        CoverabilityGraph.getCoverabilityGraph(petriNetMatrix),
+                        petriNetMatrix);
+                String message = conservativityVector == null
+                        ? "Sieć nie jest zachowawcza."
+                        : "Sieć jest zachowawcza względem wektora wag: " + Arrays.toString(conservativityVector) + ".";
+                JOptionPane.showMessageDialog(null, message,
+                        "Zachowawczość względem wektora wag.", JOptionPane.INFORMATION_MESSAGE);
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported action.");
