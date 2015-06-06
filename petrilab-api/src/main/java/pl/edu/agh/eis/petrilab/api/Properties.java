@@ -156,7 +156,7 @@ public class Properties {
         int[] capacityVector = matrix.getCapacityVector();
         Double markingSum = getMarkingSum(new Marking(matrix.getMarkingVector()), capacityVector, weightVector);
         for (Marking marking : coverabilityGraph.getVertices()) {
-            if (!markingSum.equals(getMarkingSum(marking, capacityVector))) {
+            if (!markingSum.equals(getMarkingSum(marking, capacityVector, weightVector))) {
                 return false;
             }
         }
