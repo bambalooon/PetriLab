@@ -2,6 +2,7 @@ package pl.edu.agh.eis.petrilab.gui.menu.analysis;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -24,7 +25,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -53,12 +57,15 @@ public class AnalysisPanel extends JPanel implements ActionListener {
     private static final String GENERATE_MATRIX_BUTTON_ACTION = "GENERATE_MATRIX_BUTTON_ACTION";
     private static final String GENERATE_PROPERTIES_BUTTON_LABEL = "Własności";
     private static final String GENERATE_PROPERTIES_BUTTON_ACTION = "GENERATE_PROPERTIES_BUTTON_ACTION";
+    private static final String CHECK_VECTOR_CONSERVATIVITY_BUTTON_ACTION = "CHECK_VECTOR_CONSERVATIVITY_BUTTON_ACTION";
+    private static final String CHECK_VECTOR_CONSERVATIVITY_BUTTON_LABEL = "Zachowawczość";
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_DEFAULT = 10;
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_MIN = 1;
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_MAX = Integer.MAX_VALUE;
     private static final int REACHABILITY_GRAPH_NODES_LIMIT_STEP = 5;
 
     private final JSpinner nodesLimit;
+    private final JTextField conservativityVectorTextField;
 
     public AnalysisPanel() {
         setLayout(new GridBagLayout());
@@ -90,9 +97,20 @@ public class AnalysisPanel extends JPanel implements ActionListener {
 
         JButton generatePetriNetProperties = createTextButton(
                 this, GENERATE_PROPERTIES_BUTTON_ACTION, GENERATE_PROPERTIES_BUTTON_LABEL);
+        add(generatePetriNetProperties, gbc);
+
+        conservativityVectorTextField = new JTextField();
+        conservativityVectorTextField.setText("[]");
+        conservativityVectorTextField.setHorizontalAlignment(SwingConstants.CENTER);
+        conservativityVectorTextField.setPreferredSize(new Dimension(80, 20));
+        System.out.println(conservativityVectorTextField.getPreferredSize());
+        add(conservativityVectorTextField, gbc);
+
+        JButton checkVectorConservativity = createTextButton(
+                this, CHECK_VECTOR_CONSERVATIVITY_BUTTON_ACTION, CHECK_VECTOR_CONSERVATIVITY_BUTTON_LABEL);
         gbc.weighty = 1;
         gbc.anchor = GridBagConstraints.NORTH;
-        add(generatePetriNetProperties, gbc);
+        add(checkVectorConservativity, gbc);
     }
 
     @Override
@@ -130,8 +148,40 @@ public class AnalysisPanel extends JPanel implements ActionListener {
                                 CoverabilityGraph.getCoverabilityGraph(petriNetMatrix)),
                         "Własności sieci petriego", JOptionPane.INFORMATION_MESSAGE);
                 break;
+            case CHECK_VECTOR_CONSERVATIVITY_BUTTON_ACTION:
+                checkNetVectorConservativity(CoverabilityGraph.getCoverabilityGraph(petriNetMatrix), petriNetMatrix);
+                break;
             default:
                 throw new UnsupportedOperationException("Unsupported action.");
+        }
+    }
+
+    private void checkNetVectorConservativity(DirectedSparseGraph<Marking, Transition> coverabilityGraph,
+                                              PetriNetMatrix matrix) {
+        try {
+            String vectorText = conservativityVectorTextField.getText();
+            if (vectorText.startsWith("[") && vectorText.endsWith("]")) {
+                vectorText = vectorText.substring(1, vectorText.length() - 1);
+            }
+            String[] vectorTextArray = vectorText.split("\\s*,\\s*");
+            Double[] vector = FluentIterable.of(vectorTextArray).transform(new Function<String, Double>() {
+                @Override
+                public Double apply(String vectorElement) {
+                    return Double.valueOf(vectorElement);
+                }
+            }).toArray(Double.class);
+            Preconditions.checkArgument(vector.length == matrix.getMarkingVector().length);
+            String message = Properties.isNetRelativelyConservative(coverabilityGraph, matrix, vector)
+                    ? "Sieć jest zachowawcza względem podanego wektora wag: " + conservativityVectorTextField.getText()
+                    : "Sieć nie jest zachowawcza względem podanego wektora wag: " + conservativityVectorTextField.getText();
+            JOptionPane.showMessageDialog(null, message,
+                    "Zachowawczość względem wektora wag", JOptionPane.INFORMATION_MESSAGE);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Wektor powinien być postaci \"[1,2,3]\" lub \"1,2,3\"" +
+                            " i mieć taki rozmiar jak ilość miejsc w sieci.",
+                    "Zły format wektora", JOptionPane.WARNING_MESSAGE);
         }
     }
 
