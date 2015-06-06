@@ -238,8 +238,6 @@ public static double[] isNetRelativelyConservative(DirectedSparseGraph<Marking, 
 
     public static boolean isNetReversible(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
         Marking initialMarking = new Marking(matrix.getMarkingVector());
-        Collection<Marking> markings = coverabilityGraph.getVertices();
-        Iterator<Marking> itr = markings.iterator();
         UnweightedShortestPath<Marking, Transition> shortestPath = new UnweightedShortestPath<>(coverabilityGraph);
         for (Marking marking : coverabilityGraph.getVertices()) {
             if (!marking.equals(initialMarking) && shortestPath.getDistance(marking, initialMarking) == null) {
