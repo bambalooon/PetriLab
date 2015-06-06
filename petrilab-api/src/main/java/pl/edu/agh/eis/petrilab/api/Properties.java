@@ -2,6 +2,8 @@ package pl.edu.agh.eis.petrilab.api;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import edu.uci.ics.jung.algorithms.shortestpath.UnweightedShortestPath;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import org.apache.commons.lang3.ArrayUtils;
@@ -17,7 +19,11 @@ import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
 
 import static pl.edu.agh.eis.petrilab.model2.matrix.Marking.toDoubleArray;
 
@@ -237,13 +243,97 @@ public static double[] isNetRelativelyConservative(DirectedSparseGraph<Marking, 
     }
 
     public static boolean isNetReversible(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
+        int finiteInfiniteRepresentation = findMaxArcWeight(matrix) * 1000;
+
         Marking initialMarking = new Marking(matrix.getMarkingVector());
         UnweightedShortestPath<Marking, Transition> shortestPath = new UnweightedShortestPath<>(coverabilityGraph);
+        List<Marking> reversibleMarkings = Lists.newArrayList();
+        mainLoop:
         for (Marking marking : coverabilityGraph.getVertices()) {
             if (!marking.equals(initialMarking) && shortestPath.getDistance(marking, initialMarking) == null) {
-                return false;
+                for (Marking reversibleMarking : reversibleMarkings) {
+                    if (marking.equals(reversibleMarking)
+                            || shortestPath.getDistance(marking, reversibleMarking) != null) {
+                        reversibleMarkings.add(marking);
+                        continue mainLoop;
+                    }
+                }
+                Double[] finiteMarking = new Double[marking.getValue().length];
+                int[] capacityVector = matrix.getCapacityVector();
+                int i = 0;
+                for (Double element : marking.getValue()) {
+                    finiteMarking[i] = element.isInfinite()
+                            ? capacityVector[i] == Place.CAPACITY_INFINITE
+                                    ? finiteInfiniteRepresentation
+                                    : capacityVector[i]
+                            : element;
+                    i++;
+                }
+                Marking srcMarking = new Marking(finiteMarking);
+                if (srcMarking.equals(marking)) {
+                    return false;
+                }
+                if (!findPath(matrix, srcMarking, initialMarking)) {
+                    return false;
+                }
             }
+            reversibleMarkings.add(marking);
         }
         return true;
+    }
+
+    private static int findMaxArcWeight(PetriNetMatrix matrix) {
+        int maxWeight = 0;
+        int[][] inMatrix = matrix.getInMatrix();
+        for (int i = 0; i < inMatrix.length; i++) {
+            for (int j = 0; j < inMatrix[0].length; j++) {
+                int currentWeight = inMatrix[i][j];
+                if (currentWeight > maxWeight) {
+                    maxWeight = currentWeight;
+                }
+            }
+        }
+        return maxWeight;
+    }
+
+    private static boolean findPath(PetriNetMatrix matrix, Marking srcMarking, Marking destMarking) {
+        int transitionsNumber = matrix.getTransitionsNames().length;
+        List<Marking> evaluated = Lists.newArrayList();
+        final Map<Marking, Integer> distanceMap = Maps.newHashMap();
+        distanceMap.put(srcMarking, estimateDistance(srcMarking, destMarking));
+        PriorityQueue<Marking> toEvaluate = new PriorityQueue<>(1, new Comparator<Marking>() {
+            @Override
+            public int compare(Marking marking1, Marking marking2) {
+                return distanceMap.get(marking1) - distanceMap.get(marking2);
+            }
+        });
+        toEvaluate.add(srcMarking);
+        while (!toEvaluate.isEmpty() || evaluated.size() > 1000000) {
+            Marking marking = toEvaluate.poll();
+            for (int transitionIndex = 0; transitionIndex < transitionsNumber; transitionIndex++) {
+                if (matrix.isTransitionActive(true, transitionIndex, marking.getValue())) {
+                    Double[] resultMarking = matrix.fireTransition(transitionIndex, marking.getValue());
+                    Marking newMarking = new Marking(resultMarking);
+                    if (evaluated.contains(newMarking)) continue;
+                    Integer estimatedDistance = estimateDistance(newMarking, destMarking);
+                    if (estimatedDistance == 0) return true;
+                    distanceMap.put(newMarking, estimatedDistance);
+                    toEvaluate.add(newMarking);
+                }
+            }
+            evaluated.add(marking);
+            distanceMap.remove(marking);
+        }
+        return false;
+    }
+
+    private static Integer estimateDistance(Marking srcMarking, Marking destMarking) {
+        Double[] src = srcMarking.getValue();
+        Double[] dest = destMarking.getValue();
+        int difference = 0;
+        for (int i = 0; i < src.length; i++) {
+            difference += Math.abs(dest[i] - src[i]);
+        }
+        return difference;
     }
 }
