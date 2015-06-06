@@ -136,9 +136,10 @@ public class Properties {
 //overload
 public static double[] isNetRelativelyConservative(DirectedSparseGraph<Marking, Transition> coverabilityGraph, PetriNetMatrix matrix) {
     Collection<Marking> vertices = coverabilityGraph.getVertices();
+    int a_rows = coverabilityGraph.getVertexCount();
     int a_cols = matrix.getMarkingVector().length;
-    double[][] a = new double[coverabilityGraph.getVertexCount()][a_cols];
-    double[] b = new double[a_cols];
+    double[][] a = new double[a_rows][a_cols];
+    double[] b = new double[a_rows];
     int[] capacityVector = matrix.getCapacityVector();
 
     int i = 0;
