@@ -2,8 +2,10 @@ package pl.edu.agh.eis.petrilab.gui;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
+import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
+import pl.edu.agh.eis.petrilab.api.CoverabilityGraph;
 import pl.edu.agh.eis.petrilab.gui.jung.VisualizationViewerGenerator;
 import pl.edu.agh.eis.petrilab.gui.jung.factory.ArcFactory;
 import pl.edu.agh.eis.petrilab.gui.jung.factory.VertexFactory;
@@ -12,8 +14,10 @@ import pl.edu.agh.eis.petrilab.gui.jung.mouse.CustomEditingModalGraphMouse;
 import pl.edu.agh.eis.petrilab.gui.listener.ModeChangeListener;
 import pl.edu.agh.eis.petrilab.model2.Arc;
 import pl.edu.agh.eis.petrilab.model2.PetriNetVertex;
+import pl.edu.agh.eis.petrilab.model2.Transition;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraph;
 import pl.edu.agh.eis.petrilab.model2.jung.PetriNetGraphInitializer;
+import pl.edu.agh.eis.petrilab.model2.matrix.Marking;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrix;
 import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrixWithCoordinates;
 import pl.edu.agh.eis.petrilab.model2.util.NameGenerator;
@@ -43,6 +47,7 @@ public class PetriLabApplication {
     private VisualizationViewer<PetriNetVertex, Arc> graphViewer;
     private CustomEditingModalGraphMouse<PetriNetVertex, Arc> graphMouse;
     private Configuration configuration = new Configuration();
+    private DirectedSparseGraph<Marking, Transition> coverabilityGraph;
 
     private void startGui() {
         SwingUtilities.invokeLater(new Runnable() {
@@ -91,6 +96,21 @@ public class PetriLabApplication {
         return graphMouse;
     }
 
+    public DirectedSparseGraph<Marking, Transition> getCoverabilityGraph() {
+        if (coverabilityGraph == null) {
+            initCoverabilityGraph();
+        }
+        return coverabilityGraph;
+    }
+
+    private void initCoverabilityGraph() {
+        coverabilityGraph = CoverabilityGraph.getCoverabilityGraph(PetriNetMatrix.generateMatrix(petriNetGraph));
+    }
+
+    public void removeCoverabilityGraph() {
+        coverabilityGraph = null;
+    }
+
     public PetriNetMatrixWithCoordinates generatePetriNetMatrixWithCoordinates() {
         petriNetGraphInitializer = PetriNetGraphInitializer
                 .loadInitializer(graphViewer.getGraphLayout(), petriNetGraph);
@@ -116,6 +136,7 @@ public class PetriLabApplication {
         petriNetGraph = graph;
         petriNetGraphInitializer = initializer;
         configuration.setProperty(Configuration.NAME_GENERATOR, new NameGenerator(petriNetGraph));
+        removeCoverabilityGraph();
         loadPetriNetGraph();
     }
 
