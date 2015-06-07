@@ -23,6 +23,9 @@ import pl.edu.agh.eis.petrilab.model2.matrix.PetriNetMatrixWithCoordinates;
 import pl.edu.agh.eis.petrilab.model2.util.NameGenerator;
 
 import javax.swing.SwingUtilities;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Name: PetriLabApplication
@@ -47,7 +50,7 @@ public class PetriLabApplication {
     private VisualizationViewer<PetriNetVertex, Arc> graphViewer;
     private CustomEditingModalGraphMouse<PetriNetVertex, Arc> graphMouse;
     private Configuration configuration = new Configuration();
-    private DirectedSparseGraph<Marking, Transition> coverabilityGraph;
+    private Future<DirectedSparseGraph<Marking, Transition>> coverabilityGraph;
 
     private void startGui() {
         SwingUtilities.invokeLater(new Runnable() {
@@ -96,7 +99,7 @@ public class PetriLabApplication {
         return graphMouse;
     }
 
-    public DirectedSparseGraph<Marking, Transition> getCoverabilityGraph() {
+    public Future<DirectedSparseGraph<Marking, Transition>> getCoverabilityGraph() {
         if (coverabilityGraph == null) {
             initCoverabilityGraph();
         }
@@ -104,10 +107,19 @@ public class PetriLabApplication {
     }
 
     private void initCoverabilityGraph() {
-        coverabilityGraph = CoverabilityGraph.getCoverabilityGraph(PetriNetMatrix.generateMatrix(petriNetGraph));
+        coverabilityGraph = Executors.newSingleThreadExecutor()
+                .submit(new Callable<DirectedSparseGraph<Marking, Transition>>() {
+                    @Override
+                    public DirectedSparseGraph<Marking, Transition> call() throws Exception {
+                        return CoverabilityGraph.getCoverabilityGraph(PetriNetMatrix.generateMatrix(petriNetGraph));
+                    }
+                });
     }
 
     public void removeCoverabilityGraph() {
+        if (coverabilityGraph != null) {
+            coverabilityGraph.cancel(true);
+        }
         coverabilityGraph = null;
     }
 

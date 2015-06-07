@@ -39,6 +39,9 @@ import java.awt.event.ItemListener;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static pl.edu.agh.eis.petrilab.gui.menu.analysis.SingleComponentFrame.*;
 import static pl.edu.agh.eis.petrilab.gui.util.GuiHelper.COMPONENT_DEFAULT_SIZE;
@@ -129,47 +132,69 @@ public class AnalysisPanel extends JPanel implements ActionListener {
         graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
         DirectedSparseGraph<Marking, Transition> graph;
         final VisualizationViewer<Marking, Transition> viewer;
-        switch (e.getActionCommand()) {
-            case GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION:
-                graph = PetriLabApplication.getInstance().getCoverabilityGraph();
-                viewer = VisualizationViewerGenerator.GRAPH.generateVisualizationViewer(graph);
-                setCustomVertexLabelTransformer(viewer, petriNetMatrix);
-                setVertexPickListener(viewer, petriNetMatrix);
-                viewer.setGraphMouse(graphMouse);
-                new SingleComponentFrame(COVERABILITY_GRAPH_TITLE, viewer);
-                break;
-            case GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION:
-                graph = CoverabilityGraph.getReachabilityGraph(petriNetMatrix, (Integer) nodesLimit.getValue());
-                viewer = VisualizationViewerGenerator.GRAPH.generateVisualizationViewer(graph);
-                viewer.setGraphMouse(graphMouse);
-                new SingleComponentFrame(REACHABILITY_GRAPH_TITLE, viewer);
-                break;
-            case GENERATE_MATRIX_BUTTON_ACTION:
-                new SingleComponentFrame(MATRIX_TITLE, new MatrixPanel(petriNetMatrix));
-                break;
-            case GENERATE_PROPERTIES_BUTTON_ACTION:
-                JOptionPane.showMessageDialog(null,
-                        generatePropertiesRaport(
-                                petriNetGraph,
-                                petriNetMatrix,
-                                PetriLabApplication.getInstance().getCoverabilityGraph()),
-                        "Własności sieci petriego", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            case CHECK_VECTOR_CONSERVATIVITY_BUTTON_ACTION:
-                checkNetVectorConservativity(PetriLabApplication.getInstance().getCoverabilityGraph(), petriNetMatrix);
-                break;
-            case FIND_CONSERVATIVITY_VECTOR_BUTTON_ACTION:
-                double[] conservativityVector = Properties.isNetRelativelyConservative(
-                        PetriLabApplication.getInstance().getCoverabilityGraph(),
-                        petriNetMatrix);
-                String message = conservativityVector == null
-                        ? "Sieć nie jest zachowawcza."
-                        : "Sieć jest zachowawcza względem wektora wag: " + Arrays.toString(conservativityVector) + ".";
-                JOptionPane.showMessageDialog(null, message,
-                        "Zachowawczość względem wektora wag.", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            default:
-                throw new UnsupportedOperationException("Unsupported action.");
+        final Future<DirectedSparseGraph<Marking, Transition>> coverabilityGraph
+                = PetriLabApplication.getInstance().getCoverabilityGraph();
+        try {
+            switch (e.getActionCommand()) {
+                case GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION:
+                    if (!coverabilityGraph.isDone()) {
+                        notifyWhenTaskIsDone();
+                        break;
+                    }
+                    viewer = VisualizationViewerGenerator.GRAPH.generateVisualizationViewer(coverabilityGraph.get());
+                    setCustomVertexLabelTransformer(viewer, petriNetMatrix);
+                    setVertexPickListener(viewer, petriNetMatrix);
+                    viewer.setGraphMouse(graphMouse);
+                    new SingleComponentFrame(COVERABILITY_GRAPH_TITLE, viewer);
+                    break;
+                case GENERATE_REACHABILITY_GRAPH_BUTTON_ACTION:
+                    graph = CoverabilityGraph.getReachabilityGraph(petriNetMatrix, (Integer) nodesLimit.getValue());
+                    viewer = VisualizationViewerGenerator.GRAPH.generateVisualizationViewer(graph);
+                    viewer.setGraphMouse(graphMouse);
+                    new SingleComponentFrame(REACHABILITY_GRAPH_TITLE, viewer);
+                    break;
+                case GENERATE_MATRIX_BUTTON_ACTION:
+                    new SingleComponentFrame(MATRIX_TITLE, new MatrixPanel(petriNetMatrix));
+                    break;
+                case GENERATE_PROPERTIES_BUTTON_ACTION:
+                    if (!coverabilityGraph.isDone()) {
+                        notifyWhenTaskIsDone();
+                        break;
+                    }
+                    JOptionPane.showMessageDialog(null,
+                            generatePropertiesRaport(
+                                    petriNetGraph,
+                                    petriNetMatrix,
+                                    coverabilityGraph.get()),
+                            "Własności sieci petriego", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case CHECK_VECTOR_CONSERVATIVITY_BUTTON_ACTION:
+                    if (!coverabilityGraph.isDone()) {
+                        notifyWhenTaskIsDone();
+                        break;
+                    }
+                    checkNetVectorConservativity(coverabilityGraph.get(), petriNetMatrix);
+                    break;
+                case FIND_CONSERVATIVITY_VECTOR_BUTTON_ACTION:
+                    if (!coverabilityGraph.isDone()) {
+                        notifyWhenTaskIsDone();
+                        break;
+                    }
+                    double[] conservativityVector = Properties.isNetRelativelyConservative(
+                            coverabilityGraph.get(),
+                            petriNetMatrix);
+                    String message = conservativityVector == null
+                            ? "Sieć nie jest zachowawcza."
+                            : "Sieć jest zachowawcza względem wektora wag: " + Arrays.toString(conservativityVector) + ".";
+                    JOptionPane.showMessageDialog(null, message,
+                            "Zachowawczość względem wektora wag.", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Unsupported action.");
+            }
+        } catch (InterruptedException | ExecutionException ex) {
+            System.err.println("Error while generating coverability graph.");
+            ex.printStackTrace();
         }
     }
 
@@ -350,5 +375,25 @@ public class AnalysisPanel extends JPanel implements ActionListener {
         raportBuilder.append('\n');
 
         return raportBuilder.toString();
+    }
+
+    private void notifyWhenTaskIsDone() {
+        Executors.newSingleThreadExecutor().submit(new Runnable() {
+            @Override
+            public void run() {
+                Future<DirectedSparseGraph<Marking, Transition>> coverabilityGraph = PetriLabApplication.getInstance()
+                        .getCoverabilityGraph();
+                while (!coverabilityGraph.isDone()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                if (!coverabilityGraph.isCancelled()) {
+                    JOptionPane.showMessageDialog(null, "Graf pokrycia jest już gotowy");
+                }
+            }
+        });
     }
 }
