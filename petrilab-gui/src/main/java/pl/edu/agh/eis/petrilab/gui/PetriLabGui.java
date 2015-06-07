@@ -69,7 +69,15 @@ public class PetriLabGui extends JFrame {
 
         menuPanel = new MenuPanel(ImmutableList.<TabComponent>builder()
                 .add(new TabComponent<>(ApplicationMode.NORMAL, "Edycja", mainPanel,
-                        new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
+                        new ActionGroup(
+                                new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING),
+                                new Action() {
+                                    @Override
+                                    public void invoke() {
+                                        PetriLabApplication.getInstance().removeCoverabilityGraph();
+                                    }
+                                }
+                        ), Action.NO_ACTION))
                 .add(new TabComponent<>(ApplicationMode.NORMAL, "Analiza", new AnalysisPanel(),
                         new ModeChangeAction(graphMouse, ModalGraphMouse.Mode.PICKING), Action.NO_ACTION))
                 .add(new TabComponent<>(ApplicationMode.SIMULATION, "Symulacja", simulationPanel,
