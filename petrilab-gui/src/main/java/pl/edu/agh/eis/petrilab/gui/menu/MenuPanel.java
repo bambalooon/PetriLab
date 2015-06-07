@@ -42,8 +42,9 @@ public class MenuPanel extends JTabbedPane implements ChangeListener, Observer {
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        currentComponent.onTabDeselected();
+        TabComponent previousComponent = currentComponent;
         currentComponent = tabComponents.get(getSelectedIndex());
+        previousComponent.onTabDeselected();
         currentComponent.onTabSelected();
     }
 
