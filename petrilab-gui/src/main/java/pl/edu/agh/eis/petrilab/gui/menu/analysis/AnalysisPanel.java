@@ -131,7 +131,7 @@ public class AnalysisPanel extends JPanel implements ActionListener {
         final VisualizationViewer<Marking, Transition> viewer;
         switch (e.getActionCommand()) {
             case GENERATE_COVERABILITY_GRAPH_BUTTON_ACTION:
-                graph = CoverabilityGraph.getCoverabilityGraph(petriNetMatrix);
+                graph = PetriLabApplication.getInstance().getCoverabilityGraph();
                 viewer = VisualizationViewerGenerator.GRAPH.generateVisualizationViewer(graph);
                 setCustomVertexLabelTransformer(viewer, petriNetMatrix);
                 setVertexPickListener(viewer, petriNetMatrix);
@@ -152,15 +152,15 @@ public class AnalysisPanel extends JPanel implements ActionListener {
                         generatePropertiesRaport(
                                 petriNetGraph,
                                 petriNetMatrix,
-                                CoverabilityGraph.getCoverabilityGraph(petriNetMatrix)),
+                                PetriLabApplication.getInstance().getCoverabilityGraph()),
                         "Własności sieci petriego", JOptionPane.INFORMATION_MESSAGE);
                 break;
             case CHECK_VECTOR_CONSERVATIVITY_BUTTON_ACTION:
-                checkNetVectorConservativity(CoverabilityGraph.getCoverabilityGraph(petriNetMatrix), petriNetMatrix);
+                checkNetVectorConservativity(PetriLabApplication.getInstance().getCoverabilityGraph(), petriNetMatrix);
                 break;
             case FIND_CONSERVATIVITY_VECTOR_BUTTON_ACTION:
                 double[] conservativityVector = Properties.isNetRelativelyConservative(
-                        CoverabilityGraph.getCoverabilityGraph(petriNetMatrix),
+                        PetriLabApplication.getInstance().getCoverabilityGraph(),
                         petriNetMatrix);
                 String message = conservativityVector == null
                         ? "Sieć nie jest zachowawcza."
