@@ -19,6 +19,7 @@ public class FileUtilities {
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(Point2D.class, new Point2DSerialization())
             .create();
+    private static final Charset CHARSET = Charset.forName("UTF-8");
 
     public static String getExtension(File file) {
         String fileExtension = null;
@@ -32,11 +33,11 @@ public class FileUtilities {
     }
 
     public static void saveFile(File file, Object content) throws IOException {
-        Files.write(GSON.toJson(content), file, Charset.defaultCharset());
+        Files.write(GSON.toJson(content), file, CHARSET);
     }
 
     public static <T> T openFile(File file, Class<T> outputClass) throws IOException {
-        String textContent = Files.toString(file, Charset.defaultCharset());
+        String textContent = Files.toString(file, CHARSET);
         return GSON.fromJson(textContent, outputClass);
     }
 }
