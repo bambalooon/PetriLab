@@ -71,7 +71,8 @@ public class PetriNetMatrix {
             }
             if (considerCapacity
                     && placeCapacity != CAPACITY_INFINITE
-                    && (getInMatrix()[transitionIndex][i] + placeMarking) > placeCapacity) {
+                    && (getInMatrix()[transitionIndex][i] - getOutMatrix()[transitionIndex][i] + placeMarking)
+                            > placeCapacity) {
                 return false;
             }
         }

@@ -91,18 +91,16 @@ public class PetriNetGraph extends DirectedSparseGraph<PetriNetVertex, Arc> {
     }
 
     public boolean isTransitionActive(Transition transition) {
-        Collection<Arc> inArcs = getInEdges(transition);
-        Collection<Arc> outArcs = getOutEdges(transition);
-        for (Arc inArc : inArcs) {
-            Place inPlace = (Place) getOpposite(transition, inArc);
-            if (inPlace.getMarking() < inArc.getWeight()) {
-                return false;
-            }
-        }
-        for (Arc outArc : outArcs) {
-            Place outPlace = (Place) getOpposite(transition, outArc);
-            int capacity = outPlace.getCapacity();
-            if (capacity != CAPACITY_INFINITE && (outPlace.getMarking() + outArc.getWeight()) > capacity) {
+        for (PetriNetVertex vertex : getNeighbors(transition)) {
+            Place place = (Place) vertex;
+            Arc inArc = findEdge(place, transition);
+            Arc outArc = findEdge(transition, place);
+            int inWeight = inArc != null ? inArc.getWeight() : 0;
+            int outWeight = outArc != null ? outArc.getWeight() : 0;
+            int inMarking = place.getMarking();
+            int outMarking = inMarking - inWeight + outWeight;
+            int capacity = place.getCapacity();
+            if (inMarking < inWeight || outMarking < 0 || (capacity != CAPACITY_INFINITE && outMarking > capacity)) {
                 return false;
             }
         }
